@@ -480,9 +480,44 @@ Confirmation Alert :user confirmation / OK (accept) or Cancel (dismiss)
 Prompt Alert : You need user input during execution /Enter text + OK or Cancel
 =================================================================================
 Q.How will you handle drop down /menu handling?
+<<<<<<< HEAD
 
 select is class in  Selenium WebDriver library 
 used for selecting & deselecting option in a drop down 
+=======
+What methods are available in the Select class to select options?
+
+Select class is part of the Selenium library,
+org.openqa.selenium.support.ui
+Best Practices / Real-world Tips:
+Always wait for visibility or clickability using WebDriverWait for reliability.
+For dynamic dropdowns (AJAX/populated at runtime), ensure options are fully loaded before selecting.
+Use exception handling (NoSuchElementException, ElementClickInterceptedException) for robustness.
+
+Select options:
+
+selectByIndex(int index) → by position
+selectByValue(String value) → by value attribute
+selectByVisibleText(String text) → by visible text
+
+Deselect options (multi-select only):
+
+deselectByIndex(int index)
+deselectByValue(String value)
+deselectByVisibleText(String text)
+deselectAll()
+
+Get information:
+
+getOptions() → all dropdown options
+getAllSelectedOptions() → all selected options
+getFirstSelectedOption() → first selected option
+isMultiple() → checks if multi-select is allowed
+
+Custom/non-<select> dropdowns:
+
+Click dropdown → select option via XPath/CSS locators
+>>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
 
  Select select = new Select(element); // Create a Select object for dropdowns
     select.selectByIndex(1); // Select an option by index
@@ -499,7 +534,85 @@ deselectAll()
 36.What will happen if you try to deselect on a single-select drop-down?
 💥 Selenium will throw an UnsupportedOperationException because deselection methods only 
 apply to multi-select drop-downs.
+<<<<<<< HEAD
 ----------------------------------------------------------------------------------
+=======
+-------------------------------------------------------------------------------------
+Q.How do you handle multi-select dropdowns?
+First, I check if the dropdown supports multiple selections using isMultiple(). Then, I select multiple options using selectByIndex(), selectByValue(), or selectByVisibleText()
+--------------------------------------------------------------------------------------
+Q . How do you retrieve options from a dropdown?
+
+getOptions() → retrieves all options
+getAllSelectedOptions() → returns all selected options
+getFirstSelectedOption() → returns the first selected option
+
+--------------------------------------------------------------------------------------
+Q. How do you ensure reliable dropdown selection in automation?
+
+Use WebDriverWait to wait until the element is visible or clickable
+For dynamic/AJAX dropdowns, ensure options are fully loaded
+Use exception handling like NoSuchElementException or ElementClickInterceptedException
+
+-------------------------------------------------------------------------------------
+Q . Can Select class be used for all dropdowns?
+No. It works only for <select> elements. Custom dropdowns require manual clicks and locators.
+------------------------------------------------------------------------------------
+How do you handle a dropdown where options are loaded dynamically (AJAX)?
+ Wait for options to appear using WebDriverWait with ExpectedConditions.visibilityOfAllElementsLocatedBy(). Selecting options before they load will throw exceptions.
+-----------------------------------------------------------------------------------------
+
+Q: How do you select an option if the visible text changes dynamically?
+ Use selectByValue() (if value is stable) or locate the element using XPath/CSS and click. Avoid selectByVisibleText() if the text is dynamic.
+----------------------------------------------------------------------------------
+Q .How do you select a dropdown option if multiple elements have the same visible text?
+Use getOptions() to iterate through all options and find the exact one based on additional attributes (value, index) before selecting.
+-----------------------------------------------------------------------------------------
+Q: How do you handle a dropdown inside an iframe?
+ Switch to the iframe using driver.switchTo().frame() first, then locate the dropdown and select the option.
+-----------------------------------------------------------------------------------------------------
+Q: How to handle a dropdown in a modal/pop-up?
+Switch to the modal (if it’s a separate DOM or alert) and ensure the dropdown element is visible and interactable before selecting.
+-------------------------------------------------------------------------------------------------------------
+Q: Dropdown disappears on page scroll or hover—how do you select an option?
+ Use Actions class (moveToElement()) to hover and reveal the dropdown before clicking, or use JavaScript executor to make the element visible.
+-------------------------------------------------------------------------------------------------------------
+Q: How to select a value from a dropdown if options are not in the DOM until clicked?
+ First click the dropdown to populate options, then use explicit wait (ExpectedConditions.visibilityOfAllElementsLocatedBy) before selecting.
+-------------------------------------------------------------------------------------------------------------
+Q: How to handle a read-only dropdown (disabled <select>)?
+ Selenium cannot select it normally; you can either enable it via JS or set the value directly using JavaScript.
+-----------------------------------------------------------------------------------------------------------------
+Q: How do you validate that a dropdown contains a specific option?
+ Use getOptions() to retrieve all options and loop through them, asserting the expected text/value exists.
+------------------------------------------------------------------------------------------------------------------
+Q: Can you select an option using keyboard keys instead of mouse click?
+ Yes, using Actions class: sendKeys(Keys.ARROW_DOWN) and sendKeys(Keys.ENTER) for navigation.
+-------------------------------------------------------------------------------------------------------------------
+Q: How to handle multi-select dropdowns dynamically when options can change at runtime?
+ Use getOptions() each time before selecting, and combine with WebDriverWait to ensure the options exist before performing selectBy*.
+---------------------------------------------------------------------------------------------------------------------------
+Q: How do you handle nested dropdowns (dropdown inside another dropdown)?
+ First interact with the parent dropdown to reveal the child, then locate and select the child option using XPath/CSS.
+---------------------------------------------------------------------------------------------------------------------------
+Q: How do you measure the performance or load time of a dropdown with many options?
+Capture time before and after the dropdown options are loaded using timestamps and WebDriverWait to detect when all options are present.
+----------------------------------------------------------------------------------------------------------------------------------
+Q: How do you handle dropdowns rendered differently in mobile view (responsive design)?
+Detect screen size or viewport, then use appropriate locators or touch actions to interact with mobile-style dropdowns.
+----------------------------------------------------------------------------------------------------------------------------
+Dropdown is inside a shadow DOM—how do you select an option?
+ Access the shadow root using JavaScript (element.shadowRoot) and then locate the dropdown inside it to select the option.
+----------------------------------------------------------------------------------------------------------------------------
+How do you handle dropdowns rendered differently in mobile view (responsive design)?
+ Detect screen size or viewport, then use appropriate locators or touch actions to interact with mobile-style dropdowns.
+-----------------------------------------------------------------------------------------------------------------------------
+Q: How do you select an option in a dropdown when the element keeps moving due to animations?
+ Use WebDriverWait with ExpectedConditions.elementToBeClickable() or moveToElement() with Actions to stabilize before selecting.
+=====================================================================================================================================================
+
+==================================================================================================================================
+>>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
 37.                    Menu Handling vs   drop down ?
 Requires Hovering?	Yes (often)	No (just click and select)
 -------------------------------------------------------------------------------------
@@ -525,7 +638,11 @@ List<WebElement> op = select.getAllSelectedOptions();  //list genric interface
 boolean isMulti = select.isMultiple();
 System.out.println(isMulti);
 --------------------------------------------------------------------------------
+<<<<<<< HEAD
 
+=======
+=============================================================================================================================
+>>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
 43.scroll
 or
 Can Selenium scroll to a hidden element?
@@ -536,6 +653,10 @@ WebElement element = driver.findElement(By.id("submitBtn"));
 //interface.method
 element.click();
 ---------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+============================================================================================================================
+>>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
 44.Window and Frame Handling
 
     driver.switchTo().window("windowName"); // Switch to a specific window
@@ -599,6 +720,10 @@ driver.switchTo().window(parentWindow);
 System.out.println("Back to Parent: " + driver.getTitle());
 
 ---------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+=================================================================================================================
+>>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
 50.action class
 --action class in selenium is used to handle keyboard &mouse events in selenium
 --methods like 
@@ -649,6 +774,10 @@ act.keyDown(Keys.CONTROL).build().perform();//ctrl
 act.sendKeys("v").build().perform();//v
 act.keyUp(Keys.CONTROL).build().perform();//ctrl+v relase
 -----------------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+=========================================================================================================================================
+>>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
 Robot class?
 --robot class in selenium used to handle keyboard & mouse events
 --java awt package
@@ -716,6 +845,9 @@ Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, nu
 		rb.mouseWheel(200);
 		
 ---------------------------------------------------------------------------------------
+
+=======================================================================================================================
+>>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
 how to handle file upload?
 actually file upload senario we can it by autoIT tool as well as robot class but in my 
 organization we are using AutoIT tool.
@@ -870,6 +1002,10 @@ Returns the first matching element it finds based on the locator you provide.
 If no element is found, it throws NoSuchElementException.
 By is a utility class in Selenium that provides locator strategies to find elements
 ------------------------------------------------------------------------------
+<<<<<<< HEAD
+=======
+==========================================================================================================================
+>>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
 	
 13: What type of OOP concept is used here?	
 Runtime polymorphism (interface reference holding subclass object).
@@ -963,3 +1099,8 @@ updated on 17-12-2025
 
 updated on 19-12-2025
 18.08
+<<<<<<< HEAD
+=======
+
+dropdown ,updates on 22-12-2025@00.27
+>>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
