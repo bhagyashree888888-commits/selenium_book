@@ -480,11 +480,6 @@ Confirmation Alert :user confirmation / OK (accept) or Cancel (dismiss)
 Prompt Alert : You need user input during execution /Enter text + OK or Cancel
 =================================================================================
 Q.How will you handle drop down /menu handling?
-<<<<<<< HEAD
-
-select is class in  Selenium WebDriver library 
-used for selecting & deselecting option in a drop down 
-=======
 What methods are available in the Select class to select options?
 
 Select class is part of the Selenium library,
@@ -517,13 +512,30 @@ isMultiple() → checks if multi-select is allowed
 Custom/non-<select> dropdowns:
 
 Click dropdown → select option via XPath/CSS locators
->>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
+
 
  Select select = new Select(element); // Create a Select object for dropdowns
     select.selectByIndex(1); // Select an option by index
     select.selectByValue("option2"); // Select an option by value
     select.selectByVisibleText("Option 3"); // Select an option by visible text
-----------------------------------------------------------------------------------
+------------------------------------------------------------------------------------
+//example
+ driver.get("https://the-internet.herokuapp.com/");
+        WebElement d = driver.findElement(By.xpath("//a[text()='Dropdown']"));
+        d.click();
+        WebElement dropdown = driver.findElement(By.id("dropdown"));
+        Select s=new Select(dropdown);
+        //s.selectByIndex(1);
+        // Get all options
+        List<WebElement> allOptions = s.getOptions();
+
+// Iterate and print each option
+        for (WebElement option : allOptions) {
+            System.out.println(option.getText());
+        }
+        boolean isMulti = s.isMultiple();
+
+------------------------------------------------------------------------------------
 .deselect is used only for multi select optionMethod	
 yes
 deselectByIndex(int index)	
@@ -534,9 +546,7 @@ deselectAll()
 36.What will happen if you try to deselect on a single-select drop-down?
 💥 Selenium will throw an UnsupportedOperationException because deselection methods only 
 apply to multi-select drop-downs.
-<<<<<<< HEAD
-----------------------------------------------------------------------------------
-=======
+
 -------------------------------------------------------------------------------------
 Q.How do you handle multi-select dropdowns?
 First, I check if the dropdown supports multiple selections using isMultiple(). Then, I select multiple options using selectByIndex(), selectByValue(), or selectByVisibleText()
@@ -612,8 +622,7 @@ Q: How do you select an option in a dropdown when the element keeps moving due t
 =====================================================================================================================================================
 
 ==================================================================================================================================
->>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
-37.                    Menu Handling vs   drop down ?
+Q.                    Menu Handling vs   drop down ?
 Requires Hovering?	Yes (often)	No (just click and select)
 -------------------------------------------------------------------------------------
 38.How do you get all the options from a drop-down?
@@ -630,53 +639,178 @@ List<WebElement> op = select.getAllSelectedOptions();  //list genric interface
 
 
     System.out.println(op.get(0).getText());     //0 index text 
+-------------------------------------------------------------------------------------
+  // Get all options
+        List<WebElement> allOptions = s.getOptions();
+
+// Iterate and print each option
+        for (WebElement option : allOptions) {
+            System.out.println(option.getText());
+        }
 
 
+        boolean isMulti = s.isMultiple();
+        System.out.println(isMulti);
 --------------------------------------------------------------------------------------
-39.How do you check if a drop-down allows multiple selection?
+Q.How do you check if a drop-down allows multiple selection?
 
 boolean isMulti = select.isMultiple();
 System.out.println(isMulti);
---------------------------------------------------------------------------------
-<<<<<<< HEAD
 
-=======
 =============================================================================================================================
->>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
-43.scroll
-or
-Can Selenium scroll to a hidden element?
--- Yes
+
+Q.scroll or Can Selenium scroll to a hidden element?
+-- Yes, Selenium can scroll pages using JavaScript scroll() or scrollIntoView() methods or the Actions class. Selenium natively interacts only with visible elements, so scrolling is needed for hidden elements.
 
 WebElement element = driver.findElement(By.id("submitBtn"));
    js.executeScript("arguments[0].scrollIntoView(true);", element);
 //interface.method
+//executeScript() is a Java interface method
+//Variable name is often called js
+//Method name is executeScript
+//Script language is JavaScript
+//"arguments[0]"
+//Refers to the first argument passed from Java to JavaScript
 element.click();
+
+.scrollIntoView(true) :
+
+A JavaScript DOM method.
+Scrolls the page so the element becomes visible.
+
+true means:
+➡️ Scroll until the element is aligned at the top of the viewport.
+
+If it were false:
+➡️ Scroll until the element is aligned at the bottom of the viewport.
 ---------------------------------------------------------------------------
-<<<<<<< HEAD
-=======
+Q What are the main ways to scroll in Selenium?
+1.JavaScript Executor
+((JavascriptExecutor) driver).executeScript("window.scrollBy(0, 500);"); // scroll down 500px
+
+((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
+
+2.Actions Class
+Actions actions = new Actions(driver);
+actions.moveToElement(element).perform();
+
+3.Keyboard simulation
+element.sendKeys(Keys.PAGE_DOWN);
+
+---------------------------------------------------------------------------
+Q. What is scrollIntoView()?
+ A JS method to scroll the page so that a specific element becomes visible.
+
+scrollIntoView(true) → top of viewport.
+
+scrollIntoView(false) → bottom of viewport.
+
+---------------------------------------------------------------------------
+Q. When should we scroll using Selenium?
+
+Element is not visible in viewport.
+Element is inside a scrollable div.
+Need to load lazy-loaded content (like infinite scroll).
+Clicking or interacting with element fails due to visibility issues.
+
+--------------------------------------------------------------------------
+Q.Can Selenium scroll inside a scrollable div?
+ Yes, using JavaScript:
+WebElement div = driver.findElement(By.id("scrollableDiv"));
+((JavascriptExecutor) driver).executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;", div);
+
+-------------------------------------------------------------------------
+Q. How to scroll until the bottom of the page dynamically?
+((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+
+-------------------------------------------------------------------------
+Q.How to handle lazy-loaded content using scroll?
+
+Scroll the page or container until new content is loaded, typically in a loop:
+long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
+while(true){
+    ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+    Thread.sleep(2000); // wait for loading
+    long newHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
+    if(newHeight == lastHeight) break;
+    lastHeight = newHeight;
+}
+-------------------------------------------------------------------------
+Q.Difference between Actions scroll and JS scroll?
+
+Actions: Simulates real user behavior, scrolls to an element, good for testing UI interactions.
+
+JavaScript: Directly scrolls the DOM, faster, more reliable for hidden/lazy elements.
+--------------------------------------------------------------------------
+Q9: Can we scroll horizontally?
+
+Yes, using JS:
+((JavascriptExecutor) driver).executeScript("window.scrollBy(500, 0);"); // horizontal scroll
+
+Or scroll a div horizontally:
+((JavascriptExecutor) driver).executeScript("arguments[0].scrollLeft = arguments[0].scrollWidth;", div);
+
+==========================================================================
+Scenario-Based Questions :
+Scenario 1: You need to click a button that is not visible on the page.
+Answer: Scroll to the element using:
+((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", button);
+button.click();
+
+
+OR 
+Actions actions = new Actions(driver);
+actions.moveToElement(button).click().perform();
+
+Scenario 2: You need to select a dropdown option hidden in a long list
+WebElement option = driver.findElement(By.xpath("//option[text()='Option X']"));
+((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", option);
+option.click();
+
+Scenario 3: Infinite scroll page (like Twitter feed).
+Answer: Loop scroll to bottom until no new content loads (see Q7 code)
+long lastHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
+while(true){
+    ((JavascriptExecutor) driver).executeScript("window.scrollTo(0, document.body.scrollHeight);");
+    Thread.sleep(2000); // wait for loading
+    long newHeight = (long) ((JavascriptExecutor) driver).executeScript("return document.body.scrollHeight");
+    if(newHeight == lastHeight) break;
+    lastHeight = newHeight;
+}
+
+Scenario 4: Element inside a scrollable modal/div.
+Answer: Scroll the div:
+WebElement modal = driver.findElement(By.id("modal"));
+((JavascriptExecutor) driver).executeScript("arguments[0].scrollTop = arguments[0].scrollHeight;", modal);
+
+Scenario 5: Click fails due to element being partially covered by sticky header.
+Answer: Scroll slightly above the element:
+((JavascriptExecutor) driver).executeScript("window.scrollTo(0, arguments[0].getBoundingClientRect().top - 100 + window.scrollY);", element);
+element.click();
+
+
 ============================================================================================================================
->>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
-44.Window and Frame Handling
+
+Q.Window and Frame Handling
 
     driver.switchTo().window("windowName"); // Switch to a specific window
     driver.switchTo().frame("frameId"); // Switch to a frame
     driver.switchTo().defaultContent(); // Switch back to the main content
 
-45.What method is used to get the current window handle?
+Q.What method is used to get the current window handle?
 driver.getWindowHandle();
 
-46. How do you get all open window handles?
+Q. How do you get all open window handles?
 driver.getWindowHandles(); // Returns Set<String>
 ----------------------------------------------------------------------------------------
-47. What is the difference between getWindowHandle() and getWindowHandles()?
+Q. What is the difference between getWindowHandle() and getWindowHandles()?
 
 getWindowHandle() → returns the address of current window in string format
 
 getWindowHandles() → returns a Set of IDs of all open windows in string 
 
 ------------------------------------------------------------------------------------
-48.How do you close all windows except the parent?
+Q.How do you close all windows except the parent?
 for (String win : driver.getWindowHandles()) 
 {
     if (!win.equals(parentWindow)) 
@@ -687,7 +821,7 @@ for (String win : driver.getWindowHandles())
 }
 driver.switchTo().window(parentWindow);
 ------------------------------------------------------------------------------
-49.child window shift
+Q.child window shift
 
 // Step 1: Store the parent window ID
 String parentWindow = driver.getWindowHandle();
@@ -720,11 +854,10 @@ driver.switchTo().window(parentWindow);
 System.out.println("Back to Parent: " + driver.getTitle());
 
 ---------------------------------------------------------------------
-<<<<<<< HEAD
-=======
+
 =================================================================================================================
->>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
-50.action class
+
+Q.action class
 --action class in selenium is used to handle keyboard &mouse events in selenium
 --methods like 
 Method	                         Description
@@ -774,7 +907,7 @@ act.keyDown(Keys.CONTROL).build().perform();//ctrl
 act.sendKeys("v").build().perform();//v
 act.keyUp(Keys.CONTROL).build().perform();//ctrl+v relase
 -----------------------------------------------------------------------------------
-<<<<<<< HEAD
+
 =======
 =========================================================================================================================================
 >>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
@@ -847,7 +980,7 @@ Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, nu
 ---------------------------------------------------------------------------------------
 
 =======================================================================================================================
->>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
+
 how to handle file upload?
 actually file upload senario we can it by autoIT tool as well as robot class but in my 
 organization we are using AutoIT tool.
@@ -1104,3 +1237,7 @@ updated on 19-12-2025
 
 dropdown ,updates on 22-12-2025@00.27
 >>>>>>> d55ae09caa06a994edeaf2d5d38a31d46f037fe4
+
+updated on 22-12-2025
+16.48pm
+
