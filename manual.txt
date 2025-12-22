@@ -1,0 +1,1180 @@
+Q1.WHAT IS SDLC
+It’s the process that defines how software is planned, developed, tested, deployed, and maintained to ensure quality and efficiency.
+The goal of the SDLC life cycle model is to deliver high-quality, maintainable software that meets the user's requirements.
+---------------------------------------------------------------------------------------------------------------------------------------------------
+Q2.different phases of SDLC
+six key phases —
+ Requirement Analysis, Design, Development, Testing, Deployment, and Maintenance.
+
+1.requirement gathering : BRD / BRS               :BA
+2.requirement analysis  : FRD / SRS               :Proj.manager
+3.design                : HLD        ->HLDD        :sr.architect / sr.devloper
+                        LLD        ->LLDD
+4.devlopment            :                          :devloper
+5.testing         :STLC  ->TSR                     :testor
+6.support & maintenance                            :dev,tester
+
+Stage 1: req. gathering :It involves collecting, documenting, and managing the requirements that define the features and functionalities of a system or application.
+
+
+
++----------------------------------+
+|      Requirement Gathering       |  <-- Overall phase: Identifying what the system should do
++----------------------------------+
+                |
+                v
+      +--------------------+
+      |   Stakeholder      |  <-- Phase 1: Conduct interviews
+      |    Interviews      |      - Meet with stakeholders (clients, users, etc.)
+      +--------------------+      - Understand their needs, goals, and expectations
+                |
+                v 
+      +--------------------+
+      |   Questionnaires   |  <-- Phase 2: Distribute surveys
+      +--------------------+      - Collect structured data from larger audiences
+                |                 - Helps capture specific functional or non-functional needs
+                v
+      +--------------------+
+      | Document Analysis  |  <-- Phase 3: Review existing documents
+      +--------------------+      - Study current manuals, reports, or legacy systems
+                |                 - Identify gaps, constraints, and improvements
+                v
+      +--------------------+
+      |   Use Case Study   |  <-- Phase 4: Define use cases
+      +--------------------+      - Model how users will interact with the system
+                |                 - Create scenarios to describe system behavior
+                v
+      +--------------------------+
+      |   Requirements Document  |  <-- Final Output: SRS (Software Requirements Specification)
+      |   (SRS Specification)    |      - Comprehensive documentation of all system requirements
+      +--------------------------+      - Used as a reference for all following phases
+
+
++----------------------------------------------------------
+
+Stage 2:  Requirement Analysis: The goal of the analysis part is to remove incompleteness and inconsistencies
+(R.G:Identifying what the system should do)
+
+process of understanding what the users need from a software system and defining those needs in a clear, precise, and actionable way.
+
+Objectives of Requirement Analysis
+
+Identify business goals and user needs.
+✔ Ensures the system aligns with organizational objectives and solves real user problems.
+
+Define functional and non-functional requirements.
+✔ Functional: what the system should do (features, operations).
+✔ Non-functional: how the system should perform (performance, usability, reliability, etc.).
+
+Detect and resolve conflicts or ambiguities in requirements.
+✔ Helps ensure clarity, consistency, and agreement among stakeholders.
+
+Establish a clear scope for the project.
+✔ Prevents scope creep and defines project boundaries early.
+(Scope creep means the uncontrolled expansion or change in a project's scope — that is, when new features, requirements, or tasks are added after the project has already started, without proper review, approval, or adjustment of time, budget, or resources.)
+
+Provide a baseline for design and validation.
+✔ The requirements document serves as the foundation for system design, development, testing, and validation.
+
+
+
+ Step1️⃣         Categorize and Organize Requirements 
+ Description :Group raw requirements collected from interviews, surveys, documents, etc., into logical categories.
+ Example:     Functional vs Non-Functional, Business vs 																															  System, etc.
+
+2️⃣      Prioritize Requirements	
+Decide which requirements are most important or urgent to implement first.	
+Must-have, Should-have, Could-have, Won’t-have (MoSCoW)
+
+3️⃣    Analyze Feasibility			
+Check if each requirement is technically, economically, and operationally possible.	
+Can we integrate this with existing systems? Do we have budget/time?
+
+4️⃣    Model the Requirements (Process / Data Models)	
+Create visual representations of requirements — helps understand workflows and data.	
+Use case diagrams, DFDs, flowcharts, ER diagrams
+
+5️⃣     Define and Specify Requirements Clearly	
+Convert gathered inputs into clear, unambiguous statements.	
+“The system shall send an email notification after approval.”
+
+6️⃣    Validate Requirements	
+Review with stakeholders to confirm that requirements are correct, complete, and aligned with business goals.	
+Conduct review meetings, walkthroughs, or sign-	offs
+
+7️⃣     Manage Requirement Changes	
+Track updates, additions, or deletions of requirements during the project.	
+Use change request forms, version control, requirement traceability matrix
+
+SRS (System Requirement Specification Document)
+--------------------------------------------------------------------------------
+Stage 3 : Design : convert the requirements acquired in the SRS into a format that can be coded in a programming language
+
+
+ HLD: outlining the broad structure of the system. 
+It highlights the key components and 
+how they interact with each other, giving a clear overview of the system’s architecture
+
+LLD :  It breaks down each component into smaller parts 
+and provides specifics about how each part will function, guiding the actual coding process
+
+
+Step							Typical Order			Can it overlap or repeat?		Example
+1. System Design (HLD)					Usually comes first		✅ Yes, revised if other designs  change Architecture might change 															   after database design.
+2. Database Design					After high-level design		✅ Often refined after LLD	Data structure changes may affect 															module logic.
+3. Interface (UI/UX) Design			Can start early, parallel to others	✅ Often iterative	        User feedback may cause interface 															redesign.
+4. Detailed (Low-Level) Design				After HLD and database design	✅ Iterative	              Logic may change after testing design.
+5–8 (Data, Module, Security, Integration Design)	Generally follow logical order	✅ Often overlap	Security design may affect database or 																module design.
+
+
+HLD & LLD Documents
+-------------------------------------------------------------------------------------------------------
+Stage 4 : Development : The goal is to transform the design into working code using the most suitable programming languages.
+Unit tests are often performed during this phase to make sure that each component functions correctly on its own
+
+
+Development Phase – Banking System 
+1. Environment Setup          → Install IDEs, MySQL, Git, Jenkins. Ensures consistent setup.
+   Example: Configure Spring Boot and connect to MySQL.
+
+2. Code Planning & Allocation → Divide modules among developers. Keeps workflow organized.
+   Example: Assign Account, Transaction, and Security modules.
+
+3. Frontend Development       → Build UI using React/Angular. Creates user-friendly screens.
+   Example: Design Login and Fund Transfer pages.
+
+4. Backend Development        → Develop APIs and logic in Spring Boot. Handles business processing.
+   Example: Create /login and /transfer APIs.
+
+5. Database Development       → Design tables and triggers. Ensures secure data handling.
+   Example: Create account_tbl and transaction_tbl.
+
+6. Module Integration         → Connect frontend, backend, and DB. Ensures system flow.
+   Example: Link UI forms with backend APIs.
+
+7. Unit Testing               → Test individual modules. Detects early coding bugs.
+   Example: Use JUnit to test transfer function.
+
+8. Code Review & Optimization → Review and refine code. Improves quality and performance.
+   Example: Fix loops, check naming, prevent SQL injection.
+
+9. Version Control & Build    → Push code and generate build. Prepares for deployment.
+   Example: Commit to GitHub and trigger Jenkins.
+
+10. Handover to QA            → Deliver build and docs. Starts QA testing phase.
+    Example: Provide Build v1.0 with test data.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+Stage 5 :Testing : During each integration step,
+ previously planned modules are added to the partially integrated system and the resultant system is tested. 
+Finally, after all the modules have been successfully integrated and tested, the full working system is obtained and system testing is carried out on this. System testing consists of three different kinds of testing activities as described below.
+
+Alpha testing: Alpha testing is the system testing performed by the development team.
+
+Beta testing: Beta testing is the system testing performed by a friendly set of customers.
+
+Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
+Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
+
+SDLC Testing Phase – Sub-Steps, Purpose, and Examples
+
+Step 1: Test Planning  
+Purpose: Define testing strategy, objectives, scope, resources, and schedule.  
+Example: Prepare a Test Plan for Login and Fund Transfer modules.
+
+Step 2: Test Case Design  
+Purpose: Create detailed test cases and conditions based on requirements.  
+Example: Write test cases for valid/invalid login and transaction limits.
+
+Step 3: Test Environment Setup  
+Purpose: Configure hardware, software, and data for testing execution.  
+Example: Set up QA server with test database and application build.
+
+Step 4: Test Data Preparation  
+Purpose: Create sample data to execute test cases effectively.  
+Example: Prepare dummy users, accounts, and transaction records.
+
+Step 5: Test Execution  
+Purpose: Run test cases manually or using automation tools.  
+Example: Execute test cases for fund transfer and check results in DB.
+
+Step 6: Defect Logging & Tracking  
+Purpose: Record and monitor any defects or issues found during testing.  
+Example: Log failed transactions in Jira and assign them to developers.
+
+Step 7: Defect Re-testing & Regression Testing  
+Purpose: Verify fixed defects and ensure new changes don’t break existing functions.  
+Example: Re-test login bug fix and run regression on account creation.
+
+Step 8: Test Reporting & Closure  
+Purpose: Summarize results, defects, coverage, and quality status.  
+Example: Create Test Summary Report showing 95% pass rate and 5 open defects.
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Stage 6 : Maintenance : Software Maintenance refers to the process of modifying and updating a software system after it has been delivered to the customer
+involving planned and unplanned activities to keep the system reliable and up-to-date
+ => Several Key Aspects of Software Maintenance
+
+1.Bug Fixing: The process of finding and fixing errors and problems in the software.
+2.Enhancements: The process of adding new features or improving existing features to meet the evolving needs of the users.
+3.Performance Optimization: The process of improving the speed, efficiency, and reliability of the software.
+4.Porting and Migration: The process of adapting the software to run on new hardware or software platforms.
+5.Re-Engineering: The process of improving the design and architecture of the software to make it more maintainable and scalable.
+6.Documentation: The process of creating, updating, and maintaining the documentation for the software, including user manuals, technical specifications, and design documents.
+--------------------------------------------------------------------------
+
+Q3.different SDLC Models
+
+• Waterfall Model :
+phases: requirement Analysis
+                \
+             design
+                  \
+                development
+                    \
+                   testing
+                      \
+                     deployment
+                        \
+                        maintenance
+
+Sequential and linear — each phase must complete before the next begins.
+Works well when requirements are clear and fixed.
+Difficult to handle changes once development starts.
+🧠 Example: Used in government or legacy enterprise projects.(in government or legacy enterprise projects because it supports fixed requirements, strong documentation, and a controlled, predictable development lifecycle)
+
+Features of Waterfall Model :
+1.Sequential Approach: each phase of the project is completed before moving on to the next one.
+2.Document-Driven :The waterfall model depended on documentation to ensure that the project is well-defined and the project team is working towards a clear                                                                                            set of goals. 
+
+3.Quality Control:The waterfall model places a high emphasis on quality control and testing at each phase of the project, to ensure that the final product meets the requirements and expectations of the stakeholders
+
+4.Rigorous Planning:  The waterfall model involves a careful planning process, where the project scope, timelines, and deliverables are carefully defined and monitored throughout the project lifecycle.
+
+
+Advantages of the Waterfall Model
+
+Simple and easy to understand.
+Works well when requirements are fixed.
+Clear structure and stages.
+Easy to manage due to rigidity of model.
+Good for small projects.
+Milestones are easily set and tracked.
+Early system design and resource planning is required.
+Documentation is thorough and helps in maintenance.
+
+Disadvantages of the Waterfall Model :
+Not suitable for changing requirements.
+No working software produced until late in the lifecycle.
+High risk and uncertainty.
+Poor model for long and complex projects.
+Hard to estimate time and cost in later stages.
+Limited client involvement after initial phase.
+Errors in early phases can be costly to fix later.
+Less flexibility in accommodating updates or feedback.
+
+-------------------------------------------------------------------------------------------------------------------------------
+• Spiral Model
+
+The exact number of loops of the spiral is unknown and can vary from project to project. 
+Each loop of the spiral is called a phase of the software development process.
+
+Extension of Waterfall — each development phase has a corresponding testing phase.
+Testing starts early (test planning happens during design).
+🧠 Example: Good for safety-critical systems like healthcare or automotive.
+
+Defination :
+The Spiral Model follows an iterative development process where the project passes through repeated cycles (called spirals) instead of a single linear flow.
+Each spiral represents one phase of development, and every loop consists of 4 main activities.
+
+| **Activity**                               | **Description**  
+                                                                                                                                                       
+| **1. Planning**                            | Identify objectives, alternatives, and constraints for the current phase. Includes project planning, resource                                                         						estimation, scheduling, and defining system requirements. |
+
+
+| **2. Risk Analysis (Risk Assessment)**     | Analyze and identify potential risks, uncertainties, or problems that could affect the project. Evaluate 						alternatives and develop strategies to mitigate those risks.   |
+
+
+| **3. Engineering (Development & Testing)** | Design, develop, and test the product for that iteration. This may involve prototyping, coding, and verifying 						the features defined during the planning phase.           |
+
+
+| **4. Evaluation (Customer Review)**        | Present the developed product or prototype to the customer for feedback and evaluation. The customer’s 							feedback is then used to plan the next spiral (iteration).       |
+
+
+✅ Benefits of the Spiral Model:
+Strong risk management
+High degree of customer involvement
+Flexibility to adapt to changes
+Early proof-of-concept for critical components through prototyping 
+
+Advantages of Spiral Model
+Risk Handling – Best model for identifying and reducing risks early in the project.
+Flexibility in Requirements – Changes can be added at any stage.
+Customer Feedback Oriented – Client is involved in every iteration.
+Good for Large & Complex Projects – Suitable for long-term, high-budget, high-risk projects.
+Prototyping is Built-in – Each cycle delivers a working prototype.
+Better Progress Visibility – Each loop gives a clearer picture of project status.
+Quality is Improved – Repeated testing and refinement in every phase.
+Early Software Development – Partial versions of software are produced early.
+Supports Reuse – Previous components and modules can be reused.
+Structured + Iterative – Mixes features of waterfall and incremental models.
+
+❌ Disadvantages of Spiral Model
+
+Expensive & Time-Consuming – Costly due to repeated phases and risk analysis.
+Requires High Skill – Risk assessment needs expert professionals.
+Not Suitable for Small Projects – Overkill for low-budget or simple projects.
+Complex to Manage – Requires excellent documentation and control.
+Undefined Number of Phases – No fixed end point, cycles may continue indefinitely.
+Customer Dependency – Regular involvement of client is mandatory.
+Risk of Mismanagement – Incorrect risk analysis may lead to project failure.
+Difficult to Use for Tight Deadlines – Iterative loops make planning harder.
+Heavy Documentation – Every cycle requires review, approval, and documentation.
+
+🔎 When Spiral Model is Best Used?
+
+✔️ Large systems (banking, defense, aerospace,Battlefield Communication System (Secure Military Network))
+✔️ High-risk software (safety-critical apps, AI systems)
+✔️ Projects where requirements evolve over time
+✔️ Projects requiring regular customer feedback eg.banking appliocation
+
+| Spiral Loop | Output                      |
+| ----------- | --------------------------- |
+| 1st Loop    | Requirement + Risk Analysis |
+| 2nd Loop    | Login prototype             |
+| 3rd Loop    | Core banking operations     |
+| 4th Loop    | Security + Encryption       |
+| 5th Loop    | Final deployment            |
+
+----------------------------------------------------------------------------------------------------------------------------
+spiral vs waterfall method :
+
+| Feature / Point              | **Spiral Model**                               | **Waterfall Model**                                |
+| ---------------------------- | ---------------------------------------------- | -------------------------------------------------- |
+| **Development Type**         | Iterative & Risk-driven                        | Linear & Sequential                                |
+| **Flexibility**              | Very flexible (changes allowed anytime)        | Very rigid (changes hard after development starts) |
+| **Customer Involvement**     | High – client involved in every loop           | Low – client involved mainly at start & end        |
+| **Risk Handling**            | Excellent – early risk analysis in every phase | Poor – risks found late, if at all                 |
+| **Project Size Suitability** | Large, complex, long-term, high-risk projects  | Small, simple, well-defined projects               |
+| **Cost & Time**              | More expensive & time-consuming                | Less costly & faster for small projects            |
+| **Documentation**            | Moderate to high (depends on loops)            | Very high – every phase documented                 |
+| **Working Product**          | Delivered in parts (prototypes / versions)     | Delivered only at the end                          |
+| **Changes in Requirements**  | Easy to include new changes                    | Very difficult to include after design phase       |
+| **End of Project**           | No fixed end – depends on number of spirals    | Fixed and predefined end                           |
+| **Best For**                 | Banking, aerospace, AI, large systems          | Simple apps, static websites, student projects     |
+
+-----------------------------------------------------------------------------------------------------------------------------
+• Prototype Model
+SDLC approach where an early working model / simplified model / mock-up of the software  is built to collect user feedback and 
+refine requirements before full development starts.
+Shows basic features, screens, or workflows to refine their expectations.
+Example: A startup MVP (Minimum Viable Product) or AI-based prototype to test user interest.,ATM Prototype
+interactive prototypes (using tools like Figma or Adobe XD)
+
+Prototype Model Flow:
+1. Collect Requirements
+2. Build Quick Prototype
+3. User Evaluates Prototype
+4. Modify Prototype Based on Feedback
+5. Repeat Until Approved
+6. Develop Final System
+
+✅ Advantages of Prototype Model
+
+Improves Requirement Understanding
+Users can see a working model and refine requirements.
+Early User Feedback
+Users interact with the prototype and suggest changes early.
+Reduces Risk of Failure
+Ambiguities and missing features can be found before full development.
+Better Communication with Client
+Visual output is easier to understand than documents.
+Faster Initial Development
+A basic product is built quickly for demonstration.
+High Customer Satisfaction
+Final system is more accurate because user feedback is utilized.
+Helps in Testing & Validation
+Prototype can be used to test design and logic earlier.
+
+❌ Disadvantages of Prototype Model
+
+Time-Consuming if Repeated Many Times
+Constant changes can delay the actual development.
+Higher Cost than Expected
+Extra effort required to build multiple prototypes.
+Poor Documentation
+Developers may focus on prototype more than documentation.
+Users May Think Prototype = Final System
+Prototype is often incomplete and may mislead clients.
+Prototype May Be Poorly Designed
+Quick implementation may ignore quality or scalability.
+Not Suitable for Large, Complex Systems
+Too many requirements changes can make it messy.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+• V & V Model
+even though we operate in Agile, we CAN embed V-Model principles by involving QA, during story grooming, defining acceptance criteria early, and maintaining an RTM that links user stories to test cases and defects.
+This hybrid approach has helped us detect design defects early and maintain compliance documentation efficiently.
+Even though we follow Agile now, the core idea of the V-Model — early verification and validation — still applies.
+
+This helps identify gaps and defects early, especially in environments where requirements are well-defined — like banking, insurance, or healthcare systems.
+However, the model is also quite rigid, since each phase depends on the previous one. So it’s less suited for projects with frequently changing requirements.
+eg.systems like avionics, autopilot, navigation, and flight-control software commonly use the V-Model
+
+✅ Advantages (Pros)
+
+Simple and easy to understand
+Highly structured and disciplined
+Testing is planned early, reducing defects
+Clear mapping between development phases and testing phases
+Good documentation at every stage
+Reliable for safety-critical systems (defense, aerospace, medical)
+Early detection of errors in design due to parallel test planning 
+
+❌ Disadvantages (Cons)
+Very rigid — no flexibility
+Poor for projects with changing requirements
+No working prototype early, unlike Agile or Prototype Model
+Not suitable for complex or unclear requirements
+Costly and difficult to fix changes found late in testing
+Customer sees the product very late
+Not ideal for modern, iterative software development
+
+          reuirement analysis --->prepration of acceptance tc-------------->UAT
+                \                                                           /
+              system design ----->system tc----------------------->system testing
+                  \                                                      /
+                high level------->integration tc ------------>integration testing
+                    \                                             /
+
+
+
+                   low level----->unit tc ------------->unit testing      
+                            \                          /
+                             \                        /
+                              ------ > coding <-------
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+
+• Hybrid Model
+The Hybrid Model is an SDLC approach that combines features of two or more models — for example, Waterfall, V-Model, and Agile — to create a process that best fits the project’s requirements.
+
+In this model, some phases may follow a sequential approach for stability (like requirement analysis and design), while development and testing may follow iterative cycles to deliver faster feedback and improvements.
+The main goal of the Hybrid Model is to leverage the strengths of each model while minimizing their weaknesses, ensuring both quality and adaptability.
+
+   +----------------------------+
+   | Requirements Gathering     |
+   | (Prototype Iterations)     |
+   +-------------+--------------+
+                 |
+                 v
+   +----------------------------+
+   | System Design (V-Model)    |
+   +-------------+--------------+
+                 |
+                 v
+   +----------------------------+
+   | Module Design & Coding     |
+   | (V&V - Verification)       |
+   +-------------+--------------+
+                 |
+                 v
+   +----------------------------+
+   | Integration & Validation   |
+   | (V&V - Testing Phases)     |
+   +-------------+--------------+
+                 |
+                 v
+   +----------------------------+
+   | User Evaluation (Prototype)|
+   +-------------+--------------+
+                 |
+                 v
+   +----------------------------+
+   | Deployment & Maintenance   |
+   +----------------------------+
+
+
+
+1. Requirements Gathering (Prototype Iterations)
+
+Meet users (doctors, nurses, admins, patients) to gather requirements.
+Build initial UI prototypes — simple screens showing how the system will look and behave.
+Collect feedback from users.
+Refine and modify the prototype multiple times until the requirements are confirmed.
+Ex:
+A prototype of the appointment scheduling system is created. 
+Doctors review it and 
+suggest adding “patient history” visibility on the same screen. 
+The design is updated before development begins.
+
+2. System Design (V-Model)
+
+Create high-level and detailed design documents.
+Define data flow, system architecture, and module interactions.
+Plan test cases for each design phase (as per the V-Model’s “Verification” side).
+Map each requirement to a corresponding validation step.
+Ex
+Designing how data flows from patient registration → doctor consultation → billing → pharmacy while maintaining data security (HIPAA compliance).
+
+3. Module Design & Coding (V&V – Verification)
+
+Break the system into smaller modules (e.g., Billing, Pharmacy, Doctor Scheduling).
+Write code for each module based on the design.
+Perform unit testing for each module to verify it works as expected.
+Ensure code meets software quality standards.
+Ex:
+Develop the Billing Module — ensure it correctly calculates charges, taxes, and generates invoices. Unit testing verifies each function works properly.
+
+4. Integration & Validation (V&V – Testing Phases)
+
+Combine all verified modules (integration).
+Perform integration testing to ensure modules interact correctly.
+Conduct system testing to check the entire application workflow.
+Validate that all requirements (defined from prototype phase) are satisfied.
+Ex:
+Integrate the Patient Registration, Appointment, and Billing modules. Validation confirms that when a patient registers and visits a doctor, billing and record updates happen automatically.
+
+5. User Evaluation (Prototype)
+Conduct User Acceptance Testing (UAT) sessions.
+Users test the system with real scenarios.
+Collect user feedback for usability or design improvements.
+Refine user interfaces or small features using prototype iterations again.
+Example (HMS):
+Nurses and doctors use the system in a test environment. They suggest increasing text size on patient dashboards and adding a “search by patient ID” shortcut — changes are made before go-live.
+
+6. Deployment & Maintenance
+Deploy the application in the hospital’s live environment.
+Train end-users (staff, doctors, receptionists).
+Monitor the system and fix any bugs reported.
+Continuously gather feedback and make minor improvements through small prototypes or patches.
+Example (HMS):
+After deployment, hospital staff use the system daily. Later, an update adds a new “Digital Prescription” module developed and tested using the same V&V + Prototype cycle.
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+Q4. White Box Testing
+white-box testing validates how the code implements logic, handles branching, and manages edge cases.
+
+Q5. Grey Box Testing
+hybrid software testing method that combines aspects of both Black Box Testing and White Box Testing.
+“Grey Box Testing allows  to write more context-aware test cases. 
+For example, while testing APIs in  projects, I used my knowledge of expected DB changes to validate that the API not only responded correctly but updated the system state as expected.
+
+Q6. Black Box Testing
+Black Box Testing is a software testing approach in which the internal structure, code, or implementation details of the application are not known to the tester. Instead, the focus is on validating the functionality, inputs, outputs, and user interactions against specified requirements or use cases
+
+Q7.Functionality Testing
+validates whether a software application behaves according to the specified functional requirements
+
+
+Functional: 
+             Behaviour    :radio button should only 1 selected
+             Input domain : type of datatype, length 
+             Error handling : it give proper error message
+             Backend testing :user created in db ,crud
+             service testing : User Authentication Service, Password Reset Service, Inventory Update Service, Customer Search Service,
+             calculation based :scoring, forecasting, or compensation
+
+Q9.Whats are level of testing?
+     unit 
+     Integration
+     System
+     Acceptance
+
+Q10.what is unit testing?
+check whether the individual unit or module of the source code is working properly. 
+white box testing
+done by devloper in devloper environment
+easy to fix defect
+
+Q11.What is Integration Testing? 
+testing the interface between the two software units. 
+Integration testing is done by three ways. Big Bang Approach, 
+                                           Top-Down Approach, 
+                                           Bottom-Up Approach
+to check communication between modules is as expected
+Displays category --> Electronics product page
+
+Big Bang Approach /  Non incremental integration testing
+:combine all modules once & verify functionality of each modules.
+Because it delays testing until all modules are developed, increases risk, and debugging becomes complex
+
+
+(1)Top-Down Approach:, testing starts from the highest-level modules (e.g., UI or controller logic) and progressively moves downward to lower-level modules (e.g., services, database, etc). You start testing from the main module and proceed step by step to submodules.
+stub is used as a placeholder to simulate its output.
+eg.
+Dashboard → Account → Transaction → Database
+
+(2)Bottom-up Approch:testing starts with the lowest-level modules (like database or utility classes) and integrates upwards towards the main or parent modules.
+eg.
+ Database Module — stores all data
+(account details, balance, transactions, customer info)
+
+ Transaction Module — performs operations
+(fetch balance, record deposits/withdrawals)
+
+ Fund Transfer Module — handles money transfer between accounts
+(debit sender, credit receiver)
+
+ User Interface (UI) — what the customer sees on the app or website
+(login screen, transfer page, confirmation message
+
+
+
+Q12. What is System Testing? 
+Testing the fully integrated application to evaluate the system’s compliance with its specified requirements is called System Testing .
+End to End testing. 
+Verifying the completed system to ensure that the application works as intended or not.
+eg.
+UI → Login → Dashboard → Fund Transfer → Transaction → Database → Notification 
+UI → Login → Dashboard → Select Pickup & Drop → Schedule Ride Option → Backend Booking Module → Payment Module → Database Update → Notification → Ride Confirmation
+
+
+Q13. What is User Acceptance Testing UAT? 
+pre-production testing.  
+This is done by the end users / client 
+It allows the customer to accept or reject the application. 
+Types of acceptance testing are Alpha, Beta & Gamma.
+eg,Feature: New “Buy Now, Pay Later” option.
+UAT: Business users test that the payment option appears correctly, interest calculations are accurate, and checkout flow works end-to-end with inventory, payment, and order confirmation.
+
+[Q.What is Alpha Testing?
+done in control environment
+done by devloper and/or tester and stakeholder/outsorcing team
+real production environment but not release
+actual user /end user perform testing
+helpful to get feedback
+
+Q.What is Beta Testing? 
+Release Candidate or RC or field testing
+real environment , but not realesed 
+
+Q. What is Gamma Testing? 
+Gamma testing is done when the software is ready for release with specified 
+requirements. It is done at the client place.
+broder audience       ]
+
+Q14.Build
+It combines all program files, libraries, and resources  into a single build file
+
+GENRAL STEPS FOLLOWED:
+Code Compilation – Source code is compiled into executable format.
+Unit Testing – Developers run automated unit tests.
+Packaging – Code is packaged into .jar, .war, or .apk file.
+Deployment – Build is deployed to a QA/test environment.
+Notification – Testers are informed that a new build is available.
+
+
+Q. Build number
+A build number uniquely identifies each version of the application created during development. 
+It helps track and differentiate between builds
+----->After a successful build, the build file (e.g., .war or .apk) is deployed to a testing server or QA environment using tools like Jenkins or manually via FTP/Tomcat. Testers then access the application through a test URL to begin testing.
+eg.
+Host: ftp.bankserver.com
+Username: dev_team
+Password: ********
+Port: 21
+
+
+Q.Realase
+Release is a stable and production-ready version of the software that is delivered to end users or customers after successful testing
+
+Q.What is Bug /defect  Leakage? 
+A bug which is actually missed by the testing team while testing and the build was released to the Production.
+If now that bug (which was missed by the testing team) was found by the end user or customer then we call it as Bug Leakage.
+
+Q. What is STLC? 
+Software Testing Life Cycle 
+identifies what test activities to carry out and when to accomplish those test activities. 
+
+Q.STLC phases?
+   1.requirement analysis
+   2.test planning
+   3.test design
+   4.test execution
+   5.test closure
+
+ 1.requirement analysis:read BRD/FRD
+                        check requirement is testable or not
+                        communicate with stakeholder for non-testable requirement
+                        Provide clarification/feasibility
+ 2.test planning : define test paln 
+                    test strategy
+                    estimation :duration,cost
+                    resource allocation
+                    approve test plan from manager
+ 3.test design : ts/tc creation 
+                 ts/tc review
+                 RTM
+                  test data,test scripting
+  4.test execution: apply tc on application
+                    defect find & report to devloper
+                    snapshot-->test artifact
+                    test defect report /test execution report
+
+  5.test closure: review test report & defect report 
+                   TSR
+    consolidate tc result in document to sign off test process
+
+• Smoke Testing/Dry Run :
+           build is ready or not /stability
+              critical situations checked
+               before accepting build
+            Day 0” check
+
+
+• Difference between smoke and sanity testing
+--build is ready /stable for testing|to ensure code changes working well
+--devlpoer/tester                   | tester
+--before accepting build for testing|after accepting build for testing
+--part of build accepting test      |imp. test cases from regression are executed due to lack of time
+--s.t. fail rejected                |1000tc,500imp tc
+
+• Adhoc Testing:
+informal testing type.
+When there is limited time in hand to test the system
+no tc,documents,test techniques
+done when formal testing is completed
+
+• Exploratory Testing
+experienced based techniques
+done when insufficient documents
+session based it is(timeframe:due to time pressure)
+explore all possible ways 
+
+Q.Non-functional Testing
+Non-Functional Testing is the process of validating how well a system performs under certain conditions, ensuring that the software meets specified quality attributes like speed, stability, usability, and security.
+
+compatibilty :                version,browser,hardware ->size ram ,hard disk,
+                              mobile platform,network:speed,bandwidth,capacity
+                              note unexpected behaviour like looks,broswer name &version in
+                              test report & dev change accordingly
+
+Types of Compatibility Testing by Application Type
+1. Web Application
+Test the website on multiple browsers and versions (e.g., Chrome, Firefox, Edge, Safari).
+Verify it works across different operating systems (Windows, macOS, Linux).
+Check responsive behavior on different screen resolutions and devices (desktop, tablet, mobile).
+Example:
+✅ Check if the online banking portal displays correctly in Chrome (Windows), Firefox (Ubuntu), and Safari (macOS).
+
+2. Client-Server Application
+Verify compatibility between different client configurationhos and the server environment.
+Test how the application behaves with varied network speeds, different OS versions, and database servers.
+Example:
+✅ Test a banking client app installed on Windows 10 and Windows 11 connecting to the same core banking server.
+
+3. Stand-Alone Application
+Ensure installation and performance are consistent.
+Example:
+✅ Test a loan calculator desktop app on Windows 8, 10, and 11 with different screen resolutions.
+
+🌐 Cross-Platform Compatibility Scenarios
+a. Multiple Browsers on One OS
+Test the web app in Chrome, Edge, Firefox, Safari — all on the same OS (e.g., Windows 11).
+Purpose: Verify consistent UI/UX and functionality across browsers.
+Example:
+✅ Banking login and fund transfer pages behave identically in all browsers on Windows.
+
+b. Multiple OS on One System
+Using virtual machines or containerization tools (like VMware, Docker), run different OS on one system and test the app.
+Purpose: Validate the application’s stability and look/feel on multiple operating systems.
+Example:
+✅ Test banking web portal on Windows 11, Ubuntu, and macOS (same hardware via VMs).
+
+Q.performace :(response time & speed)
+measures how well a software application performs under a particular workload
+   -----------------------------------------------------------       
+oload :
+checks how a system behaves when it is subjected to a specific expected load
+behavior , reliability , load
+Suppose a banking portal is expected to handle 2,000 concurrent users.
+During load testing, testers simulate 2,000 users performing actions like:
+
+Logging in
+Checking account balance
+Transferring funds
+Viewing transaction history
+✅  Ensure response time remains acceptable (e.g., each page loads within 3 seconds) and no crashes occur
+----------------------------------------------------------------------------
+ostress:break point of server, stability , extreme traffic
+how a system behaves under extreme or beyond-normal load conditions
+
+Suppose a banking system normally handles 2,000 concurrent users.
+In stress testing, you gradually increase the load to 5,000 or 10,000 users to see what happens:
+Does the app crash or slow down?
+Does it throw proper error messages like “Server Busy”?
+Can it recover once load returns to normal?
+
+✅ The system should slow down but not lose data or crash permanently. It should recover automatically when the load decreases.
+
+--------------------------------------------------------------------------------------
+odata volume:upload time,to verify s/w handle large amount of data
+The banking database initially has 1,000 customer records — app works fine.
+In volume testing, testers insert 10 million records into the same database.
+Then they check:
+How fast transactions are processed.
+Whether reports still generate correctly.
+If the system slows down or crashes.
+
+✅ System should still perform within acceptable limits, even with large data
+
+--------------------------------------------------------------------------------------------
+
+o What is Soak Testing / Endurance Testing?
+Running a system at high load for a prolonged period of time to identify the 
+performance problems is called Soak Testing.
+testing an online banking system:
+You simulate 500 concurrent users continuously performing transactions (balance checks, transfers, logins)
+Run the test for 48 hours non-stop
+During this time, you monitor:
+Memory usage (does it keep increasing?)
+CPU utilization (does it stabilize or stay high?)
+Response time (does it get slower over time?)
+Any crashes or database disconnections
+
+✅ The system should remain stable, responsive, and consistent throughout the test period — no memory leaks or slowdowns.
+
+-----------------------------------------------------------------------------------------------------
+o Spike Testing
+online banking site normally handles 1,000 users.
+During Spike Testing, you simulate:
+A sudden jump from 1,000 to 5,000 users in a few seconds (e.g., salary day).
+After some time, reduce it back to 1,000 users again.
+You observe:
+
+Does the system crash or slow down when load spikes?
+Does it show proper error messages (e.g., “Server busy”)?
+How fast does it recover when load returns to normal?
+
+✅ The system might slow briefly but should not crash — and should recover automatically when load decreases.
+
+-----------------------------------------------------------------------------------------------------------
+Q.Usability:Usability Testing checks how easily users can understand, navigate, and interact with the application to achieve their goals
+          look & feel
+          ease of use
+          speed of processing:main focus is to improve the user experience on how fast the
+                              system responds to a requiest.
+online banking app, usability testing checks:
+Whether users can easily find the “Fund Transfer” option.
+If the login process is simple and error messages are clear.
+Whether pages load quickly after clicking “Submit”.
+If the design and layout are clean and user-friendly.
+---------------------------------------------------------------------------
+Q.Session time out:when a user stays inactive for a certain period of time, the system automatically logs them out for security reasons
+online banking portal and do nothing for 5 minutes,
+the system will automatically log you out and show a message like:
+“Your session has expired due to inactivity.
+
+ HTTP:used for transferring data between a web browser and a web server.eg.http://www.example.com
+
+HTTPS:HTTPS is the secure version of HTTP — it uses SSL/TLS (Secure Sockets Layer,TLS (Transport Layer Security) encryption to make data transfer safe
+---------------------------------------------------------------------------
+Q. Globalization Testing: adapted to various languages and regions without any changes.
+                              currency and number format
+                              Multilingual Content 
+                             Adaptability to Regional Settings
+                              Search and Sorting Functionality
+                               Global Brand Image
+                           Date and Time formatting
+                              Currency handling
+                                Zip code format.
+                                  Address and telephone no formatting.
+                            Mobile number format:+91,+44 uk
+                            pin code:india6 digit,usa 4digit
+                             address: japan :postal code, state, city
+
+Internationalization testing :checks if the product can be adapted for multiple countries
+Localization testing : checks if it functions correctly in one specific local region or language.
+No text overlap or layout issue due to longer translations
+-------------------------------------------------------------------------------------------
+Q.What is Regression Testing?
+
+Repeated testing of an already tested program, after modification, to discover any 
+defects introduced or uncovered .
+1. New functionalities are added to the application
+2. Change Requirement (In organizations, we call it as CR)
+3. Defect Fixing
+4. Performance Issue Fix
+5. Environment change (E.g., Updating the DB from MySQL to Oracle)
+
+o Unit Regression testing :usually a single module or feature where the change happened.
+Developer fixed a bug in the “Interest Calculation” logic inside the Loan Module.
+✅ Tester performs unit regression only on:
+The Loan calculation screen
+The interest formula validation
+No need to test login, fund transfer, etc. — only that specific module
+
+o Regional Regression testing :group of related modules (region) that are functionally connected to the changed module
+Fund Transfer (main change area)
+Account Balance Update
+Transaction History
+Notifications (SMS/Email)
+These are related features — all may be affected by the change
+
+o Full Regression testing:entire application end-to-end to ensure no part of the system is broken by recent changes
+Login & Authentication
+Account Summary
+Fund Transfer
+Loan, Cards, Investments
+Reports, Notifications, etc.
+
+-----------------------------------------------------------------------------------------------
+
+
+| **Type**               | **What It Tests**            | **How It’s Done**          | **Example (Banking App)**        | **Goal**                        |
+| ---------------------- | ---------------------------- | -------------------------- | -------------------------------- | ------------------------------- |
+|  **  Monkey Testing**  | Whole app randomly           | Random clicks, random data | Randomly click transfer, deposit | Check crash handling            |
+|  **  Gorilla Testing** | One module deeply            | Repeated, detailed testing | Test fund transfer 100+ times    | Check reliability & consistency |
+|  **  Random Testing**  | App with random valid inputs | Random but meaningful data | Random valid account numbers     | Find hidden defects             |
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Q.What is Test Case? 
+test case is a set of positive and negative executable steps derived from a test scenario
+
+Q Test Case Design Techniques
+Error guessing: prone area is guessed by experience tester based on this prior experience of same type of 
+application.
+
+Boundry value analysis :BVA  helps to discover the errors caused by extreme values by CHOOSES THE BEST DATA at & 
+immediately above & below the boundaries of input domain of data.
+eg.A bank allows ATM withdrawals between ₹100 and ₹50,000 per transaction.     
+100                                                      50000 
+ 99    101(min+-1)                         49999     50001
+
+Equivalence partitioning:input data divided into partition of valid & invalid values group them & test only 1 input
+of each group
+eg. valid input 18-65
+    invalid input <18 ,65<
+
+Q. Test Case Format:
+
+Test Case ID: TC_001
+Test Title / Name: Verify login with valid credentials
+Module / Feature: Login
+Test Type: Functional
+Preconditions: User must have a valid account
+Test Data:
+ • Username: user@example.com
+ • Password: P@ssword123
+Test Steps:
+ 1. Open login page
+ 2. Enter valid credentials
+ 3. Click Login
+Expected Result: User is redirected to dashboard
+Actual Result: User successfully logged in
+Status: Pass
+Severity / Priority: Medium / High
+Remarks / Comments: Works as expected
+
+Q.STLC phases?
+
+                        
+
+                            OR
+
+Q . Procedure to Write and Execute Test Case
+
+   1.requirement analysis
+   2.test planning
+   3.test design
+   4.test execution
+   5.test closure
+
+ 1.requirement analysis:read BRD/FRD
+                        check requirement is testable or not
+                        communicate with stakeholder for non-testable requirement
+                        Provide clarification/feasibility
+ 2.test planning : define test paln 
+                    test strategy
+                    estimation :duration,cost
+                    resource allocation
+                    approve test plan from manager
+ 3.test design : ts/tc creation 
+                 ts/tc review
+                 RTM
+                  test data,test scripting
+  4.test execution: apply tc on application
+                    defect find & report to devloper
+                    snapshot-->test artifact
+                    test defect report /test execution report
+
+  5.test closure: review test report & defect report 
+                   TSR
+    consolidate tc result in document to sign off test process 
+
+Q. Test case Review Process
+
+
+
+                       OR
+
+Q.Test Case Review Process in STLC
+🔹 STLC Overview
+
+STLC consists of multiple phases:
+
+Requirement Analysis
+
+Test Planning
+
+Test Case Design (Test Case Development) ✅
+
+Test Environment Setup
+
+Test Execution
+
+Defect Reporting & Tracking
+
+Test Closure
+
+Q. Requirement Traceability Matrix
+The RTM is a document which is used to trace or track the requirment .
+In this documents we check for every requirment ,there is ts/tc created & it is executd during the excution phase
+& rtm is used to ensure that every requirement is tested, & there is no requirement is missed out
+
+
+Q.Test Plan and contents available in a Test Plan? 
+Test plan document is a document which contains the plan for all the testing 
+activities to be done to deliver a quality product. Test Plan document is derived 
+from the Product Description, SRS, or Use Case documents for all future activities 
+of the project. It is usually prepared by the Test Lead or Test Manager. 
+
+describes software testing areas and activities
+
+It outlines the test strategy, objectives, test schedule, required resources (human resources, software, and hardware), test estimation and test deliverables
+
+o Description : Testing the Internet Banking module for secure customer login and fund transfer
+o Objective : To ensure users can perform secure transactions and account operations without errors
+o Test Scope : In-scope – Login, Fund Transfer, Balance Enquiry; Out-of-scope – Loan Module, ATM Serviceso Approach : Strategy and method used to perform testing
+oApproach: Manual and automation testing using Selenium; regression testing after each release
+o Assumption, Risk, Mitigation plan :Assuming test data is available; risk of network downtime mitigated by backup servers
+o Types of testing : Functional, Regression, Security, UAT, Performance
+o Roles & Responsibilities : QA Team – test execution; QA Lead – review and reporting; Dev Team – bug fixes
+o Hardware & Software requirement : Windows 11 PCs, Chrome browser, SQL Database, Banking App v5.0
+o Defect tracking : Defects logged and tracked in JIRA with severity and priority levels.
+o Entry & Exit criteria;Entry – requirements approved & test environment ready; Exit – all critical tests passed, no high-severity defects open.
+
+
+Q. Defect Life Cycle
+
+
+                new   ;scrum master validate
+                 |
+               assign  :devloper assign
+                 |
+  -------------->open--------------------------
+  |              |          |    |             |
+reopened      fixed
+  |              |          |    |            differed-->next release
+  -------------test
+                 |     deupli    |
+                 |       cate    |
+             verified     |    rejected
+                 |        |      |
+              closed  <-----------
+ Explain the steps for Bug Cycle? 
+ Once the bug is identified by the tester, it is assigned to the development manager in open 
+status 
+ If the bug is a valid defect the development team will fix it. 
+ If it is not a valid defect, the defect will be ignored and marked as rejected 
+ The next step will be to check whether it is in scope. If the bug is not the part of the current 
+release then the defects are postponed 
+ If the defect or bug is raised earlier then the tester will assign a DUPLICATE status 
+ When bug is assigned to developer to fix, it will be given a IN-PROGRESS status 
+ Once the defect is repaired, the status will change to FIXED at the end the tester will give 
+CLOSED status if it passes the final test.
+
+
+• Status of Defects: current state of a defect
+
+Q.What is Bug Severity?
+impact on application functionality 
+It can be Critical, Major or Minor,cosmatic. 
+how much effect will be there on the system because of a particular defect.
+
+	 |**Scenario**|                                                                                  | **Explanation**  |                                |1️⃣ | Fund transfer completes, but the **amount is deducted from sender and not credited to receiver**    		| Critical data loss and financial mismatch          
+| 2️⃣   | **Interest calculation is wrong** in Savings Account                                                                 	| Affects financial accuracy and compliance          
+| 3️⃣   | **System crashes** when user clicks “Submit” on Loan Application                                               	| Causes application failure and testing blockage    
+| 4️⃣   | **User’s account balance shows negative** after deposit                                                           	| Serious defect, impacts trust and accounting logic 
+| 5️⃣   | **Transaction history not displaying** after performing transactions                                           		| Core feature broken — functional issue 
+
+
+Q.What is Bug Priority? 
+order in which a defect should be resolved.
+It can be High, Medium or Low. Most of 
+status is based on the customer requirement.
+
+        | **Scenario**                                                       | **Explanation**                                            |
+| ----- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
+| 1️⃣   | **Bank login page not loading**                             								       | Customers can’t access the system — urgent business impact 
+| 2️⃣   | **“Submit” button missing** on Credit Card Payment page          					     | Stops users from completing transactions                   
+| 3️⃣   | **Incorrect bank name or branch name** shown on printed statements 					| Impacts brand credibility, must be fixed before release    
+| 4️⃣   | **Error message displayed after successful fund transfer**         						| Causes confusion and customer support issues               
+| 5️⃣   | **Password reset email not being sent**                           								| Users can’t log in — critical for customer access          
+
+Q.Defect Report :
+formal document used to record issues, errors, or problems found in a product
+
+Defect ID: D-101
+Title: Login button not working on Chrome v118
+Description / Steps to Reproduce:
+Open the website in Chrome v118
+Enter valid username and password
+Click the Login button
+Expected Result: User is redirected to the dashboard
+Actual Result: Clicking the Login button does nothing
+Severity: Critical
+Priority: High
+Environment: Chrome v118, Windows 11
+Attachments: Screenshot attached
+Status: Open
+
+Q. Bug, Error, Failure
+
+| Term    | What it is             | Example Scenario                      |
+| ------- | ---------------------- | ------------------------------------- |
+| Error   | Human mistake          | Misunderstanding a requirement        |
+| Bug     | Defect in code         | Wrong formula coded in software       |
+| Failure | Observable malfunction | Program crashes or gives wrong result |
+1.developer writes if (x = 5) instead of if (x == 5). This is a bug in the code
+
+2.DAILY_LIMIT = 2000  # should be 500
+if withdrawal_amount <= DAILY_LIMIT:
+    account.balance -= withdrawal_amount
+    dispense_cash(withdrawal_amount)
+
+3.A customer comes to the ATM and withdraws $1500 in one day.
+According to the rules, this shouldn’t be allowed, but the ATM lets it happen.
+The system fails to behave as expected.
+This is a failure because it’s an observable incorrect behavior
+
+Q.Defect Tracking Tool : JIRA
+Tool is software used to log, track, manage, and report defects (bugs) or issues in a system or application
+
+Example in JIRA:
+Defect Logged: QA tester logs a defect after finding a bug.
+Triage / Review: Team reviews defect, sets priority and severity.
+Assignment: Assigned to a developer for fixing.
+In Progress: Developer works on fixing the bug.
+Resolved: Developer marks the defect as resolved.
+Testing / Verification: QA retests the defect.
+Closed: If the defect is fixed and verified, it is closed.
+
+Q. static testing vs dynamic testing?
+  1. it is done early stage of devlopment  |  done later stage of coding
+  2. do verification                       |  do validation
+  3. prevent defect                        |  find & fix defects
+  4. less time                             |  more time taking
+  5. reviewing the documents               |  execute the test cases on application
+
+updated on 22-12-2025@18.14
+
+
+
+
+
