@@ -1,0 +1,358 @@
+1. What is API testing and why is it important?
+API testing is the process of verifying that Application Programming Interfaces work as intended — not just in
+terms of returning correct data, but also in meeting functional, performance, and security requirements.
+Unlike UI testing, where you check the front-end interface, API testing focuses on the business logic layer —
+ensuring that endpoints correctly process requests and return expected responses.
+It’s important because:
+• APIs are the backbone of most modern applications (especially microservices).
+• Issues at the API level can break multiple downstream systems.
+• Faster feedback: API tests execute quicker than UI tests.
+Example: In an e-commerce app, the Add to Cart API must correctly handle stock availability, pricing, and
+user authentication before the UI can display it
+===============================================================================================================
+2. What are the different types of APIs?
+
+1. APIs by Architecture / Style
+🔹 REST API (Representational State Transfer)
+Most common today
+Uses HTTP methods: GET, POST, PUT, DELETE
+Data usually in JSON
+Stateless and lightweight
+Example: Web and mobile app backends
+
+🔹 SOAP API (Simple Object Access Protocol)
+Older, strict standard
+Uses XML only
+Built-in security and transactions
+Heavier than REST
+Example: Enterprise and banking systems
+
+🔹 GraphQL API
+Client asks for exactly the data it needs
+Single endpoint
+Reduces over-fetching and under-fetching
+Example: Facebook, modern frontend apps
+
+🔹 gRPC (Google Remote Procedure Call-oldname)
+High-performance, binary protocol (uses Protobuf (Protocol Buffers))
+Strongly typed
+Great for microservices
+Example: Internal service-to-service communication
+
+🔹 WebSocket API
+Real-time, two-way communication
+Persistent connection
+Example: Chat apps, live notifications, gaming
+----------------------------------------------------------------------------------------------------
+2. APIs by Access Level
+🔹 Public (Open) APIs
+Available to anyone
+Often require an API key
+Example: Weather APIs, Maps APIs
+
+🔹 Partner APIs
+Shared with specific partners
+More secure than public APIs
+Example: Payment gateway integrations
+
+🔹 Private (Internal) APIs
+Used within an organization only
+Not exposed publicly
+Example: Internal microservices
+
+• Composite APIs – Combine multiple APIs into one call (common in microservices).
+Knowing API type is important because it influences authentication, security, and testing scope
+-----------------------------------------------------------------------------------------------------
+3. APIs by Purpose
+🔹 Web APIs
+Accessed over the internet using HTTP
+Example: Social media APIs
+
+🔹 Library / Framework APIs
+Used within programming languages
+Not network-based
+Example: Java API, Python standard library
+
+🔹 Operating System APIs
+Interact with OS features
+Example: Windows API, POSIX API
+
+🔹 Hardware APIs
+Communicate with hardware devices
+Example: Camera, GPS, Bluetooth APIs
+----------------------------------------------------------------------------------------------------------
+4. APIs by Communication Pattern
+🔹 Synchronous APIs
+Client waits for a response
+Example: REST request
+
+🔹 Asynchronous APIs
+Response handled later via callbacks/events
+Example: Webhooks, message queues
+
+--------------------------------------------------------------------------
+| Feature        | GraphQL                          | REST                               |
+| -------------- | -------------------------------- | ---------------------------------- |
+| Mechanism      | Schema-centric                   | Endpoint-centric                   |
+| Client control | Client specifies fields          | Server defines response            |
+| Endpoint count | Usually 1                        | Multiple per resource              |
+| Flexibility    | High (select only needed fields) | Low (over-fetch or multiple calls) |
+
+| Feature              | REST                                              | GraphQL                                      |
+| -------------------- | ------------------------------------------------- | -------------------------------------------- |
+| Minimize payload     | Possible via `fields`, `expand`, custom endpoints | Built-in, client chooses exactly             |
+| Nested queries       | Limited and complex                               | Fully flexible, any depth                    |
+| Number of endpoints  | Multiple needed for different payloads            | Single endpoint handles all queries          |
+| Maintenance overhead | High if many variations                           | Low, schema evolves instead of new endpoints |
+
+
+------------------------------------------------------------------------------------------------------------------------------------
+Q.How and Why to use GraphQL over REST API?
+How: One endpoint handles all queries/mutations; the query itself specifies what data is needed.
+
+Why: To reduce complexity, avoid multiple endpoints, allow precise data fetching, and provide a self-describing schema for clients.
+
+---------------------------------------------------------------------------
+
+=============================================================================================================================================
+3. What is the difference between SOAP and REST APIs?
+SOAP (Simple Object Access Protocol)
+• Uses XML format for requests/responses.
+• Strict contract (WSDL-Web Services Description Language//It is an XML document that describes a SOAP web service.
+Think of it as a contract between the client and server:).
+//WSDL (Web Services Description Language) is an XML-based document that defines a strict contract for a SOAP web service, describing its operations, messages, data types, and endpoints.
+• Heavy, more secure by default.
+• Suitable for complex enterprise systems.
+//SOAP uses POST for all operations because HTTP is treated as a transport layer, while the actual action is defined inside the SOAP message body
+
+REST (Representational State Transfer)
+• Uses HTTP methods (GET, POST, PUT, DELETE).
+• Can return JSON, XML, HTML.
+• Lightweight and faster.
+• Most popular for modern web/mobile apps.
+
+==============================================================================================================================================
+4. Explain HTTP methods in API testing.
+
+• GET – Retrieve data from the server.
+• POST – Create new resources.
+• PUT – Update a resource completely.
+• PATCH – Update a resource partially.
+• DELETE – Remove a resource.
+
+HEAD 	 	Same as GET but returns only headers (no body)
+OPTIONS	 	Returns allowed methods for a resource         
+TRACE 	 	Echoes the request for debugging              
+CONNECT	 	Creates a tunnel (used for HTTPS via proxy)    
+LINK	 	Establish relationship between resources       
+UNLINK		Remove relationship between resources          
+
+
+Example:
+GET /users/1 – fetch user with ID 1
+POST /users  - Create a new user
+PUT /users/1 – update the entire user object
+PATCH /users/1 – update only part of the user data
+DELETE /users/1 - Delete user with ID 1
+HEAD /users/1 - Get response headers (status, content-type) without body
+OPTIONS /users/1 - Returns allowed methods like GET, PUT, PATCH, DELETE
+TRACE /users/1 - Server echoes back the request (usually disabled for security)
+CONNECT api.example.com:443 - Establish HTTPS tunnel through a proxy
+LINK /users/1/groups/10 - Link user 1 to group 10
+UNLINK /users/1/groups/10 - Remove user 1 from group 10
+
+===========================================================================
+5. What is idempotency in HTTP methods?
+
+Idempotency means sending the same request multiple times will result in the same outcome.
+• GET, PUT, DELETE ,PATCH, HEAD , OPTION → Idempotent.
+• POST → Not idempotent.
+Example:
+• PUT /user/1 { "name": "John" } → No matter how many times you send it, result remains the same.
+• POST /user { "name": "John" } → Multiple sends will create multiple users.
+POST /users
+First call → creates user A
+Second call → creates user B
+❌ Different results
+
+eg.
+Charging a user $50 for an order.
+Challenge: Network fails after first request → client retries.
+Solution: Use Idempotency Key (unique token per request).
+Behavior:
+
+First request → charges $50.
+
+Retry with same idempotency key → no extra charge; the original response is returned.
+
+Idempotency is crucial whenever operations can be retried or executed multiple times due to failures, network issues, or distributed architectures. It prevents unintended effects like duplicates, extra charges, or inconsistent state.
+
+==========================================================================
+6. Difference between URI, URL, and Endpoint.
+• URI – Identifier for a resource (more general).
+• URL – A type of URI that includes the location (e.g., protocol + domain + path).
+• Endpoint – Specific URL where an API resource can be accessed.
+Example:
+• URI: /users/123
+• URL: https://api.example.com/users/123
+• Endpoint: GET request to that URL.
+
+eg.
+https://www.example.com:443/path/page.html?query=test#section1
+
+https → protocol
+www.example.com  host
+443 → port
+/path/page.html → path to resource
+?query=test → query parameters
+#section1 → fragment
+
+===========================================================================
+7. Categories of HTTP status codes.
+
+• 1xx – Informational (100 Continue)
+• 2xx – Success (200 OK, 201 Created)
+• 3xx – Redirection (301 Moved Permanently)
+• 4xx – Client Error (400 Bad Request, 401 Unauthorized, 404 Not Found)
+45
+Cisco Confiden+al
+• 5xx – Server Error (500 Internal Server Error)
+
+==========================================================================
+8. What are headers in API requests and responses?
+Headers carry metadata — such as authentication tokens, content type, caching instructions.
+that tells the client and server how to communicate, process data, and apply rules correctly.
+Examples:
+• Content-Type: application/json
+• Authorization: Bearer <token>
+• Accept-Language: en-US
+
+1. They Control How Data Is Interpreted
+
+Headers tell the receiver what kind of data is being sent and how to handle it.
+Examples:
+
+Content-Type: application/json → tells server/client the body is JSON
+Content-Encoding: gzip → tells data is compressed
+
+📌 Without headers, the receiver may misinterpret the data.
+-----------------
+2. They Enable Client–Server Communication Rules
+
+Headers define expectations and capabilities between client and server.
+Examples:
+Accept: application/json → client says what formats it can accept
+Accept-Language: en-US → preferred language
+
+📌 This enables content negotiation.
+---------------
+3. They Carry Authentication & Authorization Data
+
+Headers securely send identity and access information.
+Examples:
+Authorization: Bearer <token>
+Cookie: session_id=abc123
+
+📌 Without headers, secure APIs and sessions cannot work.
+----------------
+4. They Improve Performance
+
+Headers help with caching, compression, and connection reuse.
+Examples:
+Cache-Control: max-age=3600
+ETag / If-None-Match
+Keep-Alive
+
+📌 This reduces bandwidth usage and speeds up applications.
+-----------------
+5. They Support Idempotency & Reliability
+
+Headers help prevent duplicate or unsafe operations.
+Examples:
+Idempotency-Key: xyz-123
+Retry-After: 120
+
+📌 Critical for payments, retries, and distributed systems.
+----------------
+6. They Provide Status & Debug Information
+
+Response headers give extra context about the server’s behavior.
+Examples:
+X-Request-ID → trace requests
+Server: nginx
+Date
+-------------------
+📌 Essential for monitoring and debugging.
+
+7. They Enable Security Features
+Headers protect against common web attacks.
+Examples:
+HTTPS related headers
+Content-Security-Policy
+X-Frame-Options
+Strict-Transport-Security
+
+📌 Without security headers, apps are vulnerable.
+=============================================================================================================
+9. What is JSON and why is it preferred over XML?
+JSON (JavaScript Object Notation) is lightweight, easy to read, and natively supported by JavaScript.
+Compared to XML:
+• Smaller payloads.
+• No closing tags → faster parsing.
+• More readable for humans.
+============================================================================================================
+10. How do you validate an API response?
+Validation checks:
+• Status Code – Expected 200, 201, etc.
+• Response Body – Match expected fields and values.
+• Headers – Verify content type, caching.
+• Schema Validation – Ensure response matches defined structure
+
+===========================================================================================================
+
+updated on 23-12-2025
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
