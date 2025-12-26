@@ -1,95 +1,147 @@
 1. What is API testing and why is it important?
-API testing is the process of verifying that Application Programming Interfaces work as intended — not just in
-terms of returning correct data, but also in meeting functional, performance, and security requirements.
-Unlike UI testing, where you check the front-end interface, API testing focuses on the business logic layer —
-ensuring that endpoints correctly process requests and return expected responses.
-It’s important because:
-• APIs are the backbone of most modern applications (especially microservices).
-• Issues at the API level can break multiple downstream systems.
-• Faster feedback: API tests execute quicker than UI tests.
+API testing is the process of verifying that Application Programming Interfaces work as intended.
+It ensures not only that APIs return the correct data, but also that they meet functional, performance, and security requirements. 
+Unlike UI testing, which focuses on the front-end, API testing validates the business logic layer, ensuring endpoints correctly process requests and return expected responses.
+API testing is important because APIs are the backbone of modern applications, particularly microservices. 
+Issues at the API level can affect multiple downstream systems, and API tests provide faster feedback since they execute more quickly than UI tests.
+For example, in an e-commerce application, the Add to Cart API must correctly handle stock availability, pricing, and user authentication before the UI can display it.
 Example: In an e-commerce app, the Add to Cart API must correctly handle stock availability, pricing, and
 user authentication before the UI can display it
+
 ===============================================================================================================
 2. What are the different types of APIs?
 
 1. APIs by Architecture / Style
 🔹 REST API (Representational State Transfer)
-Most common today
-Uses HTTP methods: GET, POST, PUT, DELETE
-Data usually in JSON
-Stateless and lightweight
+REST is the most commonly used API architecture today.
+It uses standard HTTP methods such as GET, POST, PUT, and DELETE.
+REST APIs typically exchange data in JSON format, but they can also support other formats like XML, HTML, plain text, CSV, and multipart form data through HTTP content negotiation using headers.
+REST APIs are stateless and lightweight, which makes them scalable and easy to maintain.
+//REST Does not have built-in standards for security or transactions.
 Example: Web and mobile app backends
+Uses: URL + query parameters / request body
+Format: HTTP (JSON usually)
+GET /users/1?fields=name,email
 
 🔹 SOAP API (Simple Object Access Protocol)
-Older, strict standard
-Uses XML only
-Built-in security and transactions
-Heavier than REST
-Example: Enterprise and banking systems
+SOAP is an older, strict standard for APIs that primarily uses XML.
+It has built-in support for security and transactions, making it suitable for critical enterprise applications.
+SOAP is generally heavier and more rigid than REST, but it is still widely used in enterprise and banking systems where reliability and strict standards are required.
+
+[  SOAP does not natively support JSON, HTML, CSV, or plain text. ❌
+You can technically wrap other formats inside XML, but that defeats the purpose of SOAP.
+If you need multiple formats, REST or GraphQL is the modern choice.    ]
+
+Uses: XML request body
+Format: XML over HTTP
+eg:<soap:Envelope>
+  <soap:Body>
+    <GetUser>
+      <UserId>1</UserId>
+      <Fields>
+        <Field>name</Field>
+        <Field>email</Field>
+      </Fields>
+    </GetUser>
+  </soap:Body>
+</soap:Envelope>
 
 🔹 GraphQL API
-Client asks for exactly the data it needs
-Single endpoint
-Reduces over-fetching and under-fetching
-Example: Facebook, modern frontend apps
+GraphQL is a query language for APIs where the client can request only the required data, so it does not receive unnecessary information.
+It uses a single endpoint for fetching and manipulating data, which helps reduce over-fetching and under-fetching.
+GraphQL is widely used in modern frontend applications, for example at Facebook.
+//Uses: Single endpoint + query body
+Format: GraphQL query (JSON response)
+{
+  user(id: 1) {
+    name
+    email
+  }
+}
 
 🔹 gRPC (Google Remote Procedure Call-oldname)
-High-performance, binary protocol (uses Protobuf (Protocol Buffers))
-Strongly typed
-Great for microservices
-Example: Internal service-to-service communication
+gRPC is a high-performance RPC framework that uses a binary protocol with Protocol Buffers (Protobuf) for serialization.
+It is strongly typed and designed for efficient communication between microservices.
+gRPC is commonly used for internal service-to-service communication in modern distributed systems.
+
+//for understanding
+1️⃣ RPC framework
+RPC = Remote Procedure Call
+A way for one service (or program) to call a function in another service, just like calling a local function.
+Think of it as: “Service A says to Service B, ‘Hey, do this task for me,’ and gets the result.”
+
+2️⃣ Protobuf (Protocol Buffers)
+A way to format data so it can travel fast and compact between services.
+It’s like a shorthand language for sending data, much smaller and faster than JSON or XML.
+Backend engineers define a schema to ensure both sides understand the data.
+
+3️⃣ Serialization
+Serialization = converting data into a format that can be sent over the network
+Example:
+A JavaScript object → convert into bytes (binary) → send to another service → convert back into object
+Protobuf handles this conversion automatically and efficiently.
+//Uses: Protobuf messages
+Format: Binary over HTTP/2
+GetUserRequest {
+  user_id: 1
+  fields: ["name", "email"]
+}
 
 🔹 WebSocket API
-Real-time, two-way communication
-Persistent connection
-Example: Chat apps, live notifications, gaming
+A WebSocket API establishes a full-duplex, persistent connection between a client (browser or app) and a server, enabling low-latency, bidirectional communication.
+It is commonly used in real-time applications such as chat platforms, online multiplayer games, live notifications, and collaborative tools where instant updates are critical.
+//Uses: Persistent connection
+Format: Custom message (JSON/text)
+{
+  "action": "getUser",
+  "userId": 1,
+  "fields": ["name", "email"]
+}
+
 ----------------------------------------------------------------------------------------------------
 2. APIs by Access Level
 🔹 Public (Open) APIs
-Available to anyone
-Often require an API key
-Example: Weather APIs, Maps APIs
+Public APIs, also called open APIs, are accessible to anyone and often require an API key for identification or access control.
+They are commonly used in services like weather apps, mapping platforms, and other third-party integrations, allowing developers to build applications on top of existing services.
 
 🔹 Partner APIs
-Shared with specific partners
-More secure than public APIs
-Example: Payment gateway integrations
+Partner APIs are shared only with specific business partners and are not publicly accessible.
+They are more secure than public APIs and are commonly used in integrations such as payment gateways, logistics services, or B2B platforms.
 
 🔹 Private (Internal) APIs
-Used within an organization only
-Not exposed publicly
-Example: Internal microservices
+Private, or internal, APIs are used only within an organization and are not exposed to external users.
+They are commonly employed to enable communication between internal systems or microservices, ensuring security and controlled access.
 
-• Composite APIs – Combine multiple APIs into one call (common in microservices).
-Knowing API type is important because it influences authentication, security, and testing scope
+• Composite APIs – 
+Composite APIs combine multiple API calls into a single request, which is especially useful in microservices architectures.
+Understanding the type of API is important because it affects authentication, security requirements, and the scope of testing.
 -----------------------------------------------------------------------------------------------------
 3. APIs by Purpose
 🔹 Web APIs
-Accessed over the internet using HTTP
-Example: Social media APIs
+Web APIs are application interfaces that are accessed over the internet using standard HTTP protocols.
+They enable communication between different applications or services and are commonly used in platforms like social media, e-commerce, and cloud services.
 
 🔹 Library / Framework APIs
-Used within programming languages
-Not network-based
-Example: Java API, Python standard library
+Library or framework APIs provide a set of functions and classes that developers can use within a programming language.
+They are not network-based and are used to simplify coding tasks. Examples include the Java API and Python standard library.
 
 🔹 Operating System APIs
-Interact with OS features
-Example: Windows API, POSIX API
+Operating System (OS) APIs allow applications to interact with the underlying operating system’s features, such as file systems, memory, and hardware.
+Examples include the Windows API and the POSIX API.
 
 🔹 Hardware APIs
-Communicate with hardware devices
-Example: Camera, GPS, Bluetooth APIs
+Hardware APIs allow software applications to communicate with and control hardware devices, such as cameras, GPS modules, and Bluetooth adapters.
+Examples include Camera APIs, GPS APIs, and Bluetooth APIs.
 ----------------------------------------------------------------------------------------------------------
 4. APIs by Communication Pattern
 🔹 Synchronous APIs
-Client waits for a response
-Example: REST request
+Synchronous APIs are those where the client sends a request and waits for the server to respond before continuing.
+A common example is a REST API request.
 
 🔹 Asynchronous APIs
-Response handled later via callbacks/events
-Example: Webhooks, message queues
-
+Asynchronous APIs allow the client to send a request without waiting for an immediate response.
+The response is handled later through callbacks, events, or message queues.
+Examples include Webhooks and message queue systems.
 --------------------------------------------------------------------------
 | Feature        | GraphQL                          | REST                               |
 | -------------- | -------------------------------- | ---------------------------------- |
@@ -121,6 +173,61 @@ When Uber was built:
 | Ride Matching → Pricing     | gRPC (binary)     |
 | Location updates stream     | Protobuf (binary) |
 //A single application/system can use multiple types of APIs at the same time, depending on the context and requirements of each part.
+
+Example: Get user information
+
+EG. A user has this data:
+id
+name
+email
+pin code
+domain
+skill
+
+REST API:
+Request:
+You call an endpoint like:GET /users/1
+Response:
+The server returns all user data, even if you only need the name:
+{
+  "id": 1,
+  "name": "John Doe",
+  "email": "john.doe@email.com",
+  "pin_code": 560001,
+  "domain": "Software Development",
+  "skill": "JavaScript"
+}
+----------------------------------------------------------------
+GraphQL API
+
+Request:
+You ask only for what you want:
+{
+  user(id: 1) {
+    name
+    email
+  }
+}
+Response:
+The server returns only what you asked for:
+{
+  "name": "John",
+  "email": "john@email.com"
+}
+Benefit: No extra data, faster and cleaner response.
+REST
+/////////////////////////////////////////////////////////////////////
+Query parameters are not standard (every API does it differently)
+[ you can use query parameters in REST,But when there are 7 or 8 fields, the REST API can become confusing and hard to manage
+GET /users/1?fields=name,email,age,address,phone,role,status,createdAt ]
+Backend developers must manually code support for filtering fields
+Becomes complex when data is nested (posts, comments, etc.)
+
+GraphQL
+Field selection is built-in by default
+Clients can request nested data easily
+One endpoint, flexible queries
+
 =============================================================================================================================================
 3. What is the difference between SOAP and REST APIs?
 SOAP (Simple Object Access Protocol)
@@ -248,11 +355,32 @@ www.example.com  host
 ===========================================================================
 7. Categories of HTTP status codes.
 
-• 1xx – Informational (100 Continue)
+• 1xx – Informational (100 Continue)(Request received, still processing)
 • 2xx – Success (200 OK, 201 Created)
-• 3xx – Redirection (301 Moved Permanently)
+• 3xx – Redirection (301 Moved Permanently)(Further action needed)
 • 4xx – Client Error (400 Bad Request, 401 Unauthorized, 404 Not Found)
 • 5xx – Server Error (500 Internal Server Error)
+
+| Code    | Name                  | Category     | Small Example / Use case                 |
+| ------- | --------------------- | ------------ | ---------------------------------------- |
+| **200** | OK                    | Success      | `GET /users/1` → user data returned      |
+| **201** | Created               | Success      | `POST /users` → new user created         |
+| **204** | No Content            | Success      | `DELETE /users/1` → deleted successfully |
+| **301** | Moved Permanently     | Redirect     | Old URL → new URL                        |
+| **302** | Found                 | Redirect     | Temporary redirect after login           |
+| **304** | Not Modified          | Redirect     | Cached data reused                       |
+| **400** | Bad Request           | Client Error | Missing required field                   |
+| **401** | Unauthorized          | Client Error | Token missing/expired                    |
+| **403** | Forbidden             | Client Error | User lacks permission                    |
+| **404** | Not Found             | Client Error | Resource ID not found                    |
+| **405** | Method Not Allowed    | Client Error | POST used instead of GET                 |
+| **409** | Conflict              | Client Error | Duplicate email registration             |
+| **422** | Unprocessable Entity  | Client Error | Validation failed                        |
+| **429** | Too Many Requests     | Client Error | Rate limit exceeded                      |
+| **500** | Internal Server Error | Server Error | Unhandled exception                      |
+| **502** | Bad Gateway           | Server Error | Downstream service failed                |
+| **503** | Service Unavailable   | Server Error | Server under maintenance                 |
+
 
 ==========================================================================
 8. What are headers in API requests and responses?
@@ -1220,92 +1348,78 @@ let value = _.get(pm.response.json(), 'data.user.details.email');
 3. Validate authentication & endpoint availability.
 4. Retry manually in Postman to isolate the issue.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+===========================================================================
+Example Real-time “Add to Cart” flow (API + UI):
+1️⃣ User clicks “Add to Cart” (UI)
+
+User is logged in
+UI sends an API request to the backend
+Endpoint: POST /cart/add
+{
+  "productId": "P123",
+  "quantity": 1
+   //optional session/token
+}
+Request validation:
+Check required fields and data types
+Reject malformed requests → return 400 Bad Request
+
+2️⃣ API checks User Authentication
+
+API verifies:
+Validate JWT / session token
+Ensure user exists and is active
+Check permissions (e.g., guest users may have restricted access)
+❌ If not authenticated → return 401 Unauthorized
+
+3️⃣ API checks Stock Availability /Stock Availability Check
+
+Query inventory service / database for requested product and quantity :
+Is product in stock?
+Is requested quantity available?
+reserved stock/ Optionally lock the stock (pessimistic) or mark it reserved ?
+❌ If out of stock → return 409 Conflict
+{
+  "message": "Product out of stock"
+}
+
+4️⃣ API checks Pricing & Discounts Validation 
+
+Fetch current price from product catalog
+Apply:
+Discounts
+Offers
+Taxes (if needed)
+Verify that the price matches business rules to prevent client-side tampering
+Failure → return 400 Bad Request / 422 Unprocessable Entity
+//👉 Prevents UI price tampering
+
+5️⃣ API adds item to cart (Transaction)
+
+Begin a database transaction (optional: use ACID compliance for reliability)
+Insert or update the cart table with the product and quantity
+Update reserved stock if applicable
+Commit transaction
+Rollback if any step fails to ensure atomicity
+
+All checks pass → item added
+Cart updated in database
+Stock reserved (optional)
+
+6️⃣ API sends response to UI
+{
+  "status": "success",
+  "cartCount": 3,
+  "price": 999,
+  "message": "Product added to cart"
+}
+
+7️⃣ UI updates in real time
+
+Cart icon count updates
+Price displayed
+Success message shown
+👉 UI only displays what API confirms
 
 
 
@@ -1314,6 +1428,7 @@ updated on 23-12-2025
 updated on 24-12-2025 @17.25
 
 
+updated on 26-12-2025 @18.14
 
 
 
