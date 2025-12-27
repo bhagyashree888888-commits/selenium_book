@@ -58,6 +58,8 @@ Format: GraphQL query (JSON response)
     email
   }
 }
+//GraphQL: query language for requests, JSON responses
+REST: HTTP-based requests, usually JSON responses
 
 🔹 gRPC (Google Remote Procedure Call-oldname)
 gRPC is a high-performance RPC framework that uses a binary protocol with Protocol Buffers (Protobuf) for serialization.
@@ -67,7 +69,7 @@ gRPC is commonly used for internal service-to-service communication in modern di
 //for understanding
 1️⃣ RPC framework
 RPC = Remote Procedure Call
-A way for one service (or program) to call a function in another service, just like calling a local function.
+A way for one service (or program) to call a function in another service, just like calling a local function.(core principle)
 Think of it as: “Service A says to Service B, ‘Hey, do this task for me,’ and gets the result.”
 
 2️⃣ Protobuf (Protocol Buffers)
@@ -76,7 +78,8 @@ It’s like a shorthand language for sending data, much smaller and faster than 
 Backend engineers define a schema to ensure both sides understand the data.
 
 3️⃣ Serialization
-Serialization = converting data into a format that can be sent over the network
+Serialization is the process of converting an in-memory object (data structure) into a format that can be transmitted over a network or stored, so that it can later be reconstructed (deserialized) into the original object.
+Think of it as packing data to send it somewhere and then unpacking it on the other side.
 Example:
 A JavaScript object → convert into bytes (binary) → send to another service → convert back into object
 Protobuf handles this conversion automatically and efficiently.
@@ -88,7 +91,8 @@ GetUserRequest {
 }
 
 🔹 WebSocket API
-A WebSocket API establishes a full-duplex, persistent connection between a client (browser or app) and a server, enabling low-latency, bidirectional communication.
+A WebSocket API establishes a full-duplex (is a communication channel where data can flow simultaneously in both directions), 
+persistent connection between a client (browser or app) and a server, enabling low-latency, bidirectional communication.
 It is commonly used in real-time applications such as chat platforms, online multiplayer games, live notifications, and collaborative tools where instant updates are critical.
 //Uses: Persistent connection
 Format: Custom message (JSON/text)
@@ -107,31 +111,125 @@ They are commonly used in services like weather apps, mapping platforms, and oth
 🔹 Partner APIs
 Partner APIs are shared only with specific business partners and are not publicly accessible.
 They are more secure than public APIs and are commonly used in integrations such as payment gateways, logistics services, or B2B platforms.
+[Logistics services = planning, implementing, and controlling the flow of goods, services, and information from the point of origin to the point of consumption.]
 
 🔹 Private (Internal) APIs
 Private, or internal, APIs are used only within an organization and are not exposed to external users.
 They are commonly employed to enable communication between internal systems or microservices, ensuring security and controlled access.
 
+1️⃣ Internal Microservices
+An e-commerce platform:
+InventoryService API provides stock data to OrderService
+Only accessible within the backend system
+
+2️⃣ Internal Dashboards
+HR or Finance dashboards call internal APIs to fetch employee or payroll data
+Example: GET /employees or GET /payroll-summary for internal admin tools
+
+3️⃣ Authentication/Authorization Services
+Internal login or SSO APIs (Single Sign-On)
+Example: POST /internal/auth/validateToken
+
+4️⃣ Enterprise Applications
+ERP systems (SAP, Oracle) exposing APIs to internal modules
+Example: Inventory, procurement, and billing services communicating via APIs
+
+
 • Composite APIs – 
 Composite APIs combine multiple API calls into a single request, which is especially useful in microservices architectures.
 Understanding the type of API is important because it affects authentication, security requirements, and the scope of testing.
+eg.
+Scenario: Book a trip with flight, hotel, and payment
+You want to allow a client (like a mobile app or web app) to book a complete trip in one API call, instead of making three separate calls.
+/////////////////////////////////////////////////////////////////////////////working//////////////////////
+Step 1: Client Sends a Single Request
+The client sends a POST request to the Composite API endpoint:
+
+POST /composite-api/book-trip
+Body:
+{
+  "flight": { "from": "NYC", "to": "LAX", "date": "2026-01-10" },
+  "hotel": { "location": "Los Angeles", "nights": 3 },
+  "payment": { "method": "credit_card", "amount": 1200 }
+}
+---------------------------------------------------------------------
+Step 2: Server Receives the Request
+The Composite API server acts like a conductor in an orchestra:
+It parses the request and understands the three actions required:
+
+Flight reservation
+Hotel booking
+Payment processing
+
+It prepares internal API calls for each of these actions.
+-----------------------------------------------------------------------
+Step 3: Server Calls Multiple APIs Internally
+Here’s what happens behind the scenes:
+Flight API call
+
+GET /flights?from=NYC&to=LAX&date=2026-01-10
+
+
+Checks availability of flights.
+Returns flight confirmation ID and seat info.
+Hotel API call
+
+POST /hotels/reserve
+Body: { "location": "Los Angeles", "nights": 3 }
+
+
+Reserves a hotel room.
+Returns booking confirmation number.
+Payment API call
+
+POST /payments
+Body: { "method": "credit_card", "amount": 1200 }
+
+
+Processes the payment.
+Returns payment transaction ID and status.
+
+Note: These APIs can be of different HTTP methods (GET, POST) and even communicate with different backend systems.
+-------------------------------------------------------------------------------------------------------------------
+Step 4: Server Aggregates Responses
+After all internal API calls complete, the Composite API server combines the results into a single response object:
+
+{
+  "flightConfirmation": { "flightId": "AB123", "seat": "12A" },
+  "hotelConfirmation": { "bookingId": "H98765", "room": "Suite" },
+  "paymentStatus": { "transactionId": "P123456", "status": "success" }
+}
+The client gets everything it needs in one response.
+The client does not need to know that internally three APIs were called.
+
+//n no of api's are there RPC APIs,Event-Driven APIs,Streaming APIs,Message-Oriented APIs,Hypermedia APIs (HATEOAS),CQRS-based APIs
 -----------------------------------------------------------------------------------------------------
 3. APIs by Purpose
 🔹 Web APIs
 Web APIs are application interfaces that are accessed over the internet using standard HTTP protocols.
 They enable communication between different applications or services and are commonly used in platforms like social media, e-commerce, and cloud services.
+UI → Web API HTTP Request → Server Validates & Processes → Web API Response → UI Updates
 
 🔹 Library / Framework APIs
 Library or framework APIs provide a set of functions and classes that developers can use within a programming language.
-They are not network-based and are used to simplify coding tasks. Examples include the Java API and Python standard library.
+They are not network-based and are used to simplify coding tasks. 
+Examples include the Java API and Python standard library. Collections API,File I/O API,Networking API
 
 🔹 Operating System APIs
 Operating System (OS) APIs allow applications to interact with the underlying operating system’s features, such as file systems, memory, and hardware.
-Examples include the Windows API and the POSIX API.
+Examples include the Windows API and the POSIX API.(Portable Operating System Interface)(Purpose:API for Unix-like operating systems (Linux, macOS, etc.))
+ReadFile("C:\\Users\\Alice\\Documents\\file.txt", buffer, size, &bytesRead);
+ReadFile("file.txt")
 
 🔹 Hardware APIs
 Hardware APIs allow software applications to communicate with and control hardware devices, such as cameras, GPS modules, and Bluetooth adapters.
 Examples include Camera APIs, GPS APIs, and Bluetooth APIs.
+a) Graphics / GPU API
+OpenGL is a Graphics / GPU API.
+Its purpose: Let programs draw shapes, images, 3D objects, and effects on the screen.
+It communicates with the GPU (Graphics Processing Unit) so your CPU doesn’t have to do heavy rendering work.
+b) Camera / Sensor API
+Mobile devices expose hardware APIs for camera, GPS, accelerometer, etc.
 ----------------------------------------------------------------------------------------------------------
 4. APIs by Communication Pattern
 🔹 Synchronous APIs
@@ -231,19 +329,53 @@ One endpoint, flexible queries
 =============================================================================================================================================
 3. What is the difference between SOAP and REST APIs?
 SOAP (Simple Object Access Protocol)
-• Uses XML format for requests/responses.
-• Strict contract (WSDL-Web Services Description Language//It is an XML document that describes a SOAP web service.
-Think of it as a contract between the client and server:).
-//WSDL (Web Services Description Language) is an XML-based document that defines a strict contract for a SOAP web service, describing its operations, messages, data types, and endpoints.
-• Heavy, more secure by default.
-• Suitable for complex enterprise systems.
-//SOAP uses POST for all operations because HTTP is treated as a transport layer, while the actual action is defined inside the SOAP message body
+SOAP is an older, strict standard for APIs that primarily uses XML.
+It has built-in support for security and transactions, making it suitable for critical enterprise applications.
+SOAP is generally heavier and more rigid than REST, but it is still widely used in enterprise and banking systems where reliability and strict standards are required.
 
+[  SOAP does not natively support JSON, HTML, CSV, or plain text. ❌
+You can technically wrap other formats inside XML, but that defeats the purpose of SOAP.
+If you need multiple formats, REST or GraphQL is the modern choice.    ]
+
+Uses: XML request body
+Format: XML over HTTP
+eg:<soap:Envelope>
+  <soap:Body>
+    <GetUser>
+      <UserId>1</UserId>
+      <Fields>
+        <Field>name</Field>
+        <Field>email</Field>
+      </Fields>
+    </GetUser>
+  </soap:Body>
+</soap:Envelope>
+                                                                           VS
 REST (Representational State Transfer)
-• Uses HTTP methods (GET, POST, PUT, DELETE).
-• Can return JSON, XML, HTML.
-• Lightweight and faster.
-• Most popular for modern web/mobile apps.
+REST is the most commonly used API architecture today.
+It uses standard HTTP methods such as GET, POST, PUT, and DELETE.
+REST APIs typically exchange data in JSON format, but they can also support other formats like XML, HTML, plain text, CSV, and multipart form data through HTTP content negotiation using headers.
+REST APIs are stateless and lightweight, which makes them scalable and easy to maintain.
+//REST Does not have built-in standards for security or transactions.
+Example: Web and mobile app backends
+Uses: URL + query parameters / request body
+Format: HTTP (JSON usually)
+GET /users/1?fields=name,email
+
+==============================================================================================================================================
+| Feature             | HTTP                                         | HTTPS                                                                                 |
+| ------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Full Form**       | HyperText Transfer Protocol                  | HyperText Transfer Protocol Secure                                                    |
+| **Security**        | Not secure                                   | Secure (data is encrypted)                                                            |
+| **Data Encryption** | ❌ No encryption                             | ✅ Uses SSL/TLS encryption                                                             |
+| **Port**            | 80                                           | 443                                                                                   |
+| **URL Prefix**      | `http://`                                    | `https://`                                                                            |
+| **Data Integrity**  | No guarantee; data can be modified           | Ensures data integrity; prevents tampering                                            |
+| **Authentication**  | ❌ No verification of server identity       | ✅ Server authentication via SSL/TLS certificate                                       |
+| **Performance**     | Slightly faster (no encryption overhead)     | Slightly slower due to encryption/decryption, but modern hardware makes it negligible |
+| **SEO**             | ❌ Less preferred by search engines         | ✅ Preferred by search engines (Google boosts HTTPS sites)                             |
+| **Use Cases**       | Blogs, public websites, informational pages  | Banking, e-commerce, login pages, confidential data transfer                          |
+| **Security Risks**  | Data can be intercepted, modified, or stolen | Man-in-the-middle attacks are prevented; encrypted transmission                       |
 
 ==============================================================================================================================================
 4. Explain HTTP methods in API testing.
@@ -254,9 +386,9 @@ REST (Representational State Transfer)
 • PATCH – Update a resource partially.
 • DELETE – Remove a resource.
 
-HEAD 	 	Same as GET but returns only headers (no body)
-OPTIONS	 	Returns allowed methods for a resource         
-TRACE 	 	Echoes the request for debugging              
+HEAD 	 	Same as GET but returns only headers metadata (no body)
+OPTIONS	 	when you want to know what actions are allowed on a resource before making the actual request.        
+TRACE 	 	Use TRACE only for debugging to see how a request is modified as it travels through intermediaries—never for normal application logic             
 CONNECT	 	Creates a tunnel (used for HTTPS via proxy)    
 LINK	 	Establish relationship between resources       
 UNLINK		Remove relationship between resources          
@@ -274,8 +406,351 @@ TRACE /users/1 - Server echoes back the request (usually disabled for security)
 CONNECT api.example.com:443 - Establish HTTPS tunnel through a proxy
 LINK /users/1/groups/10 - Link user 1 to group 10
 UNLINK /users/1/groups/10 - Remove user 1 from group 10
+--------------------------------------------------------------------------
+GET:
+demo->GET->https://jsonplaceholder.typicode.com/posts/1
 
---------------------------------------------------------------------------------------------------------------
+1.Fetch support tickets for a customer
+GET /customers/456/tickets HTTP/1.1
+
+Check Issue component :is about viewing details of a customer’s tickets or problems
+In my project, we used the GET method to fetch customer support tickets in our CRM system. 
+like, the frontend would send a GET request like GET /customers/456/tickets to the backend to display open and closed tickets on the dashboard. 
+The backend would fetch the tickets from the database, add any relevant information like status or priority, and return the data to the frontend for display.
+Backend service consuming ticket details
+This is the backend perspective.
+The backend fetches ticket data from the ticketing system or database, filters by customer ID, adds relevant metadata (like status, priority, assigned agent), and sends the processed list back to the frontend.
+o/p:
+  [{
+    "ticketId": 102,
+    "subject": "Billing issue",
+    "status": "Closed",
+    "priority": "Medium",
+    "createdDate": "2025-11-20T09:30:00Z",
+    "assignedTo": "Agent B"
+  } ]
+The backend usually sends a JSON response containing an array of tickets with relevant details:
+-------------------------------------------------------------------------------------------------
+2.2. Download FAQ PDF / Attachment
+GET /support/faqs/201/download HTTP/1.1
+Check Issue component: Downloading an FAQ document or PDF.
+
+In my project:
+When a user clicks the “Download” button on an FAQ, the frontend sends a GET request like GET /support/faqs/201/download to the backend. The backend fetches the PDF file associated with the FAQ from the file storage or database and streams it back to the frontend for the user to download.
+
+Backend service consuming file download request:
+The backend locates the file by FAQ ID, verifies access permissions if necessary, reads the file from storage, and returns it in the response with appropriate headers (Content-Type, Content-Disposition) for download.
+
+o/p (response):
+The file is streamed to the browser as a download, e.g., FAQ_201_Reset_Password.pdf.
+---------------------------------------------------------------------------
+POST:
+1. Use when creating a new resource.
+POST /users HTTP/1.1
+Real-time use:
+User registration (signup)
+Creating a new user account in database
+
+2. Use when submitting form data.
+POST /login HTTP/1.1
+Real-time use:
+User authentication (login)
+Submitting username and password
+
+3. Use when creating a child or dependent resource.
+POST /users/123/orders HTTP/1.1
+Real-time use:
+Creating an order for a user
+Adding items to a user’s cart
+
+4. Use when uploading data or files.
+POST /files/upload HTTP/1.1
+Real-time use:
+Uploading images, documents, videos
+Profile picture upload
+
+5. Use when triggering server-side processing.
+POST /payments/process HTTP/1.1
+Real-time use:
+Payment processing
+Sending emails, notifications, or background jobs
+---------------------------------------------------------------------------
+PUT:
+1. Use when replacing an entire resource.
+PUT /users/123 HTTP/1.1
+Real-time use:
+Updating full user profile (name, email, address, role)
+Admin editing all user details at once
+
+2. Use when creating or replacing a resource with a known ID.
+PUT /products/789 HTTP/1.1
+Real-time use:
+Creating a product with a predefined ID
+Inventory management systems
+
+3. Use when overwriting an existing file or document.
+PUT /files/report.pdf HTTP/1.1
+Real-time use:
+Re-uploading a report
+Replacing old document versions
+
+4. Use when updating application configuration or settings.
+PUT /settings/notifications HTTP/1.1
+Real-time use:
+Enabling/disabling notification settings
+Saving user preferences
+
+5. Use when idempotent updates are required.
+PUT /orders/456/status HTTP/1.1
+Real-time use:
+Updating order status (retries won’t duplicate updates)
+Enterprise systems requiring safe retries
+---------------------------------------------------------------------------
+PATCH:
+1. Use when partially updating a resource.
+PATCH /users/123 HTTP/1.1
+Real-time use:
+Updating only email or phone number
+Editing profile details without changing entire data
+
+2. Use when updating a single field or attribute.
+PATCH /orders/456 HTTP/1.1
+Real-time use:
+Changing order status (PLACED → SHIPPED)
+Updating delivery date
+
+3. Use when performing small, incremental updates.
+PATCH /products/789 HTTP/1.1
+Real-time use:
+Updating product price or stock count
+Flash sale price changes
+
+4. Use when toggling a setting or flag.
+PATCH /users/123/settings HTTP/1.1
+Real-time use:
+Enable/disable notifications
+Activate/deactivate account features
+
+5. Use when minimizing payload size.
+PATCH /profiles/123/avatar HTTP/1.1
+Real-time use:
+Mobile apps updating only one field
+Low-bandwidth network updates
+--------------------------------------------------------------------------
+DELETE:
+1. Use when removing a resource permanently.
+DELETE /users/123 HTTP/1.1
+Real-time use:
+Deleting a user account
+Admin removing users from the system
+
+2. Use when deleting a file or document.
+DELETE /files/old-report.pdf HTTP/1.1
+Real-time use:
+Removing outdated documents
+Storage cleanup jobs
+
+3. Use when canceling or removing a transaction.
+DELETE /orders/456 HTTP/1.1
+Real-time use:
+Canceling an order
+Removing unpaid or failed orders
+
+4. Use when removing a relationship between resources.
+DELETE /users/123/roles/admin HTTP/1.1
+Real-time use:
+Revoking admin access
+Removing permissions or roles
+
+5. Use when performing soft delete or logical delete.
+DELETE /posts/789 HTTP/1.1
+Real-time use:
+Marking post as deleted (archived)
+Hiding content without physical removal
+--------------------------------------------------------------------------
+HEAD:
+1. You only need metadata
+Use HEAD if you want headers such as:
+Content-Length (size of the response)
+Content-Type
+Last-Modified
+ETag
+👉 Example: checking how large a file is before downloading it.
+
+2. You want to check if a resource exists
+HEAD is ideal for:
+Verifying a URL
+Checking whether an API endpoint is reachable
+It’s faster and uses less bandwidth than GET.
+
+3. Cache validation
+Use HEAD to:
+Check whether cached content is still fresh
+Decide whether a new GET request is needed
+Common in browsers, CDNs, and proxies.
+
+4. Before expensive or large downloads
+Use HEAD to:
+Determine file size
+Check if resumable downloads are supported (Accept-Ranges)
+This avoids unnecessary data transfer.
+--------------------------------------------------------------------------
+OPTIONS:
+1. Use when checking which HTTP methods are supported.
+OPTIONS /users HTTP/1.1
+Real-time use:
+Discovering allowed methods (GET, POST, PUT, DELETE)
+API documentation and testing
+
+2. Use in CORS preflight requests.
+OPTIONS /api/data HTTP/1.1
+Real-time use:
+Browser checks cross-origin permissions
+Validating allowed headers and methods before actual request
+
+3. Use for security and access validation.
+OPTIONS /admin HTTP/1.1
+Real-time use:
+API gateways verifying access rules
+Checking authentication/authorization requirements
+
+4. Use for client-side feature detection.
+OPTIONS /payments HTTP/1.1
+Real-time use:
+Frontend checking if payment operations are enabled
+Versioned API compatibility checks
+
+5. Use for load balancer or proxy validation.
+OPTIONS /health HTTP/1.1
+Real-time use:
+Load balancers verifying endpoint readiness
+Infrastructure monitoring tools
+---------------------------------------------------------------------------
+TRACE:
+1. Use when debugging request path through servers.
+TRACE /api/test HTTP/1.1
+Real-time use:
+Identifying how proxies modify requests
+Debugging network routing issues
+
+2. Use when verifying headers added by intermediaries.
+TRACE /login HTTP/1.1
+Real-time use:
+Checking security headers added by gateways
+Inspecting authentication headers during testing
+
+3. Use for diagnosing proxy or firewall issues.
+TRACE /services/data HTTP/1.1
+Real-time use:
+Troubleshooting blocked requests
+Debugging enterprise network traffic
+
+4. Use in development or test environments only.
+TRACE /debug HTTP/1.1
+Real-time use:
+API debugging during development
+Verifying request integrity
+
+5. Use for detecting request tampering.
+TRACE /payment HTTP/1.1
+Real-time use:
+Identifying unexpected request changes
+Security audits in controlled environments
+--------------------------------------------------------------------------
+CONNECT:
+1. Use when establishing a secure tunnel through a proxy.
+CONNECT example.com:443 HTTP/1.1
+Real-time use:
+Browser establishing HTTPS connection via proxy
+Secure web browsing in corporate networks
+
+2. Use when accessing HTTPS websites from restricted networks.
+CONNECT google.com:443 HTTP/1.1
+Real-time use:
+School or office networks with outbound restrictions
+Secure access through firewall-controlled proxies
+
+3. Use when creating encrypted communication channels.
+CONNECT api.bank.com:443 HTTP/1.1
+Real-time use:
+Secure financial API communication
+Protecting sensitive data in transit
+
+4. Use for VPN or secure tunnel setup.
+CONNECT vpn.company.com:1194 HTTP/1.1
+Real-time use:
+Remote employee VPN connections
+Secure internal network access
+
+5. Use for WebSocket over HTTPS (via proxy).
+CONNECT realtime.chat.com:443 HTTP/1.1
+Real-time use:
+Real-time chat applications
+Live trading or notification systems
+---------------------------------------------------------------------------
+LINK:
+1. Use when creating a relationship between two resources.
+LINK /articles/101 HTTP/1.1
+Real-time use:
+Linking an article to a category
+Associating content with tags
+
+2. Use when associating users with groups or roles.
+LINK /users/123/groups/admin HTTP/1.1
+Real-time use:
+Assigning admin role to a user
+Adding user to a team or group
+
+3. Use when connecting related records.
+LINK /orders/456/invoices/789 HTTP/1.1
+Real-time use:
+Linking orders to invoices
+Financial and billing systems
+
+4. Use in content management systems.
+LINK /products/321/categories/electronics HTTP/1.1
+Real-time use:
+Assigning products to categories
+E-commerce catalog management
+
+5. Use in knowledge graph or metadata systems.
+LINK /documents/55/references/78 HTTP/1.1
+Real-time use:
+Linking related documents
+Knowledge base or document management systems
+-------------------------------------------------------------------------
+UNLINK:
+1. Use when removing a relationship between two resources.
+UNLINK /articles/101 HTTP/1.1
+Real-time use:
+Removing an article from a category
+Detaching content from tags
+
+2. Use when revoking user roles or group memberships.
+UNLINK /users/123/groups/admin HTTP/1.1
+Real-time use:
+Removing admin role from a user
+Revoking group permissions
+
+3. Use when disconnecting related records.
+UNLINK /orders/456/invoices/789 HTTP/1.1
+Real-time use:
+Unlinking an invoice from an order
+Financial data corrections
+
+4. Use in content or catalog management.
+UNLINK /products/321/categories/electronics HTTP/1.1
+Real-time use:
+Removing product from a category
+Updating product classifications
+
+5. Use in document or knowledge management systems.
+UNLINK /documents/55/references/78 HTTP/1.1
+Real-time use:
+Removing document references
+Cleaning outdated relationships
+
+================================================================================================================
 egs.
 Get -> https://jsonplaceholder.typicode.com/posts -> send =>200 OK
 //filter data
@@ -1424,11 +1899,10 @@ Success message shown
 
 
 updated on 23-12-2025
-
 updated on 24-12-2025 @17.25
-
-
 updated on 26-12-2025 @18.14
+
+updated on 27-12-2025@18.22
 
 
 
