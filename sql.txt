@@ -1,0 +1,342 @@
+Q. What Is Database?
+A database is a structured collection of data stored and managed by an RDBMS, enabling efficient CRUD operations using SQL. In QA, it is used to validate backend data integrity and consistency across UI, API, and database layers.
+====================================================================================================================================================
+//DBMS and RDBMS are types/models of database systems
+Q. What is Database Management System (DBMS)?
+A Database Management System (DBMS) is system software that provides an interface to define, store, retrieve, update, and control access to data in a database. It handles data storage, security, concurrency, backup, and recovery.
+
+Examples: FoxPro, dBase (database software ,store data in files (like .dbf files)
+
+Q. What is Relational Model ?
+A Relational Database Management System (RDBMS) is a DBMS that is based on the relational model. It organizes data into tables and allows relationships between them.
+
+Features of RDBMS:
+Uses SQL for querying data.
+Maintains data integrity and ACID properties (Atomicity, Consistency, Isolation, Durability).
+Supports relationships through primary and foreign keys.
+Allows multi-user access and transactions.
+
+Examples: MySQL, Oracle, PostgreSQL, Microsoft SQL Server.
+=====================================================================================================================================================
+//extra
+
+DB Model                    | Used For                                              | Company Name       | Where It Is Used
+----------------------------|-------------------------------------------------      |------------------|--------------------------------------------
+Key-Value DB                | Caching, sessions, leaderboards, real-time            | Redis             | Twitter, Airbnb, Instagram-style apps
+
+Key-Value DB                | E-commerce backend, inventory, real-time queues       | Amazon DynamoDB   | Amazon systems
+
+Document NoSQL DB           | Product listings, user data, logs; flexible schema    | MongoDB           | eBay, MetLife, web platforms
+
+Search / Analytic DB        | Fast full-text search, dashboards, real-time analytics| Elasticsearch     | Wikipedia, monitoring systems
+
+Column / Big Data NoSQL DB  | Distributed workloads,real-time big data,streaming,analytics | Apache Cassandra  | Netflix
+
+Column / Big Data NoSQL DB  | Huge datasets, real-time access at scale              | Google Bigtable   | YouTube, Gmail, Maps, Google Analytics
+
+Graph DB                    | Social network graphs, recommendations, fraud detection | Neo4j           | Social networks, recommendation systems
+
+
+======================================================================================================================================================
+
+• What are Datatypes ?
+Datatypes define the type of data a column in a database table can hold
+They ensure data integrity by restricting the kind of data that can be stored.
+
+• Types and Examples .
+| **Datatype Type**    | **Example**           | **Description**       |
+| -------------------- | --------------------- | --------------------- |
+| INT / INTEGER        | 10, -5                | Whole numbers         |
+| FLOAT / DOUBLE       | 3.14, 100.5           | Numbers with decimals |
+| CHAR(n)              | 'A', 'B'              | Fixed-length text     |
+| VARCHAR(n)           | 'Hello', 'Alice'      | Variable-length text  |
+| DATE                 | '2025-11-13'          | Stores date           |
+| DATETIME / TIMESTAMP | '2025-11-13 14:30:00' | Stores date and time  |
+| BOOLEAN              | TRUE, FALSE           | True or False         |
+
+
+• How to use .
+When creating a table in SQL, specify a datatype for each column:
+
+CREATE TABLE Accounts (
+    AccountID INT,
+    CustomerName VARCHAR(100),
+    AccountType VARCHAR(30),
+    Balance DECIMAL(15,2),
+    OpenDate DATE,
+    IsActive BOOLEAN
+);
+       Here:
+AccountID → Integer
+CustomerName → Text with up to 100 characters
+AccountType → Text with up to 30 characters
+Balance → Decimal number (15,2)
+OpenDate → Date
+IsActive → Boolean
+
+
+• What are Constraints?
+Constraints are rules applied to table columns to enforce data integrity. They control the type of data that can be inserted, updated, or deleted.
+
+• Types and Examples.
+| **Constraint**  | **Purpose**                                 | **Example**                                                                 |
+| --------------- | ------------------------------------------- | --------------------------------------------------------------------------- |
+| **PRIMARY KEY** | Unique identifier for each row              | `AccountID INT PRIMARY KEY`                                                 |
+| **FOREIGN KEY** | Ensures value exists in another table       | `CustomerID INT, FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)` |
+| **NOT NULL**    | Column cannot have NULL values              | `AccountType VARCHAR(30) NOT NULL`                                          |
+| **UNIQUE**      | Column values must be unique                | `AccountNumber VARCHAR(20) UNIQUE`                                          |
+| **CHECK**       | Ensures column values satisfy a condition   | `Balance DECIMAL(15,2) CHECK (Balance >= 0)`                                |
+| **DEFAULT**     | Assigns a default value if none is provided | `IsActive BOOLEAN DEFAULT TRUE`                                             |
+
+
+• How to use.
+
+CREATE TABLE Accounts (
+    AccountID INT PRIMARY KEY,
+    CustomerID INT,
+    AccountNumber VARCHAR(20) UNIQUE,
+    AccountType VARCHAR(30) NOT NULL,
+    Balance DECIMAL(15,2) CHECK (Balance >= 0),
+    IsActive BOOLEAN DEFAULT TRUE,
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+
+•Data Query Language (DQL)
+DQL is a subset of SQL (Structured Query Language) used to query or fetch data from a database.
+Its main purpose is retrieving data from one or more tables.
+
+1. SELECT
+Purpose: Chooses the columns you want to retrieve from a table.
+SELECT column1, column2, ...
+FROM table_name;
+
+2. FROM
+Purpose: Specifies the table from which to retrieve data.
+SELECT * FROM Students;
+
+3. WHERE
+Purpose: Filters rows based on a condition.
+SELECT column1, column2
+FROM table_name
+WHERE condition;
+
+4. GROUP BY
+Purpose: Groups rows that have the same values in specified columns, often used with aggregate functions like COUNT, SUM, AVG.
+SELECT column, COUNT(*)
+FROM table_name
+GROUP BY column;
+
+5. HAVING
+Purpose: Filters groups created by GROUP BY. Unlike WHERE, HAVING works on aggregated data.
+SELECT column, COUNT(*)
+FROM table_name
+GROUP BY column
+HAVING COUNT(*) > 1;
+
+6. ORDER BY
+Purpose: Sorts the result set by one or more columns.
+SELECT column1, column2
+FROM table_name
+ORDER BY column1 ASC|DESC;
+
+• Functions in SQL
+
+Functions are predefined operations in SQL that perform calculations or manipulations on data and return a single value.
+They help in data retrieval, aggregation, and transformation.
+Functions can be aggregate (work on multiple rows) or scalar (work on single values).
+
+
+• Single Row Functions : Single-row functions operate on one row at a time and return a value for each row.
+
+
+| **Function** | **Purpose**                               | **Example **                           |
+| ------------ | ----------------------------------------- | ------------------------------------------------------ |
+| **MAX()**    | Returns the **maximum value** in a column | `SELECT MAX(Balance) AS MaxBalance FROM Accounts;`     |
+| **MIN()**    | Returns the **minimum value** in a column | `SELECT MIN(Balance) AS MinBalance FROM Accounts;`     |
+| **SUM()**    | Returns the **sum of numeric values**     | `SELECT SUM(Balance) AS TotalBalance FROM Accounts;`   |
+| **AVG()**    | Returns the **average of numeric values** | `SELECT AVG(Balance) AS AverageBalance FROM Accounts;` |
+| **COUNT()**  | Returns the **number of rows**            | `SELECT COUNT(*) AS TotalAccounts FROM Accounts;`      |
+
+
+SELECT MAX(Balance) AS MaxBalance FROM Accounts;
+SELECT MIN(Balance) AS MinBalance FROM Accounts;
+SELECT SUM(Balance) AS TotalBalance FROM Accounts;
+SELECT AVG(Balance) AS AverageBalance FROM Accounts;
+SELECT COUNT(*) AS TotalAccounts FROM Accounts;
+
+•Sub Query
+query inside another query.
+It is used to fetch data that will be used by the main query.
+Subqueries are enclosed in parentheses ( ).
+They can be used in SELECT, FROM, WHERE, or HAVING clauses
+The main query is called the outer query.
+The subquery executes first, and its result is passed to the outer query
+
+• Working of Sub Query
+The main query is called the outer query.
+The subquery executes first, and its result is passed to the outer query
+
+• Query Writing and Execution
+| AccountID | CustomerName | Balance | Branch   |
+| --------- | ------------ | ------- | -------- |
+| 101       | Alice        | 5000    | Downtown |
+| 102       | Bob          | 7500    | Uptown   |
+| 103       | Charlie      | 3000    | Downtown |
+| 104       | David        | 9000    | Midtown  |
+| 105       | Eva          | 4500    | Uptown   |
+
+a) Single-row Subquery
+A single-row subquery returns only one row (and usually one column) as its result. It is typically used with comparison operators like =, <, >, <=, >=, or <>.
+
+Query: Find the customer with the highest balance.
+SELECT CustomerName, Balance
+FROM Accounts
+WHERE Balance = (SELECT MAX(Balance) FROM Accounts);
+
+-->Ex:
+Subquery (SELECT MAX(Balance) FROM Accounts) → 9000
+Outer query fetches CustomerName with balance = 9000 → David
+
+b) Multiple-row Subquery
+A multiple-row subquery can return more than one row. It is usually used with operators like IN, ANY, ALL, or EXISTS.
+
+Query: Find customers whose balance is greater than average.
+
+SELECT CustomerName, Balance
+FROM Accounts
+WHERE Balance > (SELECT AVG(Balance) FROM Accounts);
+
+Ex:
+Subquery (SELECT AVG(Balance) FROM Accounts) → 5800
+Outer query fetches rows where Balance > 5800 → Bob (7500), David (9000)
+
+c) Subquery in FROM Clause
+Query: Show branches with average balance > 5000.
+SELECT Branch, AvgBalance
+FROM (SELECT Branch, AVG(Balance) AS AvgBalance
+      FROM Accounts
+      GROUP BY Branch) AS BranchAvg
+WHERE AvgBalance > 5000;
+
+Ex:
+Inner query calculates average balance per branch:
+Downtown → (5000+3000)/2 = 4000
+Uptown → (7500+4500)/2 = 6000
+Midtown → 9000
+Outer query filters branches with AvgBalance > 5000 → Uptown, Midtown
+
+• What Is Join?
+used to combine data from two or more tables
+
+• Types of Joins.
+
+1. INNER JOIN
+   ➤ Returns: Only matching rows from both tables.
+   ➤ Banking Example: Shows customers who have accounts.
+
+2. LEFT JOIN
+   ➤ Returns: All rows from the left table and matching rows from the right table (NULL if no match).
+   ➤ Banking Example: Shows all customers, even those without accounts.
+
+3. RIGHT JOIN
+   ➤ Returns: All rows from the right table and matching rows from the left table (NULL if no match).
+   ➤ Banking Example: Shows all accounts, even if the customer info is missing.
+
+4. FULL JOIN
+   ➤ Returns: All rows from both tables (matched + unmatched, with NULLs).
+   ➤ Banking Example: Shows all customers and accounts, whether linked or not.
+
+5. CROSS JOIN
+   ➤ Returns: All possible combinations of rows from both tables.
+   ➤ Banking Example: Shows every customer with every account (Cartesian product).
+
+6. SELF JOIN
+   ➤ Returns: A table joined with itself.
+   ➤ Banking Example: Used to find customers or employees related to each other (e.g., same branch or manager)
+
+
+• Cartesian Join
+A Cartesian Join (also known as a Cross Join) in SQL is a type of join operation that returns the Cartesian product of the two tables — meaning every row from the first table is combined with every row from the second table.
+SELECT *
+FROM table1
+CROSS JOIN table2;
+  
+           OR
+SELECT *
+FROM table1, table2;
+
+•Data Definition Language (DDL)
+Data Definition Language (DDL) is a subset of SQL used to define, modify, and manage the structure of database objects such as tables, schemas, indexes, and views.
+
+• Create :Used to create new database objects like tables, views, schemas, or indexes.
+CREATE TABLE Employees (
+    emp_id INT PRIMARY KEY,
+    emp_name VARCHAR(100),
+    salary DECIMAL(10,2)
+);
+
+• Rename :Used to rename an existing database object (like a table or column).
+RENAME TABLE Employees TO Staff;
+
+• Alter : Used to modify the structure of an existing table — such as adding, deleting, or modifying columns.
+ALTER TABLE Employees ADD department VARCHAR(50);
+
+
+• Truncate : Used to remove all rows from a table but keep its structure for future use.
+TRUNCATE TABLE Employees;
+
+• Drop : Used to permanently delete a database object — structure and data.
+DROP TABLE Employees;
+
+--> Data Manipulation Language (DML)
+DML (Data Manipulation Language) is a subset of SQL used to manipulate and manage data stored inside database tables.
+
+• Insert :Used to add new records (rows) into a table.
+INSERT INTO table_name (column1, column2, ...)
+VALUES (value1, value2, ...);
+
+• Update : Used to modify existing data in a table.
+UPDATE table_name
+SET column1 = value1, column2 = value2, ...
+WHERE condition;
+
+• Delete :Used to remove specific rows from a table.
+DELETE FROM table_name
+WHERE condition;
+
+---> Transaction Control Language (TCL)
+TCL (Transaction Control Language) commands are used to manage transactions in a database — that is, to ensure that a group of DML statements (like INSERT, UPDATE, DELETE) are executed as a single unit of work.
+
+| Command             | Purpose                                                      |
+| ------------------- | ------------------------------------------------------------ |
+| **COMMIT**          | Saves all changes made during the transaction permanently    |
+| **ROLLBACK**        | Undoes changes made during the transaction                   |
+| **SAVEPOINT**       | Sets a point within a transaction to which you can roll back |
+| **SET TRANSACTION** | Defines transaction properties (like read/write mode)        |
+
+-----> Data Control Language (DCL)
+DCL (Data Control Language) is used to control access, permissions, and security of data within a database.
+| Command    | Purpose                                         |
+| ---------- | ----------------------------------------------- |
+| **GRANT**  | Gives specific privileges to users              |
+| **REVOKE** | Removes privileges that were previously granted |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
