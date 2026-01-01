@@ -2,6 +2,7 @@ Q. What Is Database?
 A database is a structured collection of data stored and managed by an RDBMS, enabling efficient CRUD operations using SQL. In QA, it is used to validate backend data integrity and consistency across UI, API, and database layers.
 ====================================================================================================================================================
 //DBMS and RDBMS are types/models of database systems
+
 Q. What is Database Management System (DBMS)?
 A Database Management System (DBMS) is system software that provides an interface to define, store, retrieve, update, and control access to data in a database. 
 It handles data storage, security, concurrency, backup, and recovery.
@@ -24,6 +25,85 @@ automicity - a transaction must either succeed completely or not run at all
 Consistency – Rules are never broken (Rules always followed)
 Isolation –  Transactions don’t disturb each other
 Durability – Once saved, it stays saved
+
+Scenario: Transfer ₹100 from Person A to Person B
+
+A – Atomicity
+Either both actions happen or none
+A balance −100
+B balance +100
+✔ If money is deducted from A but not added to B → ROLLBACK
+
+C – Consistency
+Total money stays correct
+Before transfer: A + B = same total
+After transfer:  A + B = same total
+✔ No negative balance allowed
+
+I – Isolation
+Real-Time Scenario (ATM A and ATM B at different locations)
+Initial balance = ₹1000
+Both A and B insert cards at the same time.
+
+Step-by-Step What Actually Happens
+⏱️ Time 0 seconds
+
+ATM A → request to withdraw ₹700
+ATM B → request to withdraw ₹500
+
+Both ATMs:
+✔ show menus
+✔ allow user to enter amount
+✔ look “active”
+
+What the DATABASE Does (Isolation Logic)
+Step 1: Transaction A reaches DB first
+BEGIN;
+SELECT balance FROM accounts WHERE account_id='A'; -- 1000
+🔒 Database places a lock on account A
+(This is automatic, user doesn’t see it)
+
+Step 2: Transaction B reaches DB
+BEGIN;
+SELECT balance FROM accounts WHERE account_id='A';
+🚦 B is put in WAIT state at DB level
+
+ATM screen still shows “Processing…”
+User thinks system is working
+No balance is shown yet
+
+Step 3: Transaction A completes
+UPDATE accounts SET balance = balance - 700;
+COMMIT;
+✔ Balance now = ₹300
+✔ Lock is released
+
+Step 4: Transaction B resumes
+SELECT balance FROM accounts WHERE account_id='A'; -- 300
+❌ ₹500 > ₹300
+➡ Insufficient balance message shown
+
+What ATM Machine Shows to B During Wait?
+💡 Very important
+
+ATM does NOT show:
+Balance
+Error
+Old data
+
+ATM shows:
+“Please wait”
+“Processing transaction”
+Loading screen
+
+This wait is usually:
+Milliseconds to a few seconds
+NOT the full 1–2 minutes of user input time
+
+D – Durability
+Once transfer is done, it stays done
+COMMIT;
+✔ Even if system crashes, transfer remains saved
 =====================================================================================================================================================
 //extra
 
@@ -45,6 +125,27 @@ Graph DB                    | Social network graphs, recommendations, fraud dete
 
 
 ======================================================================================================================================================
+//check db'es : show databases;
+
+//create db : CREATE DATABASE db_name;
+
+//switch db : use db_name:
+
+//current db : select databse(); //DATABASE() is a built-in SQL function, not a “method” in the object-oriented sense
+
+remove : \c
+=========================================================================
+//Extra 
+String, Numeric/Math, Date & Time, Aggregate, Control Flow/Logical, JSON, Encryption/Hashing(MD5(), SHA2(), COMPRESS(), UNCOMPRESS()), Metadata/Information, Miscellaneous (UUID(), COMPRESS(), REGEXP_LIKE())
+//Total: There are hundreds of built-in functions — roughly 400+ in MySQL 8.x.
+
+UUID : Universally Unique Identifier
+User Accounts in Apps
+
+Instead of using an auto-incrementing integer ID (1, 2, 3…), many systems use a UUID to identify users.
+in public-facing URLs & Tokens used for secure, hidden IDs
+Example: 550e8400-e29b-41d4-a716-446655440000
+======================================================================================================================
 
 Q. What are Datatypes ?
 Datatypes define the type of data a column in a database table can hold
@@ -59,11 +160,11 @@ They ensure data integrity by restricting the kind of data that can be stored.
 | VARCHAR(n)           | 'Hello', 'Alice'      | Variable-length text  |
 | DATE                 | '2025-11-13'          | Stores date           |
 | DATETIME / TIMESTAMP | '2025-11-13 14:30:00' | Stores date and time  |
-| BOOLEAN              | TRUE, FALSE           | True or False         |
+| BOOLEAN              | TRUE, FALSE           | True or False         |0 = false, 1 = true
 
 
 • How to use .
-When creating a table in SQL, specify a datatype for each column:
+When creating a table in SQL, specify a datatype for each column: //requires at least one column to define a table
 
 CREATE TABLE Accounts (
     AccountID INT,
@@ -81,15 +182,78 @@ Balance → Decimal number (15,2)
 OpenDate → Date
 IsActive → Boolean
 
+CREATE TABLE product (
+    product_id INT,
+    Customer_Id INT,
+    product_name VARCHAR(100),
+    in_stock BOOLEAN,
+    product_info VARCHAR(300),
+    tax DECIMAL(10,2) DEFAULT 0,
+    CGST DECIMAL(10,2) DEFAULT 0,
+    SGST DECIMAL(10,2) DEFAULT 0,
+    IGST DECIMAL(10,2) DEFAULT 0,
+    cess DECIMAL(10,2) DEFAULT 0,
+    booked DATE DEFAULT (CURRENT_DATE)
+);
 
+| **Category**                    | **Data Types / Notes**                                                                                                              |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **1. Numeric Types**            | `TINYINT`, `SMALLINT`, `MEDIUMINT`, `INT` / `INTEGER`, `BIGINT`, `DECIMAL(p,s)` / `NUMERIC(p,s)`, `FLOAT`, `DOUBLE` / `REAL`, `BIT` |
+| **2. String / Character Types** | `CHAR(n)`, `VARCHAR(n)`, `TINYTEXT`, `TEXT`, `MEDIUMTEXT`, `LONGTEXT`, `ENUM('val1','val2',...)`, `SET('val1','val2',...)`          |
+| **3. Date / Time Types**        | `DATE`, `DATETIME`, `TIMESTAMP`, `TIME`, `YEAR`                                                                                     |
+| **4. Boolean / Logical Types**  | `BOOLEAN` (alias for `TINYINT(1)`), `BOOL` (alias)                                                                                  |
+| **5. Binary Types**             | `TINYBLOB`, `BLOB`, `MEDIUMBLOB`, `LONGBLOB`, `BINARY(n)`, `VARBINARY(n)`                                                           |
+| **6. JSON / Special Types**     | `JSON`, `GEOMETRY`, `POINT`, `LINESTRING`, `POLYGON` (spatial data types)                                                           |
+
+============================================================================================================================================================
+Q.  when to use float ,decimal ,double ?
+
+1. DECIMAL (or NUMERIC) :Bank balances, taxes, invoices, product prices
+	tax DECIMAL(10,2)  -- max 99999999.99
+	price DECIMAL(12,4) -- max 9999999999.9999
+Exact storage of decimal numbers                   (use decimal in projects)
+
+2. FLOAT :4 bytes,Physics simulations, sensor readings, 3D coordinates, percentages where small errors are okay
+	temperature FLOAT
+	weight FLOAT
+	sensor_reading FLOAT
+float a = 1.1234567f;    // 7 digits precision
+double b = 1.123456789012345; // 15 digits
+DOUBLE  : 1.1234567890123456   -- rounded after ~15 digits
+DECIMAL: 1.12345678901234567890 -- exact
+
+3. DOUBLE (or REAL) : Space calculations, physics engines, probability computations, statistical analysis
+	astronomical_distance DOUBLE
+	pi_approximation DOUBLE
+	large-scale simulations DOUBLE
+More precise than FLOAT, can store very large or very small numbers.
+
+==================================================================================
 
 Q . What is the difference between CHAR and VARCHAR? 
 Answer: 
 • CHAR(n) – Fixed-length storage. Always takes n bytes even if data is shorter. 
-• VARCHAR(n) – Variable-length storage. Uses only the space required. 
+• VARCHAR(n) – var is Variable-length storage. Uses only the space required. //VARCHAR(n) can go up to 65,535 bytes.
 QA relevance: Helps understand storage behavior when validating DB schemas. 
 
+---------------------------------------------------------------------------------------------------------------------
 
+CREATE TABLE product (
+    product_id INT ,
+    Customer_Id INT,
+    product_name VARCHAR(100) NOT NULL,
+    in_stock BOOLEAN NOT NULL DEFAULT TRUE,
+    product_info VARCHAR(300),
+    tax DECIMAL(10,2) DEFAULT 0,
+    CGST DECIMAL(10,2) DEFAULT 0,
+    SGST DECIMAL(10,2) DEFAULT 0,
+    IGST DECIMAL(10,2) DEFAULT 0,
+    cess DECIMAL(10,2) DEFAULT 0,
+    booked DATE DEFAULT CURRENT_DATE,
+
+);
+
+---------------------------------------------------------------------------------------------------------------------
 //eg
 
 1️⃣ Data truncation & validation testing
@@ -145,7 +309,52 @@ Or report incorrect schema choice
 
 //QA relevance:
 Understanding CHAR vs VARCHAR helps QA identify data truncation issues, trailing space bugs, UI/API mismatches, performance problems, and failed validations caused by improper database schema design.
-==========================================================================================
+---------------------------------------------------------------------------------------------------------------------------------
+1️⃣ What is stored on the browser side (client side)
+When you log in to Google and then open GitHub / Google Meet:
+
+Stored in the browser:
+Cookies (HTTP-only, Secure)
+Session tokens
+ID tokens / access tokens (sometimes)
+LocalStorage / SessionStorage (depending on app)
+
+📍 Example (conceptual):
+google_session=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...
+
+2️⃣ What is stored on the backend / database side
+When GitHub (or any app) uses Login with Google:
+
+Stored in DB (temporarily or permanently):
+state (UUID)
+redirect_url (long VARCHAR)
+nonce                                                //Nonce : “Number used once”
+OAuth authorization code (short-lived)
+User mapping (google_user_id → internal_user_id)
+
+📍 Example schema:
+oauth_sessions (
+  state CHAR(36),
+  redirect_url VARCHAR(2048),                                             //used here
+  nonce VARCHAR(1024),
+  expires_at TIMESTAMP
+)
+
+Browser
+ ├── Cookies / session tokens (Google)
+ │
+ │  redirects
+ ▼
+Backend
+ ├── state (UUID)
+ ├── redirect_url (VARCHAR 2000+)
+ ├── nonce
+ │
+ │  verifies
+ ▼
+Browser logged in
+
+============================================================================================================================================================
 • What are Constraints?
 Constraints are rules applied to table columns to enforce data integrity. They control the type of data that can be inserted, updated, or deleted.
 
@@ -172,8 +381,133 @@ CREATE TABLE Accounts (
     FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
 );
 
+CREATE TABLE customer (
+    Customer_Id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50),
+    email VARCHAR(100) UNIQUE,
+    phone VARCHAR(15),
+    address VARCHAR(255),
+    city VARCHAR(50),
+    state VARCHAR(50),
+    postal_code VARCHAR(10),
+    country VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE product (
+    product_id INT PRIMARY KEY,
+    Customer_Id INT,
+    product_name VARCHAR(100) NOT NULL,
+    in_stock BOOLEAN NOT NULL DEFAULT TRUE,
+    product_info VARCHAR(300),
+    tax DECIMAL(10,2) DEFAULT 0,
+    CGST DECIMAL(10,2) DEFAULT 0,
+    SGST DECIMAL(10,2) DEFAULT 0,
+    IGST DECIMAL(10,2) DEFAULT 0,
+    cess DECIMAL(10,2) DEFAULT 0,
+    booked DATE DEFAULT CURRENT_DATE,
+    FOREIGN KEY (Customer_Id) REFERENCES customer(customer_id)
+);
 
-•Data Query Language (DQL)
+//A table is considered a CHILD table for ONE simple reason: Because it contains a FOREIGN KEY
+//  FOREIGN KEY (Customer_Id) REFERENCES customer(customer_id)
+//FOREIGN KEY (Customer_Id)
+This column is a reference
+It belongs to the child table (product)
+
+REFERENCES customer(customer_id)
+It must match a value in
+customer.customer_id (parent table)
+============================================================================================================================================================
+Kids table :
+
+| kid_id (PK) | kid_name |
+| -----------         | --------        |
+| 1                      | Alice      |
+| 2                      | Bob            |
+
+Toys table :
+
+| toy_id (PK) | toy_name | kid_id (FK) |
+| -----------         | --------     | --------- |
+| 1                      | Teddy    | 1           |
+| 2                      | Car         | 2           |
+| 3                      | Ball       | 1           |
+
+It means:
+Teddy belongs to Alice
+Car belongs to Bob
+Ball belongs to Alice
+=========================================================================================================================================================
+
+Q . What is a primary key? Can  a   table    have   multiple   primary  keys? 
+
+A primary key is a column (or set of columns) that  uniquely  identifies   each  row   in  a  table  and  does  not  allow  NULL    values. 
+
+CREATE TABLE students ( 
+    student_id INT PRIMARY KEY, 
+    name VARCHAR(50) 
+); 
+
+• A table can have only one primary key constraint, but that key can be a composite key (multiple  columns). 
+| A | B | C | Allowed?                                                             |
+| - | - | - | --------------------------------------------|
+| 1 | 2 | 3 | ✅ Yes (first row)                                       |
+| 1 | 2 | 4 | ✅ Yes (combination is unique)        |
+| 1 | 3 | 3 | ✅ Yes (combination is unique)        |
+| 1 | 2 | 3 | ❌ No (same combination as first row) |
+
+The    combination    of   all   three   columns   cannot      repeat.
+But     individual    values      (like A = 1 or B = 2) can   appear   in    multiple  rows,  as     long      as   the     full    combination (A, B, C)     is    unique.
+
+QA use case: When inserting test data, you must ensure primary key values are unique to avoid errors. 
+
+============================================================================================================================================================
+
+Q. What is a foreign key and why is it important in testing? 
+
+A foreign key is a column in one table that refers to the primary key in another table, establishing a relationship  between tables. 
+
+CREATE TABLE orders ( 
+    order_id INT PRIMARY KEY, 
+    customer_id INT, 
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) 
+); 
+
+Importance for QA: 
+• Ensures referential integrity (you cannot have an order without a valid customer). 
+• While testing, you must insert data in the correct order (parent first, then child). 
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+1️⃣ Student Table
+CREATE TABLE Student (
+    StudentID INT PRIMARY KEY,                                                                //StudentID → uniquely identifies each student.
+    Name VARCHAR(50) NOT NULL
+);
+
+2️⃣ Enrollment Table
+CREATE TABLE Enrollment (
+    StudentID INT,
+    Subject VARCHAR(50),
+    PRIMARY KEY (StudentID, Subject),
+    FOREIGN KEY (StudentID) REFERENCES Student(StudentID)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+);
+
+-- Add students
+INSERT INTO Student (StudentID, Name) VALUES (1, 'Alice');
+INSERT INTO Student (StudentID, Name) VALUES (2, 'Bob');
+
+-- Add enrollments
+INSERT INTO Enrollment (StudentID, Subject) VALUES (1, 'Math');
+INSERT INTO Enrollment (StudentID, Subject) VALUES (1, 'English');
+INSERT INTO Enrollment (StudentID, Subject) VALUES (2, 'Math');
+
+//Trying to insert (1, 'Math') again will fail because of the composite primary key.        ERROR occur
+===========================================================================================================================================================
+
+• Data Query Language (DQL)
 DQL is a subset of SQL (Structured Query Language) used to query or fetch data from a database.
 Its main purpose is retrieving data from one or more tables.
 
@@ -211,6 +545,8 @@ SELECT column1, column2
 FROM table_name
 ORDER BY column1 ASC|DESC;
 
+==========================================================================================================================================================================
+
 • Functions in SQL
 
 Functions are predefined operations in SQL that perform calculations or manipulations on data and return a single value.
@@ -235,6 +571,8 @@ SELECT MIN(Balance) AS MinBalance FROM Accounts;
 SELECT SUM(Balance) AS TotalBalance FROM Accounts;
 SELECT AVG(Balance) AS AverageBalance FROM Accounts;
 SELECT COUNT(*) AS TotalAccounts FROM Accounts;
+
+=======================================================================================================================================================================
 
 •Sub Query
 query inside another query.
@@ -268,7 +606,7 @@ WHERE Balance = (SELECT MAX(Balance) FROM Accounts);
 -->Ex:
 Subquery (SELECT MAX(Balance) FROM Accounts) → 9000
 Outer query fetches CustomerName with balance = 9000 → David
-
+---------------------------------------------------------------------------------------------
 b) Multiple-row Subquery
 A multiple-row subquery can return more than one row. It is usually used with operators like IN, ANY, ALL, or EXISTS.
 
@@ -281,7 +619,7 @@ WHERE Balance > (SELECT AVG(Balance) FROM Accounts);
 Ex:
 Subquery (SELECT AVG(Balance) FROM Accounts) → 5800
 Outer query fetches rows where Balance > 5800 → Bob (7500), David (9000)
-
+-------------------------------------------------------------------------------------------
 c) Subquery in FROM Clause
 Query: Show branches with average balance > 5000.
 SELECT Branch, AvgBalance
@@ -296,6 +634,8 @@ Downtown → (5000+3000)/2 = 4000
 Uptown → (7500+4500)/2 = 6000
 Midtown → 9000
 Outer query filters branches with AvgBalance > 5000 → Uptown, Midtown
+
+=========================================================================================================================================================================
 
 • What Is Join?
 used to combine data from two or more tables
@@ -337,6 +677,8 @@ CROSS JOIN table2;
 SELECT *
 FROM table1, table2;
 
+==========================================================================================================================================================================
+
 •Data Definition Language (DDL)
 Data Definition Language (DDL) is a subset of SQL used to define, modify, and manage the structure of database objects such as tables, schemas, indexes, and views.
 
@@ -375,6 +717,7 @@ WHERE condition;
 • Delete :Used to remove specific rows from a table.
 DELETE FROM table_name
 WHERE condition;
+=========================================================================================================================================================================
 
 ---> Transaction Control Language (TCL)
 TCL (Transaction Control Language) commands are used to manage transactions in a database — that is, to ensure that a group of DML statements (like INSERT, UPDATE, DELETE) are executed as a single unit of work.
@@ -386,6 +729,8 @@ TCL (Transaction Control Language) commands are used to manage transactions in a
 | **SAVEPOINT**       | Sets a point within a transaction to which you can roll back |
 | **SET TRANSACTION** | Defines transaction properties (like read/write mode)        |
 
+==========================================================================================================================================================================
+
 -----> Data Control Language (DCL)
 DCL (Data Control Language) is used to control access, permissions, and security of data within a database.
 | Command    | Purpose                                         |
@@ -394,8 +739,40 @@ DCL (Data Control Language) is used to control access, permissions, and security
 | **REVOKE** | Removes privileges that were previously granted |
 
 
+===========================================================================egs of demo :
 
-updated on 1-1-26@08.28
+CREATE TABLE product (
+    product_id INT PRIMARY KEY,
+    Customer_Id INT,
+    product_name VARCHAR(100) NOT NULL,
+    in_stock BOOLEAN NOT NULL DEFAULT TRUE,
+    product_info VARCHAR(300),
+    tax DECIMAL(10,2) DEFAULT 0,
+    CGST DECIMAL(10,2) DEFAULT 0,
+    SGST DECIMAL(10,2) DEFAULT 0,
+    IGST DECIMAL(10,2) DEFAULT 0,
+    cess DECIMAL(10,2) DEFAULT 0,
+    booked DATE DEFAULT CURRENT_DATE,
+    FOREIGN KEY (Customer_Id) REFERENCES customer(customer_id)
+);
+CREATE TABLE customer (
+    Customer_Id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50),
+    email VARCHAR(100) UNIQUE,
+    phone VARCHAR(15),
+    address VARCHAR(255),
+    city VARCHAR(50),
+    state VARCHAR(50),
+    postal_code VARCHAR(10),
+    country VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+
+updated on 1-1-26@08.28,@18.29
 
 
 
