@@ -396,7 +396,7 @@ CREATE TABLE customer (
 );
 CREATE TABLE product (
     product_id INT PRIMARY KEY,
-    Customer_Id INT,
+    Customer_Id INT,                              //FK
     product_name VARCHAR(100) NOT NULL,
     in_stock BOOLEAN NOT NULL DEFAULT TRUE,
     product_info VARCHAR(300),
@@ -477,7 +477,123 @@ CREATE TABLE orders (
 Importance for QA: 
 • Ensures referential integrity (you cannot have an order without a valid customer). 
 • While testing, you must insert data in the correct order (parent first, then child). 
+Helps verify delete/update behavior (cascade or restrict).
 
+------------------------------------------------------------------------------------------
+Q . “Have you faced any issue related to foreign keys?”, say:
+
+Yes, while inserting test data, the insert failed due to a foreign key constraint because the parent record was missing. I fixed it by inserting parent data first and validating FK relationships.
+
+🔹 Pattern 2: Data Insertion Order
+
+Q: Why does inserting data sometimes fail due to FK constraints?
+Expected Point:
+
+Parent table must exist before child table
+
+FK validation happens at insert time
+
+Key Line to Say:
+
+FK enforces dependency, so child data cannot exist without parent data.
+
+🔹 Pattern 3: Delete / Update Scenarios
+
+Q: What happens if you delete a parent record?
+Follow-ups:
+
+What is ON DELETE CASCADE?
+
+What happens if CASCADE is not defined?
+
+Expected Answer:
+
+Delete fails (restrict) OR
+
+Child records get deleted automatically (cascade)
+
+🔹 Pattern 4: PK vs FK Difference
+
+Q: Difference between Primary Key and Foreign Key?
+
+Primary Key	Foreign Key
+Uniquely identifies a record	References PK in another table
+Cannot be NULL	Can be NULL
+One per table	Multiple allowed
+
+⚠️ They expect short & crisp, not theory.
+
+🔹 Pattern 5: Duplicate & NULL Issues
+
+Q: Can a foreign key have duplicate values?
+✔ YES (many orders → one customer)
+
+Q: Can a foreign key be NULL?
+✔ YES (if relationship is optional)
+
+Q: Can a primary key be NULL or duplicate?
+❌ NO
+
+🔹 Pattern 6: Bug Scenarios (QA Favorite)
+
+Q: What kind of bugs occur due to missing FK?
+
+Expected Bugs:
+
+Orphan records
+
+Inconsistent reports
+
+Data mismatch between UI and DB
+
+One-line Answer:
+
+Missing FK can cause orphan data and integrity issues, which testing helps identify early.
+
+🔹 Pattern 7: API / Backend Testing
+
+Q: How do PK and FK help in API testing?
+
+Expected Points:
+
+Validate request payload IDs
+
+Ensure child entity creation fails without parent ID
+
+Validate proper error messages
+
+🔹 Pattern 8: Tricky Concept Check
+
+Q: Can a table have multiple foreign keys?
+✔ YES (e.g., order → customer, product)
+
+Q: Can a table have multiple primary keys?
+❌ NO (but composite PK exists)
+
+🔹 Pattern 9: Composite Keys
+
+Q: What is a composite primary key?
+
+Answer:
+
+A primary key made of more than one column, used when a single column cannot uniquely identify a record.
+
+🔹 Pattern 10: SQL Error Understanding
+
+Q: What does “foreign key constraint fails” mean?
+
+Expected Answer:
+
+Parent record missing
+
+Delete/update violating FK rule
+----------------------------------------
+Always answer in this format:
+Issue → Why → How you fixed it
+
+Example:
+
+Insert failed → FK constraint → inserted parent first / fixed test data
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 1️⃣ Student Table
 CREATE TABLE Student (
