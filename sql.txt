@@ -133,7 +133,7 @@ Graph DB                    | Social network graphs, recommendations, fraud dete
 
 //switch db : use db_name:
 
-//current db : select databse(); //DATABASE() is a built-in SQL function, not a “method” in the object-oriented sense
+//current db : select databse();                               //DATABASE() is a built-in SQL function, not a “method” in the object-oriented sense
 
 //list tables : show tables;
 
@@ -204,8 +204,8 @@ CREATE TABLE product (
 
 | **Category**                    | **Data Types / Notes**                                                                                                              |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------
-| **1. Numeric Types**            | `TINYINT`, `SMALLINT`, `MEDIUMINT`, `INT` / `INTEGER`, `BIGINT`, `DECIMAL(p,s)` / `NUMERIC(p,s)`, `FLOAT`, `DOUBLE` / 					`REAL`, `BIT` |
-| **2. String / Character Types** | `CHAR(n)`, `VARCHAR(n)`, `TINYTEXT`, `TEXT`, `MEDIUMTEXT`, `LONGTEXT`, `ENUM('val1','val2',...)`, 								`SET('val1','val2',...)`          |
+| **1. Numeric Types**            | `TINYINT`, `SMALLINT`, `MEDIUMINT`, `INT` / `INTEGER`, `BIGINT`, `DECIMAL(p,s)` / `NUMERIC(p,s)`, `FLOAT`, `DOUBLE` / 							`REAL`, `BIT` |
+| **2. String / Character Types** | `CHAR(n)`, `VARCHAR(n)`, `TINYTEXT`, `TEXT`, `MEDIUMTEXT`, `LONGTEXT`, `ENUM('val1','val2',...)`, 										`SET('val1','val2',...)`          |
 | **3. Date / Time Types**        | `DATE`, `DATETIME`, `TIMESTAMP`, `TIME`, `YEAR`                                                                                     |
 | **4. Boolean / Logical Types**  | `BOOLEAN` (alias for `TINYINT(1)`), `BOOL` (alias)                                                                                  |
 | **5. Binary Types**             | `TINYBLOB`, `BLOB`, `MEDIUMBLOB`, `LONGBLOB`, `BINARY(n)`, `VARBINARY(n)`                                                           |
@@ -260,7 +260,7 @@ CREATE TABLE product (
 );
 
 ---------------------------------------------------------------------------------------------------------------------
-//eg
+//eg : QA relevance: Helps understand storage behavior when validating DB schemas. 
 
 1️⃣ Data truncation & validation testing
 CHAR(10) always stores exactly 10 characters
@@ -362,17 +362,18 @@ Browser logged in
 
 ============================================================================================================================================================
 • What are Constraints?
-Constraints are rules applied to table columns to enforce data integrity. They control the type of data that can be inserted, updated, or deleted.
+Constraints are rules applied to table columns to enforce data integrity. 
+They control the type of data that can be inserted, updated, or deleted.
 
 • Types and Examples.
 | **Constraint**  | **Purpose**                                 | **Example**                                                                 |
 | --------------- | ------------------------------------------- | --------------------------------------------------------------------------- |
 | **PRIMARY KEY** | Unique identifier for each row              | `AccountID INT PRIMARY KEY`                                                 |
 | **FOREIGN KEY** | Ensures value exists in another table       | `CustomerID INT, FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)` |
-| **NOT NULL**    | Column cannot have NULL values              | `AccountType VARCHAR(30) NOT NULL`                                          |
-| **UNIQUE**      | Column values must be unique                | `AccountNumber VARCHAR(20) UNIQUE`                                          |
-| **CHECK**       | Ensures column values satisfy a condition   | `Balance DECIMAL(15,2) CHECK (Balance >= 0)`                                |
-| **DEFAULT**     | Assigns a default value if none is provided | `IsActive BOOLEAN DEFAULT TRUE`                                             |
+| **NOT NULL**    | Column cannot have NULL values(mandatory)              | product_name VARCHAR(100) NOT NULL,                                        |
+| **UNIQUE**      | values must be unique                   | `AccountNumber VARCHAR(20) UNIQUE` ,passport_number                                         |
+| **CHECK**       | Ensures column values satisfy a condition(validation)   |  price DECIMAL(10,2) CHECK (price > 0) product price cannot be negative                                |
+| **DEFAULT**     | Assigns a default value if none is provided |  order_date DATE DEFAULT CURRENT_DATE,                                            |
 
 
 • How to use.
@@ -441,7 +442,7 @@ FOREIGN KEY (order_id)
 REFERENCES orders(id);
 
 
-============================================================================================================================================================
+======================================================================================================================================
 Kids table :
 
 | kid_id (PK) | kid_name |
@@ -717,18 +718,19 @@ INSERT INTO Enrollment (StudentID, Subject) VALUES (2, 'Math');
 ============================================================================================================================
 Q . What is the difference between DELETE, TRUNCATE, and DROP? 
 Answer: 
-• DELETE – Removes specific rows from a table based on a WHERE clause. The table structure remains. 
+• DELETE – Removes specific rows from a table based on a WHERE clause. 
+The table structure remains. Row level
 Transaction logs are kept, so you can rollback if needed. 
 //DELETE does NOT reset AUTO_INCREMENT
 
 DELETE FROM employees WHERE department = 'HR'; 
-
+--------------------------
 Truncate : Removes all rows from a table, resets identity counters, and is faster than DELETE. 
-You cannot rollback in most databases. 
+You cannot rollback in most databases. Table level
 TRUNCATE TABLE Employees;
 //After TRUNCATE, the auto-generated ID starts again from the beginning (usually 1).
-
-• DROP – Completely removes the table and its structure from the database. 
+----------------------------------
+• DROP – Completely removes the table and its structure from the database. Object level (table, view, index)
 DROP TABLE employees; 
 
 QA relevance: Knowing the difference helps avoid accidental data loss when preparing or cleaning test data.
@@ -737,19 +739,36 @@ QA relevance: Knowing the difference helps avoid accidental data loss when prepa
 Q. What Is Join?
 used to combine data from two or more tables
 
+//allowed but User-facing requests must return in milliseconds
+Many joins = slower queries + complex execution plans
+They use:
+ETL pipelines
+BigQuery / Hive / Spark
+Offline batch joins
+Microservices (API joins)
+
+| Database   | Max tables in a JOIN |
+| ---------- | -------------------- |
+| MySQL      | ~61 tables           |
+| PostgreSQL | ~63 tables           |
+| SQL Server | ~64 tables           |
+| Oracle     | ~255 tables          |
+
+
 Product Table
-| product_id | product_name |
-| ----------          | ------------            |
+| product_id             | product_name |
+| ----------             | ------------ |
 | 1                      | Laptop              |
 | 2                      | Mobile              |
 | 3                      | Tablet              |
 
 Customer Table
-| customer_id | customer_name | product_id |
-| -----------           | -------------              | ---------- |
-| 101                   | Alice                     | 1          |
-| 102                   | Bob                          | 2          |
-| 103                   | Charlie                | 4          |
+| customer_id           | customer_name    | product_id |
+| -----------           | -------------    | ---------- |
+| 101                   | Alice            | 1          |
+| 102                   | Bob              | 2          |
+| 103                   | Charlie          | 4          |
+
 Note: Charlie has product_id = 4, which does not exist in Product table.
   ---------------------------------------------------------
 • Types of Joins.
@@ -763,10 +782,16 @@ INNER JOIN Customer
 ON Product.product_id = Customer.product_id;
 
 | product_name | customer_name |
-| ------------     | ------------- |
-| Laptop       | Alice        |
+| ------------ | ------------- |
+| Laptop       | Alice         |
 | Mobile       | Bob           |
 
+//SELECT *
+FROM items
+INNER JOIN items_customer
+ON items.product_id = items_customer.customer_name;
+❌ MySQL allows comparing INT with VARCHAR, but the logic is wrong
+SQL, joins are almost always done between columns of the same (or compatible) data type
 -------------------------------------------------------------------------
 
 2. LEFT JOIN
@@ -776,7 +801,7 @@ ON Product.product_id = Customer.product_id;
 Returns all rows from left table (Product) and matching from right table //Note : all rows from left table (Product)
 
 SELECT product_name, customer_name
-FROM Product
+FROM Product                                                  //left table
 LEFT JOIN Customer
 ON Product.product_id = Customer.product_id;
 
@@ -789,16 +814,50 @@ ON Product.product_id = Customer.product_id;
 --------------------------------------------------------------------------
 3. RIGHT JOIN
    ➤ Returns: All rows from the right table and matching rows from the left table (NULL if no match).
-   ➤ Banking Example: Shows all accounts, even if the customer info is missing.
 
+SELECT *
+FROM Product                                                  
+RIGHT JOIN Customer                                           //right table
+ON Product.product_id = Customer.product_id;
+
+Alice    laptop
+Bob      mobile
+Charlie   null
+
+In a RIGHT JOIN, the table after RIGHT JOIN is considered the right table.
+ All its rows are returned, and matching rows from the left table are included. If no match exists, the left table columns are NULL
+---------------------------------------------------------------------------------
 4. FULL JOIN
    ➤ Returns: All rows from both tables (matched + unmatched, with NULLs).
-   ➤ Banking Example: Shows all customers and accounts, whether linked or not.
+
+SELECT *
+FROM table1
+FULL JOIN table2
+ON table1.common_column = table2.common_column;
+
+FULL JOIN is commonly used in analytics to combine two datasets fully, e.g., comparing marketing recipients with actual purchasers to identify conversions, missed targets, and unmatched data.
+---------------------------------------------------------------------------------
 
 5. CROSS JOIN
    ➤ Returns: All possible combinations of rows from both tables.
-   ➤ Banking Example: Shows every customer with every account (Cartesian product).
+ 
+SELECT  *
+FROM Customer
+CROSS JOIN Product;
 
+| customer_id | customer_name | product_id | product_name |
+| ----------- | ------------- | ---------- | ------------ |
+| 101         | Alice         | 1          | Laptop       |
+| 101         | Alice         | 2          | Mobile       |
+| 101         | Alice         | 3          | Tablet       |
+| 102         | Bob               |   1          | Laptop       |
+| 102         | Bob               | 2          | Mobile       |
+| 102         | Bob               | 3          | Tablet       |
+| 103         | Charlie       | 1          | Laptop       |
+| 103         | Charlie       | 2          | Mobile       |
+| 103         | Charlie       | 3          | Tablet       |
+
+-----------------------------------------------------------------------------------
 6. SELF JOIN
    ➤ Returns: A table joined with itself.
    ➤ Banking Example: Used to find customers or employees related to each other (e.g., same branch or manager)
@@ -1051,6 +1110,7 @@ CREATE TABLE customer (
 
 updated on 1-1-26@08.28,@18.29
 updated on 2-1-26 @18.23
+updated on 4-1-26@22.55
 
 
 
