@@ -792,6 +792,11 @@ INNER JOIN items_customer
 ON items.product_id = items_customer.customer_name;
 ❌ MySQL allows comparing INT with VARCHAR, but the logic is wrong
 SQL, joins are almost always done between columns of the same (or compatible) data type
+
+QA Perspective:
+Verify only matching rows appear.
+Test edge cases: no matching rows → result should be empty.
+Test duplicate CustomerIDs → all matches should appear.
 -------------------------------------------------------------------------
 
 2. LEFT JOIN
@@ -811,6 +816,10 @@ ON Product.product_id = Customer.product_id;
 | Mobile               | Bob           |
 | Tablet               | NULL          |
 
+QA Perspective:
+Verify all left table rows appear, even if there’s no match.
+Check NULLs for unmatched rows.
+Edge cases: left table empty → result should be empty.
 --------------------------------------------------------------------------
 3. RIGHT JOIN
    ➤ Returns: All rows from the right table and matching rows from the left table (NULL if no match).
@@ -826,6 +835,11 @@ Charlie   null
 
 In a RIGHT JOIN, the table after RIGHT JOIN is considered the right table.
  All its rows are returned, and matching rows from the left table are included. If no match exists, the left table columns are NULL
+
+QA Perspective:
+Verify all right table rows appear, even if left table has no match.
+Check NULLs for unmatched rows.
+Edge cases: right table empty → result should be empty.
 ---------------------------------------------------------------------------------
 4. FULL JOIN
    ➤ Returns: All rows from both tables (matched + unmatched, with NULLs).
@@ -836,6 +850,12 @@ FULL JOIN table2
 ON table1.common_column = table2.common_column;
 
 FULL JOIN is commonly used in analytics to combine two datasets fully, e.g., comparing marketing recipients with actual purchasers to identify conversions, missed targets, and unmatched data.
+
+QA perspective:
+Test that all rows from both tables appear.
+Verify that unmatched rows show NULLs in the missing columns.
+Edge cases: empty tables, no matching rows, duplicate keys.
+here edge cases means?
 ---------------------------------------------------------------------------------
 
 5. CROSS JOIN
@@ -862,9 +882,88 @@ CROSS JOIN Product;
    ➤ Returns: A table joined with itself.
    ➤ Banking Example: Used to find customers or employees related to each other (e.g., same branch or manager)
 
+QA use case: Useful when verifying hierarchical relationships.
 
+SELECT columns
+FROM table_name t1
+JOIN table_name t2
+ON join_condition;
+
+INSERT INTO student (id, name, city, subj) VALUES
+(1, 'Alice', 'New York', 'Math'),
+(2, 'Bob', 'Los Angeles', 'Science'),
+(3, 'Charlie', 'New York', 'Math'),
+(4, 'David', 'Chicago', 'History'),
+(5, 'Eve', 'Los Angeles', 'Science');
+
+SELECT 
+    t1.name   AS      Student1,
+    t2.name  AS    Student2,
+    t1.city
+FROM      student t1
+JOIN    student t2
+ON    t1.city = t2.city    AND   t1.id <> t2.id;
+
+| Student1 | Student2 | city        |
+| --------        | --------          | ----------- |
+| Alice       | Charlie    | New York    |
+| Charlie  | Alice         | New York    |
+| Bob           | Eve               | Los Angeles |
+| Eve           | Bob               | Los Angeles |
+
+//✅ Notice that Alice is paired with herself, and Charlie is paired with herself.
+
+This happens because a row always matches itself when you join the table on a column it shares (like city).
+t1.city = t2.city → pairs students in the same city
+t1.id <> t2.id → excludes a student pairing with themselves, because their id would be the same.
+What t1.id <> t2.id does
+Prevents self-pairing (Alice–Alice, Charlie–Charlie).
+Only keeps pairs of different students living in the same city.
+-----------------------------------------------------------------
+A. Find products from the same category --> Products :
+
+| ProductID | ProductName | CategoryID |
+| --------- | ----------- | ---------- |
+| 1         | Pen            | 101        |
+| 2         | Pencil      | 101        |
+| 3         | Notebook  | 102        |
+| 4         | Eraser      | 101        |
+
+Result:
+Pairs of products in the same category (excluding self-pairing).
+
+QA Considerations:
+Check that a product isn’t matched with itself.
+Ensure all products in the same category are included.
+Check edge cases: categories with only 1 product (should return no row).
+-----------------------------------------------------------------------
+B. Find customers living in the same city---> Customers:
+
+CustomerID	CustomerName	         City
+1	         Alice	                New York
+2	         Bob	                 New York
+3	      Charlie	                 Boston
+
+Query:
+
+SELECT c1.CustomerName AS Customer1, c2.CustomerName AS Customer2, c1.City
+FROM Customers c1
+JOIN Customers c2
+ON c1.City = c2.City
+AND c1.CustomerID != c2.CustomerID;
+
+
+Result:
+Pairs of customers in the same city.
+
+QA Considerations:
+Check for duplicate pairs (Alice-Bob vs Bob-Alice).
+Test cities with only one customer (no rows should return).
+Check NULL city values (should handle appropriately).
+---------------------------------------------------------------------------
 • Cartesian Join
 A Cartesian Join (also known as a Cross Join) in SQL is a type of join operation that returns the Cartesian product of the two tables — meaning every row from the first table is combined with every row from the second table.
+
 SELECT *
 FROM table1
 CROSS JOIN table2;
@@ -872,48 +971,102 @@ CROSS JOIN table2;
            OR
 SELECT *
 FROM table1, table2;
+
+1. Product Recommendations / Bundling
+Scenario:
+You want to create all possible product bundles for a marketing campaign, like “Buy 2 items together.”
+Products : 
+ProductID	ProductName
+1		Pen
+2		Notebook
+3		Eraser
+
+Goal: Generate all 2-product combinations for bundles.
+QA Perspective:
+Verify all combinations are generated.
+Check no self-pairing.
+Validate against manual calculation for small product sets.
+
+EXAMPLE 2 :Scenario:
+Generate a report showing all cities × all product categories, e.g., for warehouse planning or marketing campaigns.
+
+Tables:
+Cities: New York, Boston
+Categories: Stationery, Electronics
+
+Use Case:
+QA checks coverage for campaigns or stock availability.
+Ensures all city-category combinations are included in reports.
 ============================================================================================================================================================
 Q Data Definition Language (DDL)
 DDL is a subset of SQL used to define, modify, and manage the structure of database objects such as tables, schemas, indexes, and views.
+DDL commands operate at the table level, but they can also work on other objects like indexes, views, and schemas
 
 Q. Create :Used to create new database objects like tables, views, schemas, or indexes.
-CREATE TABLE Employees (
-    emp_id INT PRIMARY KEY,
-    emp_name VARCHAR(100),
-    salary DECIMAL(10,2)
+
+CREATE TABLE table_name (
+    column1_name data_type [constraints],
+    column2_name data_type [constraints],
+    column3_name data_type [constraints],
+    ...
 );
+
+//create column
+
+ALTER    TABLE   table_name
+ADD  column_name  data_type   [constraints];
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 Q. Rename :Used to rename an existing database object (like a table or column).
 
-RENAME TABLE Employees TO Staff;
+RENAME TABLE Employees TO Staff;          //table name remain
+
+//coulmn name rename
+ALTER TABLE Employees
+CHANGE FirstName First_Name ;
+
+//rename column
+ALTER TABLE table_name
+CHANGE    old_column_name     new_column_name      data_type;
+
+//rename table
+ALTER  TABLE   old_table_name  RENAME   TO  new_table_name;
+
+//add column
+ALTER TABLE table_name
+ADD column_name data_type [constraints];
+
+//modify column
+ALTER TABLE Employees
+MODIFY Salary DECIMAL(12,2) NOT NULL;
 -----------------------------------------------------------------------------------------------------------------------------------------------------
 Q Alter : Used to modify the structure of an existing table — such as adding, deleting, or modifying columns.
 
 ALTER TABLE Employees ADD department VARCHAR(50);
 
 ---------------------------------------------------------------------------
-Q Truncate : Removes all rows from a table, resets identity counters, and is faster than DELETE. 
-You cannot rollback in most databases. 
 
+Truncate : Removes all rows from a table, resets identity counters, and is faster than DELETE. 
+You cannot rollback in most databases. Table level
 TRUNCATE TABLE Employees;
 
----------------------------------------------------------------------------
-Q Drop : Used to permanently delete a database object — structure and data.
-DROP TABLE Employees;
-
+• DROP – Completely removes the table and its structure from the database. Object level (table, view, index)
+DROP TABLE employees;  
 //QA relevance: Knowing the difference helps avoid accidental data loss when preparing or cleaning test data. 
  
-
+DELETE – Removes specific rows from a table based on a WHERE clause. 
 =========================================================================
 
 --> Data Manipulation Language (DML)
-DML (Data Manipulation Language) is a subset of SQL used to manipulate and manage data stored inside database tables.
+DML (Data Manipulation Language) is a subset of SQL used to manipulate and manage data stored inside database tables.only works on the rows of a table.
 
 • Insert :Used to add new records (rows) into a table.
+
 INSERT INTO table_name (column1, column2, ...)
 VALUES (value1, value2, ...);
 
 • Update : Used to modify existing data in a table.
+
 UPDATE table_name
 SET column1 = value1, column2 = value2, ...
 WHERE condition;
@@ -922,7 +1075,18 @@ WHERE condition;
 DELETE FROM table_name
 WHERE condition;
 
-Q.select
+Q.select :Retrieve data from tables
+//select,insert,update,delete
+
+//When testing DML operations, QA focuses on data correctness, integrity, and constraints:
+
+DML Operation	QA Checks / Edge Cases
+INSERT	Duplicate keys, NOT NULL, data type mismatch, triggers firing
+UPDATE	Only correct rows updated, constraints respected, no unintentional data changes
+DELETE	Only intended rows deleted, cascade delete effects, foreign key constraints
+SELECT	Correct data returned, filters and joins work, performance on large datasets
+//NULL is allowed in a column only if the column is defined as nullable
+//Duplicate is allowed only if there is no UNIQUE or PRIMARY KEY constraint.
 ===========================================================================================================================================================
 • Data Query Language (DQL)
 DQL is a subset of SQL (Structured Query Language) used to query or fetch data from a database.
@@ -937,30 +1101,124 @@ FROM table_name;
 Purpose: Specifies the table from which to retrieve data.
 SELECT * FROM Students;
 
+| OrderID | CustomerID | Amount | Status    |
+| -------   | ---------- | ------ | --------- |
+| 101     | 1          | 50     | Completed |
+| 102     | 2          | 30     | Pending   |
+| 103     | 1          | 70     | Completed |
+| 104     | 3          | 90     | Cancelled |
+
+---------------------------------------------------------------------------
+
+//What is the difference between WHERE and HAVING?
+
 3. WHERE
-Purpose: Filters rows based on a condition.
+Filters rows before grouping. 
+
 SELECT column1, column2
 FROM table_name
 WHERE condition;
 
+Find all orders over $50.
+
+SELECT OrderID, CustomerID, Amount
+FROM Orders
+WHERE Amount > 50;
+
+QA Perspective:
+Verify filter works correctly.
+Edge cases: Amount = 50 (boundary check), NULL amounts.
+Test with multiple conditions: WHERE Amount > 50 AND Status = 'Completed'.
+-------------------------------------------
 4. GROUP BY
 Purpose: Groups rows that have the same values in specified columns, often used with aggregate functions like COUNT, SUM, AVG.
 SELECT column, COUNT(*)
 FROM table_name
 GROUP BY column;
 
+Purpose: Aggregate rows by one or more columns.
+Example: Total sales per customer.
+
+SELECT CustomerID, SUM(Amount) AS TotalSpent
+FROM Orders
+GROUP BY CustomerID;
+
+| CustomerID | TotalSpent |
+| ---------- | ---------- |
+| 1          | 120        |
+| 2          | 30         |
+| 3          | 90         |
+
+QA Perspective:
+Verify aggregation is correct (sum, count, avg, etc.).
+Edge cases: customer with no orders → not included unless LEFT JOIN used.
+Test with duplicate rows to ensure aggregation counts correctly.
+------------------------------------------------
 5. HAVING
-Purpose: Filters groups created by GROUP BY. Unlike WHERE, HAVING works on aggregated data.
+Filters   after aggregation..
 SELECT column, COUNT(*)
 FROM table_name
 GROUP BY column
 HAVING COUNT(*) > 1;
+
+Purpose: Filter after aggregation.
+Example: Customers who spent more than $100 in total.
+
+SELECT CustomerID, SUM(Amount) AS TotalSpent
+FROM Orders
+GROUP BY CustomerID
+HAVING SUM(Amount) > 100;
+
+| CustomerID | TotalSpent |
+| ---------- | ---------- |
+| 1          | 120        |
+
+//QA note: When validating aggregated reports, you’ll often use HAVING.
+
+QA Perspective:
+Test that HAVING filters aggregates, not individual rows.
+Edge case: customer with exactly $100 → not included.
+Compare results with/without HAVING for correctness.
+------------------------------------------------
 
 6. ORDER BY
 Purpose: Sorts the result set by one or more columns.
 SELECT column1, column2
 FROM table_name
 ORDER BY column1 ASC|DESC;
+
+Example: List customers by total spending descending.
+
+SELECT CustomerID, SUM(Amount) AS TotalSpent
+FROM Orders
+GROUP BY CustomerID
+ORDER BY TotalSpent DESC;
+
+| CustomerID | TotalSpent |
+| ---------- | ---------- |
+| 1          | 120        |
+| 3          | 90         |
+| 2          | 30         |
+
+QA Perspective:
+Verify sorting is correct (ascending/descending).
+Test null handling in order by column.
+Combine with multiple columns: ORDER BY TotalSpent DESC, CustomerID ASC.
+
+Combined Example
+
+Scenario: Find customers who spent more than $50 in total, and order them by total spending descending.
+
+SELECT CustomerID, SUM(Amount) AS TotalSpent
+FROM Orders
+GROUP BY CustomerID
+HAVING SUM(Amount) > 50
+ORDER BY TotalSpent DESC;
+
+| CustomerID | TotalSpent |
+| ---------- | ---------- |
+| 1          | 120        |
+| 3          | 90         |
 
 ============================================================================================================================================================
 
@@ -996,8 +1254,6 @@ query inside another query.
 It is used to fetch data that will be used by the main query.
 Subqueries are enclosed in parentheses ( ).
 They can be used in SELECT, FROM, WHERE, or HAVING clauses
-The main query is called the outer query.
-The subquery executes first, and its result is passed to the outer query
 
 • Working of Sub Query
 The main query is called the outer query.
@@ -1013,9 +1269,11 @@ The subquery executes first, and its result is passed to the outer query
 | 105       | Eva          | 4500    | Uptown   |
 
 a) Single-row Subquery
-A single-row subquery returns only one row (and usually one column) as its result. It is typically used with comparison operators like =, <, >, <=, >=, or <>.
+A single-row subquery returns only one row (and usually one column) as its result. 
+It is typically used with comparison operators like =, <, >, <=, >=, or <>.
 
 Query: Find the customer with the highest balance.
+
 SELECT CustomerName, Balance
 FROM Accounts
 WHERE Balance = (SELECT MAX(Balance) FROM Accounts);
@@ -1025,7 +1283,8 @@ Subquery (SELECT MAX(Balance) FROM Accounts) → 9000
 Outer query fetches CustomerName with balance = 9000 → David
 ---------------------------------------------------------------------------------------------
 b) Multiple-row Subquery
-A multiple-row subquery can return more than one row. It is usually used with operators like IN, ANY, ALL, or EXISTS.
+A multiple-row subquery can return more than one row. 
+It is usually used with operators like IN, ANY, ALL, or EXISTS.
 
 Query: Find customers whose balance is greater than average.
 
@@ -1039,6 +1298,7 @@ Outer query fetches rows where Balance > 5800 → Bob (7500), David (9000)
 -------------------------------------------------------------------------------------------
 c) Subquery in FROM Clause
 Query: Show branches with average balance > 5000.
+
 SELECT Branch, AvgBalance
 FROM (SELECT Branch, AVG(Balance) AS AvgBalance
       FROM Accounts
@@ -1053,7 +1313,95 @@ Midtown → 9000
 Outer query filters branches with AvgBalance > 5000 → Uptown, Midtown
 
 ============================================================================================================================================================
+Q . What is normalization and why is it important in databases? 
 
+Normalization is a database design technique used to organize data in a relational database efficiently
+Normalization is usually done in stages called normal forms:
+
+----------------------------------------------------
+1. First Normal Form (1NF) : 
+Each column must contain atomic (indivisible) values.
+Each row must be unique.
+No repeating groups or arrays.
+
+//Not atomic (wrong in 1NF):
+StudentID	Name	Courses
+1	        Alice	Math, Physics
+
+Not 1NF → courses are multiple values in one column
+
+1NF Version:
+StudentID	Name	Course
+1	        Alice	Math
+1	        Alice	Physics
+
+//Primary Key (composite): (StudentID, Course)
+---------------------------------------------------------------
+2. Second Normal Form (2NF) :
+
+Already in 1NF.
+No partial dependency: every non-key column must depend on the whole primary key, not just part of it.
+Only relevant if the primary key is composite. 
+
+Problem in 1NF Table
+Primary Key = (StudentID, Course)
+Name depends only on StudentID, not on Course
+❌ Partial dependency → violates 2NF
+
+Solution: Split into two tables:
+
+//2NF Solution (Split Tables) :
+Students Table :
+StudentID	Name
+1		Alice
+
+StudentCourses Table
+StudentID	Course
+1		Math
+1		Physics
+
+✅ Now:
+
+Name depends fully on StudentID
+No partial dependency
+Tables are in 2NF
+---------------------------------------------------------------
+
+3. Third Normal Form (3NF)
+Rule :
+Must be in 2NF
+No transitive dependency
+(Non-key attributes must not depend on other non-key attributes)
+Third Normal Form (3NF) → Most widely used
+
+Check for Transitive Dependency :
+StudentID → Name
+No other non-key attribute depends on Name
+✅ No transitive dependency
+
+Solution: Split:
+Students: StudentID, Name, Department
+Departments: Department, DeptHead
+
+QA importance: Understanding normalization helps in writing joins for related data correctly. 
+---------------------------------------------------------------------
+| Normal Form | Rule                                 |
+| ----------- 	  | ------------------------------------ |
+| 1NF    		     | Atomic values, unique rows           |
+| 2NF    		     | 1NF + no partial dependency          |
+| 3NF    		     | 2NF + no transitive dependency       |
+| BCNF     	     | Every determinant is a candidate key |
+
+===========================================================================
+Q. What is denormalization, and when might QA encounter it? 
+Denormalization is the process of combining tables or adding redundant data to improve read performance at 
+the expense of storage space. 
+Example: 
+• Instead of keeping customer details in a separate table and joining every time, some systems store them 
+directly in the orders table for faster reporting. 
+QA relevance: When testing reporting systems or data warehouses, denormalization is common — you 
+need to ensure data consistency across multiple redundant storage locations. 
+============================================================================================================================================================
 
 ---> Transaction Control Language (TCL)
 TCL (Transaction Control Language) commands are used to manage transactions in a database — that is, to ensure that a group of DML statements (like INSERT, UPDATE, DELETE) are executed as a single unit of work.
@@ -1110,7 +1458,7 @@ CREATE TABLE customer (
 
 updated on 1-1-26@08.28,@18.29
 updated on 2-1-26 @18.23
-updated on 4-1-26@22.55
+updated on 4-1-26@22.55@18.17
 
 
 
