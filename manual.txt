@@ -1,11 +1,313 @@
-Q1.WHAT IS SDLC
+Q. What is Software Testing? 
+
+Software Testing is the process of evaluating and verifying that a software application or system meets the specified requirements and works as intended. 
+It involves executing the software to identify defects, ensuring it is free from critical bugs, and confirming that it delivers the expected business value. 
+• The main goals are: 
+o Verification: Does the software meet the design specifications? 
+o Validation: Does the software meet the customer’s needs? 
+• Testing is not only about finding defects; it’s also about preventing defects and improving quality. 
+
+========================================================================================================
+Q.WHAT IS SDLC
+
 It’s the process that defines how software is planned, developed, tested, deployed, and maintained to ensure quality and efficiency.
 The goal of the SDLC life cycle model is to deliver high-quality, maintainable software that meets the user's requirements.
----------------------------------------------------------------------------------------------------------------------------------------------------
-Q2.different phases of SDLC
-six key phases —
- Requirement Analysis, Design, Development, Testing, Deployment, and Maintenance.
+------------------------------------------------------------------------------------------------------------------------------------------------
 
+Q. different phases of SDLC
+
+six key phases — 
+ Requirement Analysis, Design, Development, Testing, Deployment, and Maintenance.
+---------------------------------------------------------------------------------------------------------
+1. Requirement Analysis
+
+--->Objective: Understand what the retail business needs.
+
+--->Stakeholders:(Each stakeholder has different needs)
+Store Owner → wants profit, reports, control
+Store Manager → wants smooth operations
+Cashiers → want fast and simple billing
+Inventory Staff → want accurate stock tracking
+Customers → want easy shopping and correct pricing
+If we don’t list stakeholders, we may miss important requirements.
+Listing stakeholders ensures the system supports all business roles
+
+--->Requirements Identified:
+Product management (add, update, delete products((usually suggested by store manager / inventory team)))
+Inventory tracking (stock in/out, low-stock alerts((inventory staff need)))
+Billing and invoicing
+Customer management (owner & marketing need)
+Sales reports (daily, monthly, yearly (store owner & manager need))
+User roles (admin, cashier, manager)((security & control requirement))
+
+Secure login and data backup
+
+--->Output:
+Software Requirement Specification (SRS) document
+---------------------------
+2. System Design
+
+--->Objective: Plan how the system will work.
+
+--->Design Activities:
+Architecture Design: 3-tier architecture (UI, Business Logic, Database),
+UI → API Gateway → Independent Microservices (Business Logic) → Separate Databases
+Database Design: Tables for Products, Customers, Sales, Users, Inventory
+UI Design: Screens for login, billing, inventory, reports
+
+--->Technology Stack (example) :
+Frontend: Web or Desktop UI
+Backend: Java / .NET / Python
+Database: MySQL / PostgreSQL
+
+--->Output:
+System Design Document (SDD)
+ER diagrams and flowcharts
+------------------
+3. Implementation (Coding)
+
+--->Objective: Develop the system based on design.
+
+--->Modules Developed:
+Login & User Management Module
+Product & Inventory Module
+Billing & Payment Module
+Customer Management Module
+Reporting Module
+
+--->Activities:
+Write source code
+Follow coding standards
+Version control (Git)
+
+--->Output:
+Working software modules
+-----------------------
+4. Testing
+Objective: Ensure the system works correctly.
+
+Types of Testing:
+Unit Testing: Test individual modules 
+(e.g., billing calculation :Correct total price calculation,Correct tax (GST/VAT) applied,Correct discount calculation)
+------------------------------------
+Integration Testing: Test interaction between modules
+1.Returns Module + Inventory Module
+When a product is returned, the stock quantity should increase accordingly
+
+2.Tax Module + Billing Module
+Applicable taxes should be calculated correctly based on product category and location
+
+3.User Account Module + Orders Module
+Order history should appear correctly in the customer’s account after purchase
+
+4.Notification Module + Orders Module
+Order confirmation email/SMS should be triggered after placing an order
+
+5.Cart Module + Inventory Module
+Adding an item to cart should reserve or validate available stock
+
+6.Loyalty Module + Promotions Module
+Loyalty points should be redeemable during checkout and correctly applied to the bill
+
+Payment Module + Orders Module
+After successful payment, order status should change to Confirmed/Paid
+
+Inventory Module + Purchase Module
+When new stock is received, inventory levels should increase automatically
+
+Promotions Module + Billing Module
+Applied discounts or coupons should correctly reduce the final bill amount
+
+Shipping Module + Orders Module
+Once an order is shipped, the order status should update to Shipped and tracking details should be added
+---------------------------------
+System Testing: Test full retail system
+
+Objective:
+To verify that the retail system correctly manages inventory from order placement to stock replenishment and reflects accurate stock information across all modules.
+
+1. Order Placement (Orders Module)
+
+Customer selects a product and places an order through the website or mobile app.
+Order details (product ID, quantity, customer info) are saved successfully.
+Order status is set to Placed.
+
+2. Payment Processing (Payment Module)
+
+Customer completes payment using a valid payment method.
+Payment is authorized and marked as Successful.
+Order status updates to Confirmed.
+--------
+//payment modules works here like:
+Payment Authorization and Success (Payment Module)
+
+1.After the customer submits payment details (card/UPI/net banking/wallet), the payment request is securely sent to the payment gateway.
+
+2.The gateway validates the payment information,
+
+ including:
+Card or account validity
+Available balance or credit limit
+Fraud and security checks (CVV, OTP, 3-D Secure, etc.)
+three domains involved in securing an online card payment:
+Issuer Domain – the bank that issued your card
+Acquirer Domain – the merchant’s bank
+Interoperability Domain – the card network (Visa, Mastercard, etc.)
+
+3.Once all validations pass, the issuing bank approves the transaction.
+
+4.The payment gateway returns a success response to the retail system with:
+Transaction ID
+Authorization code
+Payment status = Successful
+
+5.The system records the transaction details in the payment database.
+6.The order status is automatically updated from Pending to Confirmed.
+7.A payment confirmation message/email/SMS is triggered for the customer.
+8.The system ensures no duplicate payment is created for the same order.
+-----------------
+3. Inventory Update (Inventory Module)
+
+System automatically reduces product stock based on purchased quantity.
+Updated stock count is stored in the inventory database.
+
+4. Low-Stock Alert (Inventory Rules + Notification Module)
+
+When stock falls below the predefined threshold, a low-stock rule is triggered.
+System sends alert notifications to the admin/store manager via email or dashboard alert.
+
+5 .Stock Replenishment (Purchase/Supplier Module)
+
+Admin raises a purchase order to the supplier.
+Supplier delivers new stock and goods receipt is recorded in the system.
+Inventory quantity is increased accordingly.
+
+6 .System-Wide Stock Update (Website, Admin, Reports)
+
+Updated stock is immediately visible on:
+Customer website/product listing
+Admin inventory dashboard
+Inventory and sales reports
+
+Product becomes available again for customers to purchase.
+
+Expected Results:
+Order and payment are processed successfully
+Inventory quantity is accurately reduced and replenished
+Low-stock alerts are triggered at the right threshold
+Updated stock values are consistent across all system interfaces
+No manual intervention is required for stock synchronization
+-----------------------------------------------------------
+User Acceptance Testing (UAT): 
+
+UAT Test Case 1: Product Sale at POS
+
+Business Requirement:
+Cashier should be able to sell a product and inventory should update automatically.
+
+UAT Steps:
+1.Cashier logs into POS system
+2.Scans product barcode
+3.System displays:
+	Product name
+	Price
+	Available stock
+4.Cashier selects quantity
+5.Customer pays by card
+6.Bill is generated
+
+Expected Result:
+Payment is successful
+Receipt is printed
+Inventory reduces by sold quantity
+Sales report is updated
+
+✅ User Acceptance: Store manager confirms the flow matches real store operations.
+
+----------------------------------------
+UAT Test Case 2: Inventory Reorder Alert
+
+Business Requirement:
+System should alert when stock falls below reorder level.
+
+UAT Steps:
+1.Sell multiple units of a product
+2.Stock reaches minimum threshold
+
+Expected Result:
+System generates low-stock alert
+Product appears in reorder report
+
+✅ User Acceptance: Inventory team confirms alert is useful and accurate.
+
+-----------------------------------------
+UAT Test Case 3: Product Return & Refund
+
+Business Requirement:
+Customer can return items and get refund.
+
+UAT Steps:
+1.Cashier selects “Return Item”
+2.Enters original bill number
+3.Selects product to return
+4.Issues refund
+
+Expected Result:
+Refund processed
+Inventory increases
+Return recorded in reports
+
+✅ User Acceptance: Finance team validates refund accuracy.
+----------------------------------------
+UAT Test Case 4: End-of-Day Sales Report
+
+Business Requirement:
+Manager should view daily sales summary.
+
+UAT Steps:
+1.Manager logs in
+2.Opens sales report
+3.Selects date
+
+Expected Result:
+Total sales shown
+Payment-mode breakdown (cash/card/UPI)
+No discrepancies
+
+✅ User Acceptance: Manager approves report format.
+
+
+Output:
+Test cases
+Bug reports
+Tested application
+---------------------
+5. Deployment
+Objective: Make the system available for use.
+
+Activities:
+Install software on store systems
+Configure database
+Migrate existing product data
+Train staff
+
+Output:
+Live Retail Management System
+---------------------------
+6. Maintenance
+
+Objective: Keep the system running efficiently.
+
+Maintenance Tasks:
+Fix bugs
+Update features (e.g., GST changes)
+Improve performance
+Add new modules (online orders, loyalty points)
+
+Output:
+Updated versions of the system
+
+---------------------------------------------------------------------------------------------------------
 1.requirement gathering : BRD / BRS               :BA
 2.requirement analysis  : FRD / SRS               :Proj.manager
 3.design                : HLD        ->HLDD        :sr.architect / sr.devloper
@@ -22,7 +324,7 @@ Stage 1: req. gathering :It involves collecting, documenting, and managing the r
 |      Requirement Gathering       |  <-- Overall phase: Identifying what the system should do
 +----------------------------------+
                 |
-                v
+                v                  
       +--------------------+
       |   Stakeholder      |  <-- Phase 1: Conduct interviews
       |    Interviews      |      - Meet with stakeholders (clients, users, etc.)
@@ -50,7 +352,7 @@ Stage 1: req. gathering :It involves collecting, documenting, and managing the r
       +--------------------------+      - Used as a reference for all following phases
 
 
-+----------------------------------------------------------
++---------------------------------------------------------------------------------------------------------------------------
 
 Stage 2:  Requirement Analysis: The goal of the analysis part is to remove incompleteness and inconsistencies
 (R.G:Identifying what the system should do)
@@ -226,7 +528,7 @@ involving planned and unplanned activities to keep the system reliable and up-to
 6.Documentation: The process of creating, updating, and maintaining the documentation for the software, including user manuals, technical specifications, and design documents.
 --------------------------------------------------------------------------
 
-Q3.different SDLC Models
+3.different SDLC Models
 
 • Waterfall Model :
 phases: requirement Analysis
@@ -416,6 +718,44 @@ Too many requirements changes can make it messy.
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 • V & V Model
+
+Q . Difference between Verification and Validation. 
+• Verification ensures the product is built according to the requirements and design. It answers, “Are we 
+building the product right?” 
+Example: Reviewing documents, inspecting code. 
+
+1.Reviewing requirement documents to ensure:
+Tax calculation rules match government regulations
+Discount logic follows store policies
+
+2.Checking database design to confirm:
+Inventory tables correctly track stock levels
+Customer tables include loyalty points fields
+
+3.Code reviews to ensure:
+POS billing module follows the defined algorithm
+Security standards are applied to payment modules
+
+• Validation ensures the product meets the actual needs of the user. It answers, “Are we building the 
+right product?” 
+
+Product Master :
+New products added appear correctly on POS and website
+Price, tax, and barcode updates reflect instantly during checkout
+Product availability updates correctly after every sale
+Sales reports generate correctly by store, product, and date
+Inventory reports update accurately after each sale or purchase
+Promotion performance reports reflect correct discount usage
+//POS here :
+✔ POS is offline / in-store
+✔ Cashier scans product : Stock quantity decreases 
+✔ Sale updates admin panel
+✔ Reports are generated
+
+Example: Testing the application with real-world scenarios. 
+Key point: Verification is a static process (no code execution), while Validation is a dynamic process 
+(involves running the code). 
+-------------------------------------------------------------------------
 even though we operate in Agile, we CAN embed V-Model principles by involving QA, during story grooming, defining acceptance criteria early, and maintaining an RTM that links user stories to test cases and defects.
 This hybrid approach has helped us detect design defects early and maintain compliance documentation efficiently.
 Even though we follow Agile now, the core idea of the V-Model — early verification and validation — still applies.
@@ -1173,6 +1513,7 @@ Q. static testing vs dynamic testing?
   5. reviewing the documents               |  execute the test cases on application
 
 updated on 22-12-2025@18.14
+updated on 06-01-2026
 
 
 
