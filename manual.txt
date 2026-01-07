@@ -11,7 +11,7 @@ o Validation: Does the software meet the customer’s needs?
 Q.WHAT IS SDLC
 
 It’s the process that defines how software is planned, developed, tested, deployed, and maintained to ensure quality and efficiency.
-The goal of the SDLC life cycle model is to deliver high-quality, maintainable software that meets the user's requirements.
+//The goal of the SDLC life cycle model is to deliver high-quality, maintainable software that meets the user's requirements.
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
 Q. different phases of SDLC
@@ -29,8 +29,7 @@ Store Manager → wants smooth operations
 Cashiers → want fast and simple billing
 Inventory Staff → want accurate stock tracking
 Customers → want easy shopping and correct pricing
-If we don’t list stakeholders, we may miss important requirements.
-Listing stakeholders ensures the system supports all business roles
+
 
 --->Requirements Identified:
 Product management (add, update, delete products((usually suggested by store manager / inventory team)))
@@ -44,10 +43,99 @@ Secure login and data backup
 
 --->Output:
 Software Requirement Specification (SRS) document
----------------------------
+
+Stage 1: req. gathering :It involves collecting, documenting, and managing the requirements that define the features and functionalities of a system or application.
+
+//Use cases describe how a user (or another system) interacts with a system to achieve a specific goal.
+
+
++----------------------------------+
+|      Requirement Gathering       |  <-- Overall phase: Identifying what the system should do
++----------------------------------+
+                |
+                v                  
+      +--------------------+
+      |   Stakeholder      |  <-- Phase 1: Conduct interviews  //owner,cashier,manager,inventory staff
+      |    Interviews      |               Store owner: “I want daily sales reports and profit analysis.”
+					   Cashier: “Billing should be fast and barcode-based.”
+                                           Inventory manager: “Stock should auto-update after sales.”
+      +--------------------+      
+                |
+                v 
+      +--------------------+
+      |   Questionnaires   |  <-- Phase 2: Distribute surveys
+      +--------------------+               How many transactions per day?
+					   Do you offer discounts or loyalty points?
+                                           Payment methods needed (cash, card, UPI)?
+                |                 
+                v
+      +--------------------+
+      | Document Analysis  |  <-- Phase 3: Review existing documents
+      +--------------------+                    Existing billing invoices
+		|				Inventory registers (manual or Excel)
+						GST/tax compliance documents
+		|				Supplier contracts
+
+		|				Findings:
+						Current problems (manual errors, slow billing)
+		|				Legal constraints (tax rules, invoice format)
+						Required integrations (barcode scanners, printers)
+                |                 
+                v
+      +--------------------+
+      |   Use Case Study   |  <-- Phase 4: Define use cases
+      +--------------------+                Example scenario – Process Sale:
+						Cashier logs in
+						Scans product barcode
+						System fetches price & stock
+						Applies discounts/taxes
+						Generates bill
+						Updates inventory
+                |                 
+                v
+      +--------------------------+
+      |   Requirements Document  |  <-- Final Output: SRS (Software Requirements Specification)
+      |   (SRS Specification)    |      Functional Requirements
+      +--------------------------+
+						Product management
+						Inventory management
+						Sales and billing
+						Customer management
+						Supplier management
+						Reports and analytics
+
+					Non-Functional Requirements
+						System should process a sale within 2 seconds
+						Secure login and data encryption
+						99% system availability
+						Easy-to-use interface
+-----------------------------------------------------------------------------------------------------------------------------------
+Use Case: Process Sale ://egs : 
+
+Field		:Description
+Use Case ID	:UC-01
+Use Case Name	:Process Sale
+Actor		:Cashier
+System		:Retail Management System
+Description	:This use case describes how a cashier processes a customer sale and generates a bill.
+Pre-Conditions	:Cashier is registered and logged into the system
+Trigger	Customer:brings items for purchase
+Main Flow	1. Cashier logs into the system
+		2. Cashier scans product barcode
+		3. System fetches product price and stock details
+		4. System applies applicable discounts and taxes
+		5. System generates the bill
+		6. System updates inventory
+Alternate Flow :3a. If product is out of stock, system shows error message
+Post-Conditions:Sale is recorded and inventory is updated
+Business Rules:Tax and discount rules are applied as per store policy
+-----------------------------------------------------------------------------------------------------------------------------------
 2. System Design
 
---->Objective: Plan how the system will work.
+--->Objective: Design is the phase where requirements from the SRS are transformed into a technical blueprint that defines system architecture and implementation details..
+
+High-level architectural design (HLD)
+HLD defines the system’s overall architecture, including major modules, interfaces, data flow, and interactions between components.
 
 --->Design Activities:
 Architecture Design: 3-tier architecture (UI, Business Logic, Database),
@@ -63,33 +151,221 @@ Database: MySQL / PostgreSQL
 --->Output:
 System Design Document (SDD)
 ER diagrams and flowcharts
-------------------
-3. Implementation (Coding)
 
---->Objective: Develop the system based on design.
++----------------+           +----------------+           +----------------+
+|    Product     |           |    Inventory   |           |      Sales     |
++----------------+           +----------------+           +----------------+
+| productId (PK) |<--------- | inventoryId(PK)| --------> | saleId (PK)    |
+| name           |  Stocks   | productId (FK) |  Sold In  | productId (FK) |
+| price          |           | quantity       |           | quantitySold   |
+| category       |           | lastUpdated    |           | saleDate       |
++----------------+           +----------------+           +----------------+
+         ^                             ^
+         | Supplies                     |
+         |                              |
++----------------+                      |
+|    Supplier    |                      |
++----------------+                      |
+| supplierId(PK) |                      |
+| name           |                      |
+| contact        |                      |
+| productId(FK)  |---------------------- 
++----------------+                      
+         |
+         v
++----------------+
+|      User      |
++----------------+
+| userId (PK)    |
+| name           |
+| role           |
+| loginDetails   |
++----------------+
+        ^
+        |
+  Processed By
 
---->Modules Developed:
-Login & User Management Module
-Product & Inventory Module
-Billing & Payment Module
-Customer Management Module
-Reporting Module
+-------------------------------------------
+Low-Level Detailed Design (LLD)
+LLD provides detailed specifications of each module, including class diagrams, algorithms, data structures, and method-level logic for coding
+Example: Inventory Management Module
 
---->Activities:
-Write source code
-Follow coding standards
-Version control (Git)
+-->A . Classes & Responsibilities:
+
+	1.Product :
+	Attributes: productId, name, price, quantity
+
+	2.Inventory
+          Methods:
+          addStock(productId, qty)
+          updateStock(productId, qty)
+          checkAvailability(productId)
+
+	3.InventoryService
+		Validates stock operations
+
+	4.InventoryDAO
+		Handles database CRUD operations
+--> B . Data Structures:
+	HashMap for quick product lookup
+	Tables: Product, Inventory, Sales
+
+--> C . Algorithms / Logic:
+	Reduce stock quantity after each sale
+	Generate low-stock alerts when quantity < threshold
+											
+HLD & LLD Documents
+----------------------------------------------------------------------------------------------------------------------------------------
+Stage 3 : Development / Implementation (Coding)
 
 --->Output:
 Working software modules
------------------------
-4. Testing
-Objective: Ensure the system works correctly.
+
+ The goal is to transform the design into working code using the most suitable programming languages.
+Unit tests are often performed during this phase to make sure that each component functions correctly on its own
+
+
+| Step                       | Developer                             | QA                                                                | optional Role 														
+| -------------------------- | ------------------------------------- | ----------------------------------------------------------------- 
+| Environment Setup          | Setup IDEs, servers, databases        | Ensure test environments are ready; may help configure test tools | System Admin               |
+| Code Planning & Allocation | Break down features, assign tasks     | Understand feature implementation to prepare test cases           | Project Manager, 																           Team Lead |
+| Frontend Development       | Write UI code                         | Review UI specs; early smoke tests if possible                    | UX Designer                |
+| Backend Development        | Write APIs, business logic            | Prepare API test scenarios; review data flows                     | Solution 																	 	   Architect|
+| Database Development       | Design tables, write queries          | Prepare DB test cases (data validation, constraints, triggers)    | DBA                        |
+| Module Integration         | Integrate frontend, backend, DB       | Plan integration test cases; execute early integration tests      | Tech Lead                  |
+| Unit Testing               | Developers test individual modules    | Review unit test coverage; sometimes run sanity tests             | —                          |
+| Code Review & Optimization | Developers review each other’s code   | May review for testability, potential defect areas                | —                          |
+| Version Control & Build    | Commit code, generate builds          | Fetch build for QA testing; confirm build integrity               | Build Engineer             |
+| Handover to QA             | Provide final build and documentation | Begin functional/system testing                                   | —    
+                      
+-----------------------------------------------------------------------------------------------------------------------------------------
+4. Testing :  
+
+The testing phase is where QA validates the complete application against business requirements by executing planned test cases, identifying defects, performing regression testing, and ensuring release readiness.
+
+//QA prespective :
+I ensure test coverage, execute different levels of testing, report and track defects, verify fixes, perform regression testing, and provide quality sign-off for release.
+
+//Q . What types of testing do you perform in the testing phase?
+
+Expected:
+Functional
+Integration
+Regression
+Sanity/Smoke
+UAT support
+
+Optional bonus: API / DB / Automation awareness
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. Deployment
+Objective: Make the system available for use.
+
+Activities:
+Install software on store systems
+Configure database
+Migrate existing product data
+Train staff
+
+Output:
+Live Retail Management System
+//In some projects, there is no separate UAT phase; QA testing and product owner validation ensure release readiness before deployment.
+
+Q: Is UAT mandatory before deployment?
+
+UAT is recommended but not mandatory. In some Agile or product-based projects, QA testing and product owner approval replace formal UAT.
+
+Q: How do you ensure quality without UAT?
+
+We ensure complete requirement coverage, strong regression testing, and involve the product owner early. QA provides confident sign-off before deployment.
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+6. Maintenance
+Output:
+Updated versions of the system
+
+Stage 6 : Maintenance : 
+maintenance phase is the stage of the software lifecycle where a live, production application is continuously monitored, supported, and improved to ensure stability, performance, security, and alignment with evolving business needs.
+
+ => Several Key Aspects of Software Maintenance
+
+1.Bug Fixing: The process of finding and fixing errors and problems in the software.
+2.Enhancements: The process of adding new features or improving existing features to meet the evolving needs of the users.
+3.Performance Optimization: The process of improving the speed, efficiency, and reliability of the software.
+4.Porting and Migration: The process of adapting the software to run on new hardware or software platforms.
+
+
+✅ Planned Maintenance :
+UI improvements for POS screen
+Performance optimization for faster billing
+Adding new payment methods (UPI, wallets, cards)
+
+❌ Unplanned Maintenance :
+Login/authentication failures for staff
+Server downtime or frequent 5xx errors
+Infinite loading spinners
+Extremely slow response times
+Timeouts on common actions :example
+Login
+Timeout: 30–60 seconds
+Example:
+“Session expired due to inactivity. Please log in again.”
+---------------------------------------------------------------------------------------------------------
+1.requirement gathering : BRD / BRS               :BA
+2.requirement analysis  : FRD / SRS               :Proj.manager
+3.design                : HLD        ->HLDD        :sr.architect / sr.devloper
+                        LLD        ->LLDD
+4.devlopment            :                          :devloper
+5.testing         :STLC  ->TSR                     :testor
+6.support & maintenance                            :dev,tester
+============================================================================================================================================================
+System testing consists of three different kinds of testing activities as described below.
+
+Alpha testing: Alpha testing is the system testing performed by the development team.
+
+Beta testing: Beta testing is the system testing performed by a friendly set of customers.
+
+Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
+Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
+
+SDLC Testing Phase – Sub-Steps, Purpose, and Examples
+
+Step 1: Test Planning  
+Purpose: Define testing strategy, objectives, scope, resources, and schedule.  
+Example: Prepare a Test Plan for Login and Fund Transfer modules.
+
+Step 2: Test Case Design  
+Purpose: Create detailed test cases and conditions based on requirements.  
+Example: Write test cases for valid/invalid login and transaction limits.
+
+Step 3: Test Environment Setup  
+Purpose: Configure hardware, software, and data for testing execution.  
+Example: Set up QA server with test database and application build.
+
+Step 4: Test Data Preparation  
+Purpose: Create sample data to execute test cases effectively.  
+Example: Prepare dummy users, accounts, and transaction records.
+
+Step 5: Test Execution  
+Purpose: Run test cases manually or using automation tools.  
+Example: Execute test cases for fund transfer and check results in DB.
+
+Step 6: Defect Logging & Tracking  
+Purpose: Record and monitor any defects or issues found during testing.  
+Example: Log failed transactions in Jira and assign them to developers.
+
+Step 7: Defect Re-testing & Regression Testing  
+Purpose: Verify fixed defects and ensure new changes don’t break existing functions.  
+Example: Re-test login bug fix and run regression on account creation.
+
+Step 8: Test Reporting & Closure  
+Purpose: Summarize results, defects, coverage, and quality status.  
+Example: Create Test Summary Report showing 95% pass rate and 5 open defects.
+=========================================================================================================================================================
 
 Types of Testing:
 Unit Testing: Test individual modules 
 (e.g., billing calculation :Correct total price calculation,Correct tax (GST/VAT) applied,Correct discount calculation)
-------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------
 Integration Testing: Test interaction between modules
 1.Returns Module + Inventory Module
 When a product is returned, the stock quantity should increase accordingly
@@ -281,252 +557,8 @@ Output:
 Test cases
 Bug reports
 Tested application
----------------------
-5. Deployment
-Objective: Make the system available for use.
 
-Activities:
-Install software on store systems
-Configure database
-Migrate existing product data
-Train staff
-
-Output:
-Live Retail Management System
----------------------------
-6. Maintenance
-
-Objective: Keep the system running efficiently.
-
-Maintenance Tasks:
-Fix bugs
-Update features (e.g., GST changes)
-Improve performance
-Add new modules (online orders, loyalty points)
-
-Output:
-Updated versions of the system
-
----------------------------------------------------------------------------------------------------------
-1.requirement gathering : BRD / BRS               :BA
-2.requirement analysis  : FRD / SRS               :Proj.manager
-3.design                : HLD        ->HLDD        :sr.architect / sr.devloper
-                        LLD        ->LLDD
-4.devlopment            :                          :devloper
-5.testing         :STLC  ->TSR                     :testor
-6.support & maintenance                            :dev,tester
-
-Stage 1: req. gathering :It involves collecting, documenting, and managing the requirements that define the features and functionalities of a system or application.
-
-
-
-+----------------------------------+
-|      Requirement Gathering       |  <-- Overall phase: Identifying what the system should do
-+----------------------------------+
-                |
-                v                  
-      +--------------------+
-      |   Stakeholder      |  <-- Phase 1: Conduct interviews
-      |    Interviews      |      - Meet with stakeholders (clients, users, etc.)
-      +--------------------+      - Understand their needs, goals, and expectations
-                |
-                v 
-      +--------------------+
-      |   Questionnaires   |  <-- Phase 2: Distribute surveys
-      +--------------------+      - Collect structured data from larger audiences
-                |                 - Helps capture specific functional or non-functional needs
-                v
-      +--------------------+
-      | Document Analysis  |  <-- Phase 3: Review existing documents
-      +--------------------+      - Study current manuals, reports, or legacy systems
-                |                 - Identify gaps, constraints, and improvements
-                v
-      +--------------------+
-      |   Use Case Study   |  <-- Phase 4: Define use cases
-      +--------------------+      - Model how users will interact with the system
-                |                 - Create scenarios to describe system behavior
-                v
-      +--------------------------+
-      |   Requirements Document  |  <-- Final Output: SRS (Software Requirements Specification)
-      |   (SRS Specification)    |      - Comprehensive documentation of all system requirements
-      +--------------------------+      - Used as a reference for all following phases
-
-
-+---------------------------------------------------------------------------------------------------------------------------
-
-Stage 2:  Requirement Analysis: The goal of the analysis part is to remove incompleteness and inconsistencies
-(R.G:Identifying what the system should do)
-
-process of understanding what the users need from a software system and defining those needs in a clear, precise, and actionable way.
-
-Objectives of Requirement Analysis
-
-Identify business goals and user needs.
-✔ Ensures the system aligns with organizational objectives and solves real user problems.
-
-Define functional and non-functional requirements.
-✔ Functional: what the system should do (features, operations).
-✔ Non-functional: how the system should perform (performance, usability, reliability, etc.).
-
-Detect and resolve conflicts or ambiguities in requirements.
-✔ Helps ensure clarity, consistency, and agreement among stakeholders.
-
-Establish a clear scope for the project.
-✔ Prevents scope creep and defines project boundaries early.
-(Scope creep means the uncontrolled expansion or change in a project's scope — that is, when new features, requirements, or tasks are added after the project has already started, without proper review, approval, or adjustment of time, budget, or resources.)
-
-Provide a baseline for design and validation.
-✔ The requirements document serves as the foundation for system design, development, testing, and validation.
-
-
-
- Step1️⃣         Categorize and Organize Requirements 
- Description :Group raw requirements collected from interviews, surveys, documents, etc., into logical categories.
- Example:     Functional vs Non-Functional, Business vs 																															  System, etc.
-
-2️⃣      Prioritize Requirements	
-Decide which requirements are most important or urgent to implement first.	
-Must-have, Should-have, Could-have, Won’t-have (MoSCoW)
-
-3️⃣    Analyze Feasibility			
-Check if each requirement is technically, economically, and operationally possible.	
-Can we integrate this with existing systems? Do we have budget/time?
-
-4️⃣    Model the Requirements (Process / Data Models)	
-Create visual representations of requirements — helps understand workflows and data.	
-Use case diagrams, DFDs, flowcharts, ER diagrams
-
-5️⃣     Define and Specify Requirements Clearly	
-Convert gathered inputs into clear, unambiguous statements.	
-“The system shall send an email notification after approval.”
-
-6️⃣    Validate Requirements	
-Review with stakeholders to confirm that requirements are correct, complete, and aligned with business goals.	
-Conduct review meetings, walkthroughs, or sign-	offs
-
-7️⃣     Manage Requirement Changes	
-Track updates, additions, or deletions of requirements during the project.	
-Use change request forms, version control, requirement traceability matrix
-
-SRS (System Requirement Specification Document)
---------------------------------------------------------------------------------
-Stage 3 : Design : convert the requirements acquired in the SRS into a format that can be coded in a programming language
-
-
- HLD: outlining the broad structure of the system. 
-It highlights the key components and 
-how they interact with each other, giving a clear overview of the system’s architecture
-
-LLD :  It breaks down each component into smaller parts 
-and provides specifics about how each part will function, guiding the actual coding process
-
-
-Step							Typical Order			Can it overlap or repeat?		Example
-1. System Design (HLD)					Usually comes first		✅ Yes, revised if other designs  change Architecture might change 															   after database design.
-2. Database Design					After high-level design		✅ Often refined after LLD	Data structure changes may affect 															module logic.
-3. Interface (UI/UX) Design			Can start early, parallel to others	✅ Often iterative	        User feedback may cause interface 															redesign.
-4. Detailed (Low-Level) Design				After HLD and database design	✅ Iterative	              Logic may change after testing design.
-5–8 (Data, Module, Security, Integration Design)	Generally follow logical order	✅ Often overlap	Security design may affect database or 																module design.
-
-
-HLD & LLD Documents
--------------------------------------------------------------------------------------------------------
-Stage 4 : Development : The goal is to transform the design into working code using the most suitable programming languages.
-Unit tests are often performed during this phase to make sure that each component functions correctly on its own
-
-
-Development Phase – Banking System 
-1. Environment Setup          → Install IDEs, MySQL, Git, Jenkins. Ensures consistent setup.
-   Example: Configure Spring Boot and connect to MySQL.
-
-2. Code Planning & Allocation → Divide modules among developers. Keeps workflow organized.
-   Example: Assign Account, Transaction, and Security modules.
-
-3. Frontend Development       → Build UI using React/Angular. Creates user-friendly screens.
-   Example: Design Login and Fund Transfer pages.
-
-4. Backend Development        → Develop APIs and logic in Spring Boot. Handles business processing.
-   Example: Create /login and /transfer APIs.
-
-5. Database Development       → Design tables and triggers. Ensures secure data handling.
-   Example: Create account_tbl and transaction_tbl.
-
-6. Module Integration         → Connect frontend, backend, and DB. Ensures system flow.
-   Example: Link UI forms with backend APIs.
-
-7. Unit Testing               → Test individual modules. Detects early coding bugs.
-   Example: Use JUnit to test transfer function.
-
-8. Code Review & Optimization → Review and refine code. Improves quality and performance.
-   Example: Fix loops, check naming, prevent SQL injection.
-
-9. Version Control & Build    → Push code and generate build. Prepares for deployment.
-   Example: Commit to GitHub and trigger Jenkins.
-
-10. Handover to QA            → Deliver build and docs. Starts QA testing phase.
-    Example: Provide Build v1.0 with test data.
-
-
-------------------------------------------------------------------------------------------------------------------------------------------------
-Stage 5 :Testing : During each integration step,
- previously planned modules are added to the partially integrated system and the resultant system is tested. 
-Finally, after all the modules have been successfully integrated and tested, the full working system is obtained and system testing is carried out on this. System testing consists of three different kinds of testing activities as described below.
-
-Alpha testing: Alpha testing is the system testing performed by the development team.
-
-Beta testing: Beta testing is the system testing performed by a friendly set of customers.
-
-Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
-Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
-
-SDLC Testing Phase – Sub-Steps, Purpose, and Examples
-
-Step 1: Test Planning  
-Purpose: Define testing strategy, objectives, scope, resources, and schedule.  
-Example: Prepare a Test Plan for Login and Fund Transfer modules.
-
-Step 2: Test Case Design  
-Purpose: Create detailed test cases and conditions based on requirements.  
-Example: Write test cases for valid/invalid login and transaction limits.
-
-Step 3: Test Environment Setup  
-Purpose: Configure hardware, software, and data for testing execution.  
-Example: Set up QA server with test database and application build.
-
-Step 4: Test Data Preparation  
-Purpose: Create sample data to execute test cases effectively.  
-Example: Prepare dummy users, accounts, and transaction records.
-
-Step 5: Test Execution  
-Purpose: Run test cases manually or using automation tools.  
-Example: Execute test cases for fund transfer and check results in DB.
-
-Step 6: Defect Logging & Tracking  
-Purpose: Record and monitor any defects or issues found during testing.  
-Example: Log failed transactions in Jira and assign them to developers.
-
-Step 7: Defect Re-testing & Regression Testing  
-Purpose: Verify fixed defects and ensure new changes don’t break existing functions.  
-Example: Re-test login bug fix and run regression on account creation.
-
-Step 8: Test Reporting & Closure  
-Purpose: Summarize results, defects, coverage, and quality status.  
-Example: Create Test Summary Report showing 95% pass rate and 5 open defects.
-
-
--------------------------------------------------------------------------------------------------------------------------------------------------------
-
-Stage 6 : Maintenance : Software Maintenance refers to the process of modifying and updating a software system after it has been delivered to the customer
-involving planned and unplanned activities to keep the system reliable and up-to-date
- => Several Key Aspects of Software Maintenance
-
-1.Bug Fixing: The process of finding and fixing errors and problems in the software.
-2.Enhancements: The process of adding new features or improving existing features to meet the evolving needs of the users.
-3.Performance Optimization: The process of improving the speed, efficiency, and reliability of the software.
-4.Porting and Migration: The process of adapting the software to run on new hardware or software platforms.
-5.Re-Engineering: The process of improving the design and architecture of the software to make it more maintainable and scalable.
-6.Documentation: The process of creating, updating, and maintaining the documentation for the software, including user manuals, technical specifications, and design documents.
---------------------------------------------------------------------------
+===========================================================================================================================================================
 
 3.different SDLC Models
 
@@ -1230,7 +1262,7 @@ Q. Globalization Testing: adapted to various languages and regions without any c
 Internationalization testing :checks if the product can be adapted for multiple countries
 Localization testing : checks if it functions correctly in one specific local region or language.
 No text overlap or layout issue due to longer translations
--------------------------------------------------------------------------------------------
+=======================================================================================================================================================
 Q.What is Regression Testing?
 
 Repeated testing of an already tested program, after modification, to discover any 
@@ -1273,8 +1305,12 @@ Reports, Notifications, etc.
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
+==========================================================================================================================================================
+
 Q.What is Test Case? 
 test case is a set of positive and negative executable steps derived from a test scenario
+
+==========================================================================================================================================================
 
 Q Test Case Design Techniques
 Error guessing: prone area is guessed by experience tester based on this prior experience of same type of 
@@ -1290,6 +1326,8 @@ Equivalence partitioning:input data divided into partition of valid & invalid va
 of each group
 eg. valid input 18-65
     invalid input <18 ,65<
+
+==========================================================================================================================================================
 
 Q. Test Case Format:
 
@@ -1310,6 +1348,8 @@ Actual Result: User successfully logged in
 Status: Pass
 Severity / Priority: Medium / High
 Remarks / Comments: Works as expected
+
+===========================================================================================================================================================
 
 Q.STLC phases?
 
@@ -1372,11 +1412,15 @@ Defect Reporting & Tracking
 
 Test Closure
 
+======================================================================================================================================================
+
 Q. Requirement Traceability Matrix
 The RTM is a document which is used to trace or track the requirment .
 In this documents we check for every requirment ,there is ts/tc created & it is executd during the excution phase
 & rtm is used to ensure that every requirement is tested, & there is no requirement is missed out
 
+
+=========================================================================================================================================================
 
 Q.Test Plan and contents available in a Test Plan? 
 Test plan document is a document which contains the plan for all the testing 
@@ -1399,6 +1443,7 @@ o Hardware & Software requirement : Windows 11 PCs, Chrome browser, SQL Database
 o Defect tracking : Defects logged and tracked in JIRA with severity and priority levels.
 o Entry & Exit criteria;Entry – requirements approved & test environment ready; Exit – all critical tests passed, no high-severity defects open.
 
+============================================================================================================================================================
 
 Q. Defect Life Cycle
 
@@ -1429,8 +1474,9 @@ release then the defects are postponed
  Once the defect is repaired, the status will change to FIXED at the end the tester will give 
 CLOSED status if it passes the final test.
 
-
 • Status of Defects: current state of a defect
+
+=====================================================================================================================================================
 
 Q.What is Bug Severity?
 impact on application functionality 
@@ -1456,6 +1502,8 @@ status is based on the customer requirement.
 | 3️⃣   | **Incorrect bank name or branch name** shown on printed statements 					| Impacts brand credibility, must be fixed before release    
 | 4️⃣   | **Error message displayed after successful fund transfer**         						| Causes confusion and customer support issues               
 | 5️⃣   | **Password reset email not being sent**                           								| Users can’t log in — critical for customer access          
+\
+==========================================================================================================================================================
 
 Q.Defect Report :
 formal document used to record issues, errors, or problems found in a product
@@ -1473,6 +1521,8 @@ Priority: High
 Environment: Chrome v118, Windows 11
 Attachments: Screenshot attached
 Status: Open
+
+==========================================================================================================================================================
 
 Q. Bug, Error, Failure
 
@@ -1493,6 +1543,8 @@ According to the rules, this shouldn’t be allowed, but the ATM lets it happen.
 The system fails to behave as expected.
 This is a failure because it’s an observable incorrect behavior
 
+========================================================================================================================================================
+
 Q.Defect Tracking Tool : JIRA
 Tool is software used to log, track, manage, and report defects (bugs) or issues in a system or application
 
@@ -1505,6 +1557,8 @@ Resolved: Developer marks the defect as resolved.
 Testing / Verification: QA retests the defect.
 Closed: If the defect is fixed and verified, it is closed.
 
+========================================================================================================================================================
+
 Q. static testing vs dynamic testing?
   1. it is done early stage of devlopment  |  done later stage of coding
   2. do verification                       |  do validation
@@ -1513,7 +1567,7 @@ Q. static testing vs dynamic testing?
   5. reviewing the documents               |  execute the test cases on application
 
 updated on 22-12-2025@18.14
-updated on 06-01-2026
+updated on 06-01-2026,7/1@18.22
 
 
 
