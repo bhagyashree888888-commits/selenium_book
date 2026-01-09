@@ -12,6 +12,28 @@ Q.WHAT IS SDLC
 
 It’s the process that defines how software is planned, developed, tested, deployed, and maintained to ensure quality and efficiency.
 //The goal of the SDLC life cycle model is to deliver high-quality, maintainable software that meets the user's requirements.
+
+ Requirements are gathered to define customer management, sales tracking, and support features
+			|
+			|
+			v
+the system is designed with secure architecture and workflows; 
+			|
+			|
+			v
+CRM modules are developed and integrated; 
+			|
+			|
+			v
+the portal is thoroughly tested for functionality and performance; 
+			|
+			|
+			v
+deployed for organizational use; 
+			|
+			|
+			v
+and continuously maintained with updates, enhancements, and bug fixes.
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
 Q. different phases of SDLC
@@ -24,12 +46,25 @@ six key phases —
 --->Objective: Understand what the retail business needs.
 
 --->Stakeholders:(Each stakeholder has different needs)
-Store Owner → wants profit, reports, control
-Store Manager → wants smooth operations
-Cashiers → want fast and simple billing
-Inventory Staff → want accurate stock tracking
-Customers → want easy shopping and correct pricing
+Business Owner → wants High-level dashboards, sales & revenue reports, seller performance metrics, customer retention features, compliance & risk management
 
+Operations Manager → wants Real-time inventory visibility, WMS integration, automated stock alerts, route optimization for deliveries, SLA tracking (service-level-aggrement)
+
+Finance /Accounts → want fast and simple billing , Payment gateway integration, automated invoicing, refund management, GST/tax reports
+
+Inventory Staff /warehouse/ fulfillment team → Integration with WMS/IMS, barcode/RFID scanning, optimized pick-pack process, real-time stock updates
+
+Customers → Easy search & filter, secure payments (UPI, cards, COD), fast delivery, real-time order tracking, simple returns
+
+Product Manager ->User-friendly search, filtering & recommendation system, mobile app features, loyalty programs, feedback collection
+
+Marketing / Sales Manager->Promotional module, targeted offers, email/SMS campaigns, analytics for campaign effectiveness
+
+Customer Support Manager->Helpdesk system, ticket prioritization, chatbots/FAQ, SLA tracking, returns & refunds workflow
+
+//Think “OOPFMC”:
+Owner, Operations, Product, Finance, Marketing, Customer Support → covers all managerial perspectives.
+++++++++++++++++++++++++++++++++++++++++++
 
 --->Requirements Identified:
 Product management (add, update, delete products((usually suggested by store manager / inventory team)))
@@ -40,6 +75,8 @@ Sales reports (daily, monthly, yearly (store owner & manager need))
 User roles (admin, cashier, manager)((security & control requirement))
 
 Secure login and data backup
+
+++++++++++++++++++++++++++++++++++++++++++++
 
 --->Output:
 Software Requirement Specification (SRS) document
@@ -58,7 +95,7 @@ Stage 1: req. gathering :It involves collecting, documenting, and managing the r
       |   Stakeholder      |  <-- Phase 1: Conduct interviews  //owner,cashier,manager,inventory staff
       |    Interviews      |               Store owner: “I want daily sales reports and profit analysis.”
 					   Cashier: “Billing should be fast and barcode-based.”
-                                           Inventory manager: “Stock should auto-update after sales.”
+                                           Inventory manager: “Stock should auto-update after sales.”,stock in/out, low-stock alerts
       +--------------------+      
                 |
                 v 
@@ -72,9 +109,10 @@ Stage 1: req. gathering :It involves collecting, documenting, and managing the r
       +--------------------+
       | Document Analysis  |  <-- Phase 3: Review existing documents
       +--------------------+                    Existing billing invoices
-		|				Inventory registers (manual or Excel)
-						GST/tax compliance documents
-		|				Supplier contracts
+		|				Inventory registers (digital record)
+                                                reorder & safety stock policies
+						GST/tax compliance documents, SLA document
+		|				Supplier contracts,Business KPIs
 
 		|				Findings:
 						Current problems (manual errors, slow billing)
@@ -228,16 +266,44 @@ Unit tests are often performed during this phase to make sure that each componen
 | Step                       | Developer                             | QA                                                                | optional Role 														
 | -------------------------- | ------------------------------------- | ----------------------------------------------------------------- 
 | Environment Setup          | Setup IDEs, servers, databases        | Ensure test environments are ready; may help configure test tools | System Admin               |
-| Code Planning & Allocation | Break down features, assign tasks     | Understand feature implementation to prepare test cases           | Project Manager, 																           Team Lead |
+| Code Planning & Allocation | Break down features, assign tasks     | Understand feature implementation to prepare test cases           | Project Manager, 																         			  Team Lead |
 | Frontend Development       | Write UI code                         | Review UI specs; early smoke tests if possible                    | UX Designer                |
-| Backend Development        | Write APIs, business logic            | Prepare API test scenarios; review data flows                     | Solution 																	 	   Architect|
+| Backend Development        | Write APIs, business logic            | Prepare API test scenarios; review data flows                     | Solution 																	 	   			Architect|
 | Database Development       | Design tables, write queries          | Prepare DB test cases (data validation, constraints, triggers)    | DBA                        |
 | Module Integration         | Integrate frontend, backend, DB       | Plan integration test cases; execute early integration tests      | Tech Lead                  |
 | Unit Testing               | Developers test individual modules    | Review unit test coverage; sometimes run sanity tests             | —                          |
 | Code Review & Optimization | Developers review each other’s code   | May review for testability, potential defect areas                | —                          |
 | Version Control & Build    | Commit code, generate builds          | Fetch build for QA testing; confirm build integrity               | Build Engineer             |
 | Handover to QA             | Provide final build and documentation | Begin functional/system testing                                   | —    
-                      
+     
+//Environment setup is handled by developers or DevOps. QA’s role is to validate readiness, perform smoke checks, and ensure the environment is suitable for testing                 
+1️⃣ Requirement & design validation
+QA reviews PRDs, user stories
+Identifies gaps, ambiguities, and edge cases
+Provides feedback from a quality and user perspective
+📌 Example:
+“If requirements are unclear, QA raises questions before development starts to avoid rework.”
+
+2️⃣ Test planning & test design (parallel to coding)
+QA prepares:
+Test scenarios
+Detailed test cases
+Test data
+Negative and boundary cases
+Maps test cases to requirements/user stories
+👉 This happens while developers are coding, not after.
+
+3️⃣ Early build validation (Smoke / sanity testing)
+As soon as a development build is available:
+QA performs smoke testing
+Verifies core functionality
+Confirms the build is stable for detailed testing
+📌 This avoids wasting time on broken builds.
+
+//Ans
+During the development phase, QA ensures quality is built early by validating requirements, designing tests in parallel, testing features incrementally as they are developed, and collaborating closely with developers to prevent defects before release
+
+//For example, in a retail management system, QA validates inventory and scanning requirements early, designs test cases while development is ongoing, tests barcode and RFID features incrementally per sprint, and works closely with developers to catch inventory and billing issues before the feature reaches production
 -----------------------------------------------------------------------------------------------------------------------------------------
 4. Testing :  
 
@@ -318,249 +384,7 @@ Example:
 5.testing         :STLC  ->TSR                     :testor
 6.support & maintenance                            :dev,tester
 ============================================================================================================================================================
-System testing consists of three different kinds of testing activities as described below.
-
-Alpha testing: Alpha testing is the system testing performed by the development team.
-
-Beta testing: Beta testing is the system testing performed by a friendly set of customers.
-
-Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
-Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
-
-SDLC Testing Phase – Sub-Steps, Purpose, and Examples
-
-Step 1: Test Planning  
-Purpose: Define testing strategy, objectives, scope, resources, and schedule.  
-Example: Prepare a Test Plan for Login and Fund Transfer modules.
-
-Step 2: Test Case Design  
-Purpose: Create detailed test cases and conditions based on requirements.  
-Example: Write test cases for valid/invalid login and transaction limits.
-
-Step 3: Test Environment Setup  
-Purpose: Configure hardware, software, and data for testing execution.  
-Example: Set up QA server with test database and application build.
-
-Step 4: Test Data Preparation  
-Purpose: Create sample data to execute test cases effectively.  
-Example: Prepare dummy users, accounts, and transaction records.
-
-Step 5: Test Execution  
-Purpose: Run test cases manually or using automation tools.  
-Example: Execute test cases for fund transfer and check results in DB.
-
-Step 6: Defect Logging & Tracking  
-Purpose: Record and monitor any defects or issues found during testing.  
-Example: Log failed transactions in Jira and assign them to developers.
-
-Step 7: Defect Re-testing & Regression Testing  
-Purpose: Verify fixed defects and ensure new changes don’t break existing functions.  
-Example: Re-test login bug fix and run regression on account creation.
-
-Step 8: Test Reporting & Closure  
-Purpose: Summarize results, defects, coverage, and quality status.  
-Example: Create Test Summary Report showing 95% pass rate and 5 open defects.
-=========================================================================================================================================================
-
-Types of Testing:
-Unit Testing: Test individual modules 
-(e.g., billing calculation :Correct total price calculation,Correct tax (GST/VAT) applied,Correct discount calculation)
-------------------------------------------------------------------------------------------------------------------------------------------
-Integration Testing: Test interaction between modules
-1.Returns Module + Inventory Module
-When a product is returned, the stock quantity should increase accordingly
-
-2.Tax Module + Billing Module
-Applicable taxes should be calculated correctly based on product category and location
-
-3.User Account Module + Orders Module
-Order history should appear correctly in the customer’s account after purchase
-
-4.Notification Module + Orders Module
-Order confirmation email/SMS should be triggered after placing an order
-
-5.Cart Module + Inventory Module
-Adding an item to cart should reserve or validate available stock
-
-6.Loyalty Module + Promotions Module
-Loyalty points should be redeemable during checkout and correctly applied to the bill
-
-Payment Module + Orders Module
-After successful payment, order status should change to Confirmed/Paid
-
-Inventory Module + Purchase Module
-When new stock is received, inventory levels should increase automatically
-
-Promotions Module + Billing Module
-Applied discounts or coupons should correctly reduce the final bill amount
-
-Shipping Module + Orders Module
-Once an order is shipped, the order status should update to Shipped and tracking details should be added
----------------------------------
-System Testing: Test full retail system
-
-Objective:
-To verify that the retail system correctly manages inventory from order placement to stock replenishment and reflects accurate stock information across all modules.
-
-1. Order Placement (Orders Module)
-
-Customer selects a product and places an order through the website or mobile app.
-Order details (product ID, quantity, customer info) are saved successfully.
-Order status is set to Placed.
-
-2. Payment Processing (Payment Module)
-
-Customer completes payment using a valid payment method.
-Payment is authorized and marked as Successful.
-Order status updates to Confirmed.
---------
-//payment modules works here like:
-Payment Authorization and Success (Payment Module)
-
-1.After the customer submits payment details (card/UPI/net banking/wallet), the payment request is securely sent to the payment gateway.
-
-2.The gateway validates the payment information,
-
- including:
-Card or account validity
-Available balance or credit limit
-Fraud and security checks (CVV, OTP, 3-D Secure, etc.)
-three domains involved in securing an online card payment:
-Issuer Domain – the bank that issued your card
-Acquirer Domain – the merchant’s bank
-Interoperability Domain – the card network (Visa, Mastercard, etc.)
-
-3.Once all validations pass, the issuing bank approves the transaction.
-
-4.The payment gateway returns a success response to the retail system with:
-Transaction ID
-Authorization code
-Payment status = Successful
-
-5.The system records the transaction details in the payment database.
-6.The order status is automatically updated from Pending to Confirmed.
-7.A payment confirmation message/email/SMS is triggered for the customer.
-8.The system ensures no duplicate payment is created for the same order.
------------------
-3. Inventory Update (Inventory Module)
-
-System automatically reduces product stock based on purchased quantity.
-Updated stock count is stored in the inventory database.
-
-4. Low-Stock Alert (Inventory Rules + Notification Module)
-
-When stock falls below the predefined threshold, a low-stock rule is triggered.
-System sends alert notifications to the admin/store manager via email or dashboard alert.
-
-5 .Stock Replenishment (Purchase/Supplier Module)
-
-Admin raises a purchase order to the supplier.
-Supplier delivers new stock and goods receipt is recorded in the system.
-Inventory quantity is increased accordingly.
-
-6 .System-Wide Stock Update (Website, Admin, Reports)
-
-Updated stock is immediately visible on:
-Customer website/product listing
-Admin inventory dashboard
-Inventory and sales reports
-
-Product becomes available again for customers to purchase.
-
-Expected Results:
-Order and payment are processed successfully
-Inventory quantity is accurately reduced and replenished
-Low-stock alerts are triggered at the right threshold
-Updated stock values are consistent across all system interfaces
-No manual intervention is required for stock synchronization
------------------------------------------------------------
-User Acceptance Testing (UAT): 
-
-UAT Test Case 1: Product Sale at POS
-
-Business Requirement:
-Cashier should be able to sell a product and inventory should update automatically.
-
-UAT Steps:
-1.Cashier logs into POS system
-2.Scans product barcode
-3.System displays:
-	Product name
-	Price
-	Available stock
-4.Cashier selects quantity
-5.Customer pays by card
-6.Bill is generated
-
-Expected Result:
-Payment is successful
-Receipt is printed
-Inventory reduces by sold quantity
-Sales report is updated
-
-✅ User Acceptance: Store manager confirms the flow matches real store operations.
-
-----------------------------------------
-UAT Test Case 2: Inventory Reorder Alert
-
-Business Requirement:
-System should alert when stock falls below reorder level.
-
-UAT Steps:
-1.Sell multiple units of a product
-2.Stock reaches minimum threshold
-
-Expected Result:
-System generates low-stock alert
-Product appears in reorder report
-
-✅ User Acceptance: Inventory team confirms alert is useful and accurate.
-
------------------------------------------
-UAT Test Case 3: Product Return & Refund
-
-Business Requirement:
-Customer can return items and get refund.
-
-UAT Steps:
-1.Cashier selects “Return Item”
-2.Enters original bill number
-3.Selects product to return
-4.Issues refund
-
-Expected Result:
-Refund processed
-Inventory increases
-Return recorded in reports
-
-✅ User Acceptance: Finance team validates refund accuracy.
-----------------------------------------
-UAT Test Case 4: End-of-Day Sales Report
-
-Business Requirement:
-Manager should view daily sales summary.
-
-UAT Steps:
-1.Manager logs in
-2.Opens sales report
-3.Selects date
-
-Expected Result:
-Total sales shown
-Payment-mode breakdown (cash/card/UPI)
-No discrepancies
-
-✅ User Acceptance: Manager approves report format.
-
-
-Output:
-Test cases
-Bug reports
-Tested application
-
-===========================================================================================================================================================
-
-3.different SDLC Models
+Q .different SDLC Models
 
 • Waterfall Model :
 phases: requirement Analysis
@@ -580,36 +404,23 @@ Works well when requirements are clear and fixed.
 Difficult to handle changes once development starts.
 🧠 Example: Used in government or legacy enterprise projects.(in government or legacy enterprise projects because it supports fixed requirements, strong documentation, and a controlled, predictable development lifecycle)
 
-Features of Waterfall Model :
-1.Sequential Approach: each phase of the project is completed before moving on to the next one.
-2.Document-Driven :The waterfall model depended on documentation to ensure that the project is well-defined and the project team is working towards a clear                                                                                            set of goals. 
+Document-Driven :The waterfall model depended on documentation to ensure that the project is well-defined and the project team is working towards a clear                                                                                            set of goals. 
 
-3.Quality Control:The waterfall model places a high emphasis on quality control and testing at each phase of the project, to ensure that the final product meets the requirements and expectations of the stakeholders
+//How Agile Is Different (Even Though It Has Documentation)
+In Agile:
+Documentation exists, but is: Lightweight , Continuously updated
 
-4.Rigorous Planning:  The waterfall model involves a careful planning process, where the project scope, timelines, and deliverables are carefully defined and monitored throughout the project lifecycle.
+Primary focus is: Working software, Team collaboration , Feedback
 
+Example (Agile):
+User stories instead of long SRS
+Acceptance criteria instead of detailed specs
+Test cases evolve sprint by sprint
+Documentation supports development — it doesn’t control it
 
-Advantages of the Waterfall Model
+📌 If docs are wrong, the team:Talks,Adjusts,Updates
 
-Simple and easy to understand.
-Works well when requirements are fixed.
-Clear structure and stages.
-Easy to manage due to rigidity of model.
-Good for small projects.
-Milestones are easily set and tracked.
-Early system design and resource planning is required.
-Documentation is thorough and helps in maintenance.
-
-Disadvantages of the Waterfall Model :
-Not suitable for changing requirements.
-No working software produced until late in the lifecycle.
-High risk and uncertainty.
-Poor model for long and complex projects.
-Hard to estimate time and cost in later stages.
-Limited client involvement after initial phase.
-Errors in early phases can be costly to fix later.
-Less flexibility in accommodating updates or feedback.
-
+So documentation is: 🧭 A reference, not a rulebook
 -------------------------------------------------------------------------------------------------------------------------------
 • Spiral Model
 
@@ -926,6 +737,250 @@ Continuously gather feedback and make minor improvements through small prototype
 Example (HMS):
 After deployment, hospital staff use the system daily. Later, an update adds a new “Digital Prescription” module developed and tested using the same V&V + Prototype cycle.
 -----------------------------------------------------------------------------------------------------------------------------------------------
+==============================================================================================================================================================
+System testing consists of three different kinds of testing activities as described below.
+
+Alpha testing: Alpha testing is the system testing performed by the development team.
+
+Beta testing: Beta testing is the system testing performed by a friendly set of customers.
+
+Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
+Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
+
+SDLC Testing Phase – Sub-Steps, Purpose, and Examples
+
+Step 1: Test Planning  
+Purpose: Define testing strategy, objectives, scope, resources, and schedule.  
+Example: Prepare a Test Plan for Login and Fund Transfer modules.
+
+Step 2: Test Case Design  
+Purpose: Create detailed test cases and conditions based on requirements.  
+Example: Write test cases for valid/invalid login and transaction limits.
+
+Step 3: Test Environment Setup  
+Purpose: Configure hardware, software, and data for testing execution.  
+Example: Set up QA server with test database and application build.
+
+Step 4: Test Data Preparation  
+Purpose: Create sample data to execute test cases effectively.  
+Example: Prepare dummy users, accounts, and transaction records.
+
+Step 5: Test Execution  
+Purpose: Run test cases manually or using automation tools.  
+Example: Execute test cases for fund transfer and check results in DB.
+
+Step 6: Defect Logging & Tracking  
+Purpose: Record and monitor any defects or issues found during testing.  
+Example: Log failed transactions in Jira and assign them to developers.
+
+Step 7: Defect Re-testing & Regression Testing  
+Purpose: Verify fixed defects and ensure new changes don’t break existing functions.  
+Example: Re-test login bug fix and run regression on account creation.
+
+Step 8: Test Reporting & Closure  
+Purpose: Summarize results, defects, coverage, and quality status.  
+Example: Create Test Summary Report showing 95% pass rate and 5 open defects.
+=========================================================================================================================================================
+
+Types of Testing:
+Unit Testing: Test individual modules 
+(e.g., billing calculation :Correct total price calculation,Correct tax (GST/VAT) applied,Correct discount calculation)
+------------------------------------------------------------------------------------------------------------------------------------------
+Integration Testing: Test interaction between modules
+1.Returns Module + Inventory Module
+When a product is returned, the stock quantity should increase accordingly
+
+2.Tax Module + Billing Module
+Applicable taxes should be calculated correctly based on product category and location
+
+3.User Account Module + Orders Module
+Order history should appear correctly in the customer’s account after purchase
+
+4.Notification Module + Orders Module
+Order confirmation email/SMS should be triggered after placing an order
+
+5.Cart Module + Inventory Module
+Adding an item to cart should reserve or validate available stock
+
+6.Loyalty Module + Promotions Module
+Loyalty points should be redeemable during checkout and correctly applied to the bill
+
+Payment Module + Orders Module
+After successful payment, order status should change to Confirmed/Paid
+
+Inventory Module + Purchase Module
+When new stock is received, inventory levels should increase automatically
+
+Promotions Module + Billing Module
+Applied discounts or coupons should correctly reduce the final bill amount
+
+Shipping Module + Orders Module
+Once an order is shipped, the order status should update to Shipped and tracking details should be added
+---------------------------------
+System Testing: Test full retail system
+
+Objective:
+To verify that the retail system correctly manages inventory from order placement to stock replenishment and reflects accurate stock information across all modules.
+
+1. Order Placement (Orders Module)
+
+Customer selects a product and places an order through the website or mobile app.
+Order details (product ID, quantity, customer info) are saved successfully.
+Order status is set to Placed.
+
+2. Payment Processing (Payment Module)
+
+Customer completes payment using a valid payment method.
+Payment is authorized and marked as Successful.
+Order status updates to Confirmed.
+--------
+//payment modules works here like:
+Payment Authorization and Success (Payment Module)
+
+1.After the customer submits payment details (card/UPI/net banking/wallet), the payment request is securely sent to the payment gateway.
+
+2.The gateway validates the payment information,
+
+ including:
+Card or account validity
+Available balance or credit limit
+Fraud and security checks (CVV, OTP, 3-D Secure, etc.)
+three domains involved in securing an online card payment:
+Issuer Domain – the bank that issued your card
+Acquirer Domain – the merchant’s bank
+Interoperability Domain – the card network (Visa, Mastercard, etc.)
+
+3.Once all validations pass, the issuing bank approves the transaction.
+
+4.The payment gateway returns a success response to the retail system with:
+Transaction ID
+Authorization code
+Payment status = Successful
+
+5.The system records the transaction details in the payment database.
+6.The order status is automatically updated from Pending to Confirmed.
+7.A payment confirmation message/email/SMS is triggered for the customer.
+8.The system ensures no duplicate payment is created for the same order.
+-----------------
+3. Inventory Update (Inventory Module)
+
+System automatically reduces product stock based on purchased quantity.
+Updated stock count is stored in the inventory database.
+
+4. Low-Stock Alert (Inventory Rules + Notification Module)
+
+When stock falls below the predefined threshold, a low-stock rule is triggered.
+System sends alert notifications to the admin/store manager via email or dashboard alert.
+
+5 .Stock Replenishment (Purchase/Supplier Module)
+
+Admin raises a purchase order to the supplier.
+Supplier delivers new stock and goods receipt is recorded in the system.
+Inventory quantity is increased accordingly.
+
+6 .System-Wide Stock Update (Website, Admin, Reports)
+
+Updated stock is immediately visible on:
+Customer website/product listing
+Admin inventory dashboard
+Inventory and sales reports
+
+Product becomes available again for customers to purchase.
+
+Expected Results:
+Order and payment are processed successfully
+Inventory quantity is accurately reduced and replenished
+Low-stock alerts are triggered at the right threshold
+Updated stock values are consistent across all system interfaces
+No manual intervention is required for stock synchronization
+-----------------------------------------------------------
+User Acceptance Testing (UAT): 
+
+UAT Test Case 1: Product Sale at POS
+
+Business Requirement:
+Cashier should be able to sell a product and inventory should update automatically.
+
+UAT Steps:
+1.Cashier logs into POS system
+2.Scans product barcode
+3.System displays:
+	Product name
+	Price
+	Available stock
+4.Cashier selects quantity
+5.Customer pays by card
+6.Bill is generated
+
+Expected Result:
+Payment is successful
+Receipt is printed
+Inventory reduces by sold quantity
+Sales report is updated
+
+✅ User Acceptance: Store manager confirms the flow matches real store operations.
+
+----------------------------------------
+UAT Test Case 2: Inventory Reorder Alert
+
+Business Requirement:
+System should alert when stock falls below reorder level.
+
+UAT Steps:
+1.Sell multiple units of a product
+2.Stock reaches minimum threshold
+
+Expected Result:
+System generates low-stock alert
+Product appears in reorder report
+
+✅ User Acceptance: Inventory team confirms alert is useful and accurate.
+
+-----------------------------------------
+UAT Test Case 3: Product Return & Refund
+
+Business Requirement:
+Customer can return items and get refund.
+
+UAT Steps:
+1.Cashier selects “Return Item”
+2.Enters original bill number
+3.Selects product to return
+4.Issues refund
+
+Expected Result:
+Refund processed
+Inventory increases
+Return recorded in reports
+
+✅ User Acceptance: Finance team validates refund accuracy.
+----------------------------------------
+UAT Test Case 4: End-of-Day Sales Report
+
+Business Requirement:
+Manager should view daily sales summary.
+
+UAT Steps:
+1.Manager logs in
+2.Opens sales report
+3.Selects date
+
+Expected Result:
+Total sales shown
+Payment-mode breakdown (cash/card/UPI)
+No discrepancies
+
+✅ User Acceptance: Manager approves report format.
+
+
+Output:
+Test cases
+Bug reports
+Tested application
+
+===========================================================================================================================================================
+
+
 
 Q4. White Box Testing
 white-box testing validates how the code implements logic, handles branching, and manages edge cases.
@@ -1565,6 +1620,28 @@ Q. static testing vs dynamic testing?
   3. prevent defect                        |  find & fix defects
   4. less time                             |  more time taking
   5. reviewing the documents               |  execute the test cases on application
+========================================================================================
+Q: Explain the QA role in the Agile SDLC.
+
+A:
+“In Agile, QA is involved from the start — reviewing requirements, writing test cases in parallel with development, running smoke and story-level tests each sprint, performing regression, and providing early feedback to ensure quality throughout the sprint.”
+
+Q: How does QA contribute early in Agile?
+
+A:
+“QA participates in requirement refinement, identifies missing scenarios, prepares test data and cases while developers code, and gives early feedback on risks and edge cases before testing begins.
+
+Q: What is regression testing in SDLC? When is it done?
+
+A:
+“Regression testing verifies that new code changes have not broken existing functionality. In Agile, it’s done every sprint after new features or bug fixes. In traditional models, it’s done after major development phases.
+
+Q: How do you define ‘continuous testing’?
+
+A:
+“Continuous testing means testing features as soon as they are developed, not waiting for the end of development. It ensures quicker feedback and early defect detection
+
+======================================================================================
 
 updated on 22-12-2025@18.14
 updated on 06-01-2026,7/1@18.22
