@@ -371,10 +371,10 @@ Server downtime or frequent 5xx errors
 Infinite loading spinners
 Extremely slow response times
 Timeouts on common actions :example
-Login
-Timeout: 30–60 seconds
-Example:
-“Session expired due to inactivity. Please log in again.”
+				Login
+				Timeout: 30–60 seconds
+				Example:	
+				“Session expired due to inactivity. Please log in again.”
 ---------------------------------------------------------------------------------------------------------
 1.requirement gathering : BRD / BRS               :BA
 2.requirement analysis  : FRD / SRS               :Proj.manager
@@ -404,6 +404,24 @@ Works well when requirements are clear and fixed.
 Difficult to handle changes once development starts.
 🧠 Example: Used in government or legacy enterprise projects.(in government or legacy enterprise projects because it supports fixed requirements, strong documentation, and a controlled, predictable development lifecycle)
 
+1️⃣ Government & Public Sector projects
+Defense systems
+Tax systems
+Voting systems
+Large government contracts
+1️⃣ Defense Systems
+Missile guidance software
+Radar & surveillance systems
+Command-and-control systems
+2️⃣ Tax Systems
+Online income tax filing portals
+GST / VAT processing systems
+National revenue management systems
+4️⃣ Large Government Contracts
+National healthcare platforms
+Citizen ID systems
+Customs & immigration systems
+
 Document-Driven :The waterfall model depended on documentation to ensure that the project is well-defined and the project team is working towards a clear                                                                                            set of goals. 
 
 //How Agile Is Different (Even Though It Has Documentation)
@@ -418,82 +436,212 @@ Acceptance criteria instead of detailed specs
 Test cases evolve sprint by sprint
 Documentation supports development — it doesn’t control it
 
-📌 If docs are wrong, the team:Talks,Adjusts,Updates
+📌 If docs are wrong, the team:Talks,Adjusts,Updates So documentation is: 🧭 A reference, not a rulebook
 
-So documentation is: 🧭 A reference, not a rulebook
+Voting System – Waterfall SDLC
+(How each phase works & overall workflow)
+
+Voting systems are highly regulated, security-critical, and audit-driven, which is why Waterfall (or a very strict V-Model) is still used.
+
+1️⃣ Requirement Analysis Phase
+Government / Election Commission defines fixed requirements
+Legal, security, and compliance rules are finalized
+Requirements are frozen early (very important)
+
+Examples of requirements
+One voter → one vote
+Voter authentication must be mandatory
+Votes must be anonymous
+System must not allow vote modification
+Audit logs must be tamper-proof
+QA role :Review requirement documents
+Check for:Missing scenarios , Security gaps , Edge cases (power failure, network failure), Ensure requirements are testable
+📌 No coding starts until requirements are signed off.
+
+2️⃣ System Design Phase
+Architects design:
+System architecture
+Database schema
+Security mechanisms (encryption, access control)
+Hardware + software interaction (EVM, servers)
+Example : Separate modules for:
+Voter authentication
+Vote casting
+Vote storage
+Result counting
+QA role :
+Review design documents
+Understand data flow
+Identify test points
+Prepare high-level test scenarios
+📌 QA starts planning tests here (V-Model thinking).
+
+3️⃣ Development Phase
+Developers implement code strictly based on design
+Each module is developed separately
+Unit testing by developers
+Example modules :
+Login & authentication module
+Vote recording module
+Encryption module
+Result calculation module
+QA role : No execution yet (mostly)
+Prepare: Detailed test cases , Test data ,Traceability matrix (RTM)
+📌 Changes are discouraged at this stage.
+
+4️⃣ Testing Phase (Main QA Phase)
+QA executes testing after full development is complete.
+Types of testing done : Functional testing , Security testing , Integration testing ,System testing ,Performance & load testing, Failover & recovery testing ,Compliance testing
+                     User Acceptance Testing (UAT)
+QA examples :
+Verify vote count accuracy
+Ensure duplicate voting is blocked
+Test system under high load (election day traffic)
+Validate audit logs
+Check data encryption
+Defect handling
+Defects logged
+Fixed by dev
+Retested by QA
+Regression testing performed
+📌 This phase is long and very detailed.
+
+5️⃣ Deployment Phase
+System is deployed in a controlled environment
+Often deployed in phases (pilot → full rollout)
+Strict approval required
+QA role :
+Support deployment verification
+Perform smoke tests
+Validate environment readiness
+
+6️⃣ Maintenance Phase :
+Bug fixes (if any)
+Security patches
+System monitoring
+Minor updates (very controlled)
+QA role :
+Verify fixes
+Perform regression testing
+Ensure no impact on core voting logic
+End-to-End Workflow (Simple)
+
+No overlapping phases. Each phase must be completed and approved before moving to the next.
+
+Why Waterfall suits Voting Systems (Interview MUST)
+
+✔ Requirements are fixed by law
+✔ Changes are risky and expensive
+✔ Heavy documentation required
+✔ Strong audit & compliance needs
+✔ Security is critical
+✔ Predictable timeline needed
+Interview-
+“Voting systems typically follow the Waterfall SDLC because requirements are fixed, legally regulated, and security-critical. Each phase is completed sequentially with strict reviews, ensuring accuracy, auditability, and compliance before moving forward.”
 -------------------------------------------------------------------------------------------------------------------------------
 • Spiral Model
 
 The exact number of loops of the spiral is unknown and can vary from project to project. 
 Each loop of the spiral is called a phase of the software development process.
 
-Extension of Waterfall — each development phase has a corresponding testing phase.
-Testing starts early (test planning happens during design).
 🧠 Example: Good for safety-critical systems like healthcare or automotive.
-
-Defination :
-The Spiral Model follows an iterative development process where the project passes through repeated cycles (called spirals) instead of a single linear flow.
-Each spiral represents one phase of development, and every loop consists of 4 main activities.
 
 | **Activity**                               | **Description**  
                                                                                                                                                        
-| **1. Planning**                            | Identify objectives, alternatives, and constraints for the current phase. Includes project planning, resource                                                         						estimation, scheduling, and defining system requirements. |
+| **1. Planning**                            | Identify objectives, alternatives, and constraints for the current phase. 
+					       Includes project planning, resource estimation,scheduling, and defining system requirements. 
 
 
-| **2. Risk Analysis (Risk Assessment)**     | Analyze and identify potential risks, uncertainties, or problems that could affect the project. Evaluate 						alternatives and develop strategies to mitigate those risks.   |
+| **2. Risk Analysis (Risk Assessment)**     | Analyze and identify potential risks, uncertainties, or problems that could affect the project.
+ 					       Evaluate alternatives and develop strategies to mitigate those risks.   
 
 
-| **3. Engineering (Development & Testing)** | Design, develop, and test the product for that iteration. This may involve prototyping, coding, and verifying 						the features defined during the planning phase.           |
+| **3. Engineering (Development & Testing)** | Design, develop, and test the product for that iteration. 
+					      This may involve prototyping, coding, and verifying the features defined during the planning phase.           
 
-
-| **4. Evaluation (Customer Review)**        | Present the developed product or prototype to the customer for feedback and evaluation. The customer’s 							feedback is then used to plan the next spiral (iteration).       |
-
-
-✅ Benefits of the Spiral Model:
-Strong risk management
-High degree of customer involvement
-Flexibility to adapt to changes
-Early proof-of-concept for critical components through prototyping 
-
-Advantages of Spiral Model
-Risk Handling – Best model for identifying and reducing risks early in the project.
-Flexibility in Requirements – Changes can be added at any stage.
-Customer Feedback Oriented – Client is involved in every iteration.
-Good for Large & Complex Projects – Suitable for long-term, high-budget, high-risk projects.
-Prototyping is Built-in – Each cycle delivers a working prototype.
-Better Progress Visibility – Each loop gives a clearer picture of project status.
-Quality is Improved – Repeated testing and refinement in every phase.
-Early Software Development – Partial versions of software are produced early.
-Supports Reuse – Previous components and modules can be reused.
-Structured + Iterative – Mixes features of waterfall and incremental models.
-
-❌ Disadvantages of Spiral Model
-
-Expensive & Time-Consuming – Costly due to repeated phases and risk analysis.
-Requires High Skill – Risk assessment needs expert professionals.
-Not Suitable for Small Projects – Overkill for low-budget or simple projects.
-Complex to Manage – Requires excellent documentation and control.
-Undefined Number of Phases – No fixed end point, cycles may continue indefinitely.
-Customer Dependency – Regular involvement of client is mandatory.
-Risk of Mismanagement – Incorrect risk analysis may lead to project failure.
-Difficult to Use for Tight Deadlines – Iterative loops make planning harder.
-Heavy Documentation – Every cycle requires review, approval, and documentation.
+| **4. Evaluation (Customer Review)**        | Present the developed product or prototype to the customer for feedback and evaluation. 
+                                               The customer’s feedback is then used to plan the next spiral (iteration).       
 
 🔎 When Spiral Model is Best Used?
-
-✔️ Large systems (banking, defense, aerospace,Battlefield Communication System (Secure Military Network))
+✔️ Large systems ( defense, aerospace,Battlefield Communication System (Secure Military Network))
 ✔️ High-risk software (safety-critical apps, AI systems)
 ✔️ Projects where requirements evolve over time
 ✔️ Projects requiring regular customer feedback eg.banking appliocation
+1️⃣ Defense Systems
+Missile guidance software
+Radar & surveillance systems
+Command-and-control systems
+3️⃣ Aerospace & Defense (R&D / New Technology)
+Space exploration software (prototype phase)
+Defense simulation systems
+5️⃣ Defense Command & Simulation Systems
+War-game simulation software(russia-ukrain)
+Military training simulators
+Command decision-support systems
+----------------------------------------------------------------
+Spiral Loop 1 – Concept & Feasibility
+Planning
+Objective: Develop a new missile guidance concept
+Define basic requirements (range, accuracy, speed)
 
-| Spiral Loop | Output                      |
-| ----------- | --------------------------- |
-| 1st Loop    | Requirement + Risk Analysis |
-| 2nd Loop    | Login prototype             |
-| 3rd Loop    | Core banking operations     |
-| 4th Loop    | Security + Encryption       |
-| 5th Loop    | Final deployment            |
+Risk Analysis
+Risk: New guidance algorithm may not work in real conditions
+Risk: Sensor accuracy in bad weather
 
+Engineering
+Create mathematical models
+Run simulations in lab environment
+
+Evaluation
+Review results with defence scientists
+Decision: Concept feasible → proceed
+--------------------------------------
+Spiral Loop 2 – Proof of Concept
+Planning
+Objective: Test guidance logic on a small-scale system
+
+Risk Analysis
+Risk: Algorithm fails under electronic interference (jamming)
+Risk: Processing delay
+
+Engineering
+Develop prototype guidance software
+Hardware-in-the-loop testing
+
+Evaluation
+Accuracy acceptable but needs improvement
+Decision: Improve algorithm
+-------------------------------------------
+Spiral Loop 3 – Prototype Development
+Planning
+Objective: Full prototype missile guidance unit
+
+Risk Analysis
+Risk: System failure at high speed
+Risk: Power consumption issues
+
+Engineering
+Integrate sensors, processor, and control system
+Conduct controlled flight tests
+
+Evaluation
+Successful test flights
+Minor corrections required
+---------------------------------------------
+Spiral Loop 4 – System Validation & Optimization
+Planning
+Objective: Prepare system for deployment
+
+Risk Analysis
+Risk: Reliability in extreme combat environments
+
+Engineering
+Stress testing
+Environmental and battlefield simulations
+
+Evaluation
+System meets defence standards
+Approved for production
 ----------------------------------------------------------------------------------------------------------------------------
 spiral vs waterfall method :
 
@@ -509,8 +657,8 @@ spiral vs waterfall method :
 | **Working Product**          | Delivered in parts (prototypes / versions)     | Delivered only at the end                          |
 | **Changes in Requirements**  | Easy to include new changes                    | Very difficult to include after design phase       |
 | **End of Project**           | No fixed end – depends on number of spirals    | Fixed and predefined end                           |
-| **Best For**                 | Banking, aerospace, AI, large systems          | Simple apps, static websites, student projects     |
-
+| **Best For**                 |  aerospace, AI, large systems                  | Simple apps, static websites, student projects     |
+ 
 -----------------------------------------------------------------------------------------------------------------------------
 • Prototype Model
 SDLC approach where an early working model / simplified model / mock-up of the software  is built to collect user feedback and 
@@ -520,51 +668,60 @@ Example: A startup MVP (Minimum Viable Product) or AI-based prototype to test us
 interactive prototypes (using tools like Figma or Adobe XD)
 
 Prototype Model Flow:
-1. Collect Requirements
-2. Build Quick Prototype
-3. User Evaluates Prototype
-4. Modify Prototype Based on Feedback
-5. Repeat Until Approved
-6. Develop Final System
+1. Collect Requirement  2. Build Quick Prototype  3. User Evaluates Prototype  4. Modify Prototype Based on Feedback
+5. Repeat Until Approved  6. Develop Final System
 
-✅ Advantages of Prototype Model
+1️⃣ Defense Systems
+Missile guidance software prototypes
+Radar & surveillance system prototypes
+Command-and-control system prototypes
+1️⃣ Healthcare & Citizen Services
+National healthcare platform prototypes
+Citizen ID / e-KYC system prototypes
+Social welfare & pension portals prototypes
+1️⃣ Large Government Contracts
+Smart city digital service prototypes
+Disaster management & emergency response prototypes 
 
-Improves Requirement Understanding
-Users can see a working model and refine requirements.
-Early User Feedback
-Users interact with the prototype and suggest changes early.
-Reduces Risk of Failure
-Ambiguities and missing features can be found before full development.
-Better Communication with Client
-Visual output is easier to understand than documents.
-Faster Initial Development
-A basic product is built quickly for demonstration.
-High Customer Satisfaction
-Final system is more accurate because user feedback is utilized.
-Helps in Testing & Validation
-Prototype can be used to test design and logic earlier.
+//RTE :
+Smart City Traffic Management – Prototype Model (Easy Version)
 
-❌ Disadvantages of Prototype Model
 
-Time-Consuming if Repeated Many Times
-Constant changes can delay the actual development.
-Higher Cost than Expected
-Extra effort required to build multiple prototypes.
-Poor Documentation
-Developers may focus on prototype more than documentation.
-Users May Think Prototype = Final System
-Prototype is often incomplete and may mislead clients.
-Prototype May Be Poorly Designed
-Quick implementation may ignore quality or scalability.
-Not Suitable for Large, Complex Systems
-Too many requirements changes can make it messy.
+1️⃣ Requirements Gathering – What do we want?
+Decide what the system should do.
+Example: Show traffic congestion, alert jams, and suggest alternative routes.
+Simple action: Draw a simple sketch of a dashboard with roads colored green/red for traffic.
 
+2️⃣ Quick Design – Make a small test version
+Build a small working version to see if the idea works.
+Example: Use 2–3 main roads and simulate traffic with dummy data.
+Purpose: Check how the dashboard looks and works before building the whole system.
+
+3️⃣ Implementation – Make it work
+Build a working prototype with real or simulated sensors.
+Example: Dashboard updates traffic status in real time. Road A = red (busy), Road B = yellow (slow).
+Purpose: See the system working in action, not just a sketch.
+
+4️⃣ Evaluation & Feedback – Ask users what they think
+Show the prototype to city managers or test users.
+Example: Managers say “We need traffic predictions for the next 30 minutes.”
+Purpose: Find problems early so we can improve.
+
+5️⃣ Refinement – Make improvements
+Fix problems and add new features based on feedback.
+Example: Add predicted traffic alerts, suggest alternate routes, improve dashboard colors.
+Purpose: Make the system better before full deployment.
+
+6️⃣ Deployment – Launch full system
+Connect all real sensors and cameras for the entire city.
+Example: Live traffic updates for all roads, alerts sent to citizens’ apps.
+Benefit: Because we tested with a prototype first, the system works correctly and safely.
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
 • V & V Model
 
 Q . Difference between Verification and Validation. 
-• Verification ensures the product is built according to the requirements and design. It answers, “Are we 
-building the product right?” 
+• Verification ensures the product is built according to the requirements and design. 
+It answers, “Are we building the product right?” 
 Example: Reviewing documents, inspecting code. 
 
 1.Reviewing requirement documents to ensure:
@@ -579,8 +736,8 @@ Customer tables include loyalty points fields
 POS billing module follows the defined algorithm
 Security standards are applied to payment modules
 
-• Validation ensures the product meets the actual needs of the user. It answers, “Are we building the 
-right product?” 
+• Validation ensures the product meets the actual needs of the user. 
+It answers, “Are we building the right product?” 
 
 Product Master :
 New products added appear correctly on POS and website
@@ -599,32 +756,10 @@ Example: Testing the application with real-world scenarios.
 Key point: Verification is a static process (no code execution), while Validation is a dynamic process 
 (involves running the code). 
 -------------------------------------------------------------------------
-even though we operate in Agile, we CAN embed V-Model principles by involving QA, during story grooming, defining acceptance criteria early, and maintaining an RTM that links user stories to test cases and defects.
-This hybrid approach has helped us detect design defects early and maintain compliance documentation efficiently.
-Even though we follow Agile now, the core idea of the V-Model — early verification and validation — still applies.
 
-This helps identify gaps and defects early, especially in environments where requirements are well-defined — like banking, insurance, or healthcare systems.
-However, the model is also quite rigid, since each phase depends on the previous one. So it’s less suited for projects with frequently changing requirements.
-eg.systems like avionics, autopilot, navigation, and flight-control software commonly use the V-Model
+eg.systems like avionics, autopilot, navigation, and flight-control software,Aerospace,Satellite navigation systems
+,Air traffic control systems commonly use the V-Model
 
-✅ Advantages (Pros)
-
-Simple and easy to understand
-Highly structured and disciplined
-Testing is planned early, reducing defects
-Clear mapping between development phases and testing phases
-Good documentation at every stage
-Reliable for safety-critical systems (defense, aerospace, medical)
-Early detection of errors in design due to parallel test planning 
-
-❌ Disadvantages (Cons)
-Very rigid — no flexibility
-Poor for projects with changing requirements
-No working prototype early, unlike Agile or Prototype Model
-Not suitable for complex or unclear requirements
-Costly and difficult to fix changes found late in testing
-Customer sees the product very late
-Not ideal for modern, iterative software development
 
           reuirement analysis --->prepration of acceptance tc-------------->UAT
                 \                                                           /
@@ -643,9 +778,8 @@ Not ideal for modern, iterative software development
 ------------------------------------------------------------------------------------------------------------------------------------------------------
 
 • Hybrid Model
-The Hybrid Model is an SDLC approach that combines features of two or more models — for example, Waterfall, V-Model, and Agile — to create a process that best fits the project’s requirements.
-
-In this model, some phases may follow a sequential approach for stability (like requirement analysis and design), while development and testing may follow iterative cycles to deliver faster feedback and improvements.
+In this model, some phases may follow a sequential approach for stability (like requirement analysis and design), 
+while development and testing may follow iterative cycles to deliver faster feedback and improvements.
 The main goal of the Hybrid Model is to leverage the strengths of each model while minimizing their weaknesses, ensuring both quality and adaptability.
 
    +----------------------------+
@@ -727,7 +861,8 @@ Users test the system with real scenarios.
 Collect user feedback for usability or design improvements.
 Refine user interfaces or small features using prototype iterations again.
 Example (HMS):
-Nurses and doctors use the system in a test environment. They suggest increasing text size on patient dashboards and adding a “search by patient ID” shortcut — changes are made before go-live.
+Nurses and doctors use the system in a test environment. 
+They suggest increasing text size on patient dashboards and adding a “search by patient ID” shortcut — changes are made before go-live.
 
 6. Deployment & Maintenance
 Deploy the application in the hospital’s live environment.
@@ -736,88 +871,215 @@ Monitor the system and fix any bugs reported.
 Continuously gather feedback and make minor improvements through small prototypes or patches.
 Example (HMS):
 After deployment, hospital staff use the system daily. Later, an update adds a new “Digital Prescription” module developed and tested using the same V&V + Prototype cycle.
------------------------------------------------------------------------------------------------------------------------------------------------
-==============================================================================================================================================================
-System testing consists of three different kinds of testing activities as described below.
 
-Alpha testing: Alpha testing is the system testing performed by the development team.
-
-Beta testing: Beta testing is the system testing performed by a friendly set of customers.
-
-Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
-Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
-
-SDLC Testing Phase – Sub-Steps, Purpose, and Examples
-
-Step 1: Test Planning  
-Purpose: Define testing strategy, objectives, scope, resources, and schedule.  
-Example: Prepare a Test Plan for Login and Fund Transfer modules.
-
-Step 2: Test Case Design  
-Purpose: Create detailed test cases and conditions based on requirements.  
-Example: Write test cases for valid/invalid login and transaction limits.
-
-Step 3: Test Environment Setup  
-Purpose: Configure hardware, software, and data for testing execution.  
-Example: Set up QA server with test database and application build.
-
-Step 4: Test Data Preparation  
-Purpose: Create sample data to execute test cases effectively.  
-Example: Prepare dummy users, accounts, and transaction records.
-
-Step 5: Test Execution  
-Purpose: Run test cases manually or using automation tools.  
-Example: Execute test cases for fund transfer and check results in DB.
-
-Step 6: Defect Logging & Tracking  
-Purpose: Record and monitor any defects or issues found during testing.  
-Example: Log failed transactions in Jira and assign them to developers.
-
-Step 7: Defect Re-testing & Regression Testing  
-Purpose: Verify fixed defects and ensure new changes don’t break existing functions.  
-Example: Re-test login bug fix and run regression on account creation.
-
-Step 8: Test Reporting & Closure  
-Purpose: Summarize results, defects, coverage, and quality status.  
-Example: Create Test Summary Report showing 95% pass rate and 5 open defects.
 =========================================================================================================================================================
 
-Types of Testing:
-Unit Testing: Test individual modules 
-(e.g., billing calculation :Correct total price calculation,Correct tax (GST/VAT) applied,Correct discount calculation)
+Q . Types of Testing: 
+
+[1]Unit Testing: Test individual modules 
+(e.g., billing calculation :
+Correct total price calculation,Correct tax (GST/VAT) applied,Correct discount calculation)
+Correct final amount after applying discounts, delivery charges, platform fees , bank/wallet discount ,GST .
+Correct GST extraction from price.
+Input validation — negative price or discounts should throw errors.
+
+Inputs (Assumptions):
+Product price (incl. GST): ₹62,999
+GST: 18% (already included)
+Delivery charge: ₹0
+Platform fee: ₹0
+Bank discount: ₹1,000
+Exchange offer: ₹0
+Expected Output:
+
+Final payable amount = ₹61,999
+
+//code
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import static org.junit.Assert.assertEquals;
+
+public class TestFlipkartCheckout {
+
+    WebDriver driver;
+
+    @Before
+    public void setUp() {
+        // Set ChromeDriver path if not in system PATH
+        // System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
+
+        driver = new ChromeDriver();
+        driver.get("http://localhost:8000/flipkart_checkout.html"); // local test page
+    }
+
+    @Test
+    public void testFinalAmountCalculation() {
+
+        // Fill the form fields
+        driver.findElement(By.id("product_price")).sendKeys("62999");
+        driver.findElement(By.id("delivery_charge")).sendKeys("0");
+        driver.findElement(By.id("platform_fee")).sendKeys("0");
+        driver.findElement(By.id("bank_discount")).sendKeys("1000");
+        driver.findElement(By.id("exchange_offer")).sendKeys("0");
+
+        // Click Calculate button
+        driver.findElement(By.id("calculate_button")).click();
+
+        // Get final amount displayed
+        WebElement finalAmountElement = driver.findElement(By.id("final_amount"));
+        String finalAmount = finalAmountElement.getText();
+
+        // Assertion
+        assertEquals("61999", finalAmount);
+    }
+
+    @After
+    public void tearDown() {
+        driver.quit();
+    }
+}
+
 ------------------------------------------------------------------------------------------------------------------------------------------
-Integration Testing: Test interaction between modules
-1.Returns Module + Inventory Module
-When a product is returned, the stock quantity should increase accordingly
+[2]Integration Testing: Test interaction between modules
 
-2.Tax Module + Billing Module
-Applicable taxes should be calculated correctly based on product category and location
+//In standard web architecture, frontend always initiates communication and backend responds. Backend can only push updates to frontend using real-time mechanisms like WebSockets or server-sent events
+Frontend  →  Backend  →  Frontend
+(request)    (logic)     (response)
 
-3.User Account Module + Orders Module
-Order history should appear correctly in the customer’s account after purchase
 
-4.Notification Module + Orders Module
-Order confirmation email/SMS should be triggered after placing an order
+1️⃣ POS ↔ Inventory Integration
+📌 Scenario : A customer buys 1 iPhone at a retail store.
 
-5.Cart Module + Inventory Module
-Adding an item to cart should reserve or validate available stock
+🔄 Integrated Modules:
+POS System
+Inventory Management System
 
-6.Loyalty Module + Promotions Module
-Loyalty points should be redeemable during checkout and correctly applied to the bill
+✅ Test Steps :
+POS scans product barcode
+System checks stock availability
+Available
+Sale completes
+Inventory reduces by 1
 
-Payment Module + Orders Module
-After successful payment, order status should change to Confirmed/Paid
+✔ Expected Result :
+Sale successful
+Inventory count decreases correctly
+No negative stock
 
-Inventory Module + Purchase Module
-When new stock is received, inventory levels should increase automatically
-
-Promotions Module + Billing Module
-Applied discounts or coupons should correctly reduce the final bill amount
-
-Shipping Module + Orders Module
+🔍 Failure Example :
+Sale completed but inventory not updated ❌
 Once an order is shipped, the order status should update to Shipped and tracking details should be added
----------------------------------
-System Testing: Test full retail system
+---------------------------
+2️⃣ Inventory ↔ Warehouse ↔ Supplier Integration
+📌 Scenario : Stock falls below reorder level.
+
+🔄 Integrated Modules
+Inventory
+Warehouse
+Supplier System
+
+✅ Test Steps
+Stock drops below threshold
+Auto purchase order created
+Supplier notified
+
+✔ Expected Result
+Reorder triggered automatically
+Supplier receives order
+-------------------------------------
+🔷 Integration Testing Example
+Order Management ↔ Payment Gateway
+📌 Business Scenario (Real-Time):A customer purchases a product (e.g., iPhone) on a retail website and chooses Credit Card as the payment method.
+
+The system must ensure that:
+Money is successfully collected
+Order status is updated correctly
+Transaction details are stored for reconciliation
+
+🔄 Integrated Systems / Modules
+Module	Responsibility
+Order Management System (OMS)	Creates and manages order lifecycle
+Payment Gateway (Razorpay / Stripe / PayU)	Handles payment authorization and settlement
+Database	Stores order and transaction data
+Notification Service (optional)	Sends confirmation to customer
+🔁 Detailed Integration Flow (Step-by-Step)
+Customer → Order Management → Payment Gateway → Order Management → DB
+
+🧪 Integration Test Steps (Detailed)
+🔹 Step 1: Order Creation
+Customer adds product to cart
+Clicks Place Order
+OMS creates order with status:
+Order ID: ORD12345
+Status: PENDING_PAYMENT
+Amount: ₹61,999
+✅ Verify:
+Order record exists in DB
+Status is PENDING_PAYMENT
+
+🔹 Step 2: Payment Initiation
+OMS sends payment request to payment gateway API
+Request contains:
+Order ID
+Amount
+Currency
+Payment method (Credit Card)
+Callback / webhook URL
+{
+  "order_id": "ORD12345",
+  "amount": 61999,
+  "currency": "INR",
+  "payment_method": "CARD"
+}
+✅ Verify:
+Correct request payload sent
+API returns payment reference ID
+
+🔹 Step 3: Payment Processing
+Customer enters card details
+Payment gateway:
+Authorizes card
+Deducts amount
+Generates transaction ID
+{
+  "payment_status": "SUCCESS",
+  "transaction_id": "TXN789456",
+  "order_id": "ORD12345"
+}
+
+🔹 Step 4: Payment Success Response
+Payment gateway sends:
+API response
+Webhook callback to OMS
+✅ Verify:
+Webhook received
+Response signature verified
+Status = SUCCESS
+
+🔹 Step 5: Order Status Update
+OMS updates order status to:
+Status: CONFIRMED
+Transaction ID: TXN789456
+✅ Verify:
+Order status updated in DB
+Transaction ID stored correctly
+
+✔ Expected Results (Integration Success)
+Check			Result
+Payment			Successful
+Order Status		CONFIRMED
+Transaction ID		Stored
+Amount			Correct
+Duplicate charges	None
+
+-----------------------------------------------------------------
+[3]System Testing: Test full retail system as a whole
 
 Objective:
 To verify that the retail system correctly manages inventory from order placement to stock replenishment and reflects accurate stock information across all modules.
@@ -894,7 +1156,7 @@ Low-stock alerts are triggered at the right threshold
 Updated stock values are consistent across all system interfaces
 No manual intervention is required for stock synchronization
 -----------------------------------------------------------
-User Acceptance Testing (UAT): 
+[4]User Acceptance Testing (UAT): Ensuring the system meets user needs 
 
 UAT Test Case 1: Product Sale at POS
 
@@ -980,7 +1242,16 @@ Tested application
 
 ===========================================================================================================================================================
 
+-----------------------------------------------------------------------------------------------------------------------------------------------
+============================================================================================================================================================
+System testing consists of three different kinds of testing activities as described below.
 
+Alpha testing: Alpha testing is the system testing performed by the development team.
+
+Beta testing: Beta testing is the system testing performed by a friendly set of customers.
+
+Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
+Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
 
 Q4. White Box Testing
 white-box testing validates how the code implements logic, handles branching, and manages edge cases.
