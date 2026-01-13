@@ -1102,7 +1102,7 @@ Purpose: Specifies the table from which to retrieve data.
 SELECT * FROM Students;
 
 | OrderID | CustomerID | Amount | Status    |
-| -------   | ---------- | ------ | --------- |
+| ------- | ---------- | ------ | --------- |
 | 101     | 1          | 50     | Completed |
 | 102     | 2          | 30     | Pending   |
 | 103     | 1          | 70     | Completed |
@@ -1386,11 +1386,11 @@ Departments: Department, DeptHead
 QA importance: Understanding normalization helps in writing joins for related data correctly. 
 ---------------------------------------------------------------------
 | Normal Form | Rule                                 |
-| ----------- 	  | ------------------------------------ |
-| 1NF    		     | Atomic values, unique rows           |
-| 2NF    		     | 1NF + no partial dependency          |
-| 3NF    		     | 2NF + no transitive dependency       |
-| BCNF     	     | Every determinant is a candidate key |
+| ----------- | ------------------------------------ |
+| 1NF         | Atomic values, unique rows           |
+| 2NF         | 1NF + no partial dependency          |
+| 3NF         | 2NF + no transitive dependency       |
+| BCNF        | Every determinant is a candidate key |
 
 ===========================================================================
 Q. What is denormalization, and when might QA encounter it? 
