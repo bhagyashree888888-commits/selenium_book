@@ -245,9 +245,9 @@ Unit tests are often performed during this phase to make sure that each componen
 | Step                       | Developer                             | QA                                                                | optional Role 														
 | -------------------------- | ------------------------------------- | ----------------------------------------------------------------- 
 | Environment Setup          | Setup IDEs, servers, databases        | Ensure test environments are ready; may help configure test tools | System Admin               |
-| Code Planning & Allocation | Break down features, assign tasks     | Understand feature implementation to prepare test cases           | Project Manager, 																         			  Team Lead |
+| Code Planning & Allocation | Break down features, assign tasks     | Understand feature implementation to prepare test cases           | Project Manager, 																         			  																	Team Lead |
 | Frontend Development       | Write UI code                         | Review UI specs; early smoke tests if possible                    | UX Designer                |
-| Backend Development        | Write APIs, business logic            | Prepare API test scenarios; review data flows                     | Solution 																	 	   			Architect|
+| Backend Development        | Write APIs, business logic            | Prepare API test scenarios; review data flows                     | Solution 																	 	   																				Architect|
 | Database Development       | Design tables, write queries          | Prepare DB test cases (data validation, constraints, triggers)    | DBA                        |
 | Module Integration         | Integrate frontend, backend, DB       | Plan integration test cases; execute early integration tests      | Tech Lead                  |
 | Unit Testing               | Developers test individual modules    | Review unit test coverage; sometimes run sanity tests             | —                          |
@@ -1108,6 +1108,8 @@ eg.
 
 Objective:
 To verify that the retail system correctly manages inventory from order placement to stock replenishment and reflects accurate stock information across all modules.
+Login → Product Search & Selection→ Video Streaming → Add to Cart → Apply Voucher → Checkout & Payment → Order Confirmation → Certificate/Voucher Issuance → Post-Order Activities (Tracking, Returns, Reviews)
+
 
 1. Order Placement (Orders Module)
 
@@ -1278,139 +1280,357 @@ Tested application
 //extra++++++++++++++++++++++++++++++++++++++
 pre-production testing.  
 This is done by the end users / client 
-It allows the customer to accept or reject the application. 
+After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
+Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
 Types of acceptance testing are Alpha, Beta & Gamma.
 eg,Feature: New “Buy Now, Pay Later” option.
 UAT: Business users test that the payment option appears correctly, interest calculations are accurate, and checkout flow works end-to-end with inventory, payment, and order confirmation.
 
 [Q.What is Alpha Testing?
-done in control environment
-done by devloper and/or tester and stakeholder/outsorcing team
-real production environment but not release
-actual user /end user perform testing
-helpful to get feedback
+Testing done by internal teams before releasing to users. 
 
 Q.What is Beta Testing? 
-Release Candidate or RC or field testing
-real environment , but not realesed 
+Beta testing is the system testing performed by a friendly set of customers 
 
 Q. What is Gamma Testing? 
 Gamma testing is done when the software is ready for release with specified 
 requirements. It is done at the client place.
 broder audience       ]
 ============================================================================================================================================================
-System testing consists of three different kinds of testing activities as described below.
-
-Alpha testing: Alpha testing is the system testing performed by the development team.
-
-Beta testing: Beta testing is the system testing performed by a friendly set of customers.
-
-Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
-Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
-=====================================================================================================================================================================================
 
 Q. What is STLC? 
-Software Testing Life Cycle 
-identifies what test activities to carry out and when to accomplish those test activities. 
-
+defines the structured sequence of testing activities, specifying what testing tasks need to be performed and at which stage of the project to ensure software quality 
+ ------------------------------------------------------------------------------------------------------------------------------------
 Q.STLC phases?
-   1.requirement analysis
-   2.test planning
-   3.test design
-   4.test execution
-   5.test closure
+1. Requirement Analysis 
+2. Test Planning 
+3. Test Case Development 
+4. Test Environment Setup 
+5. Test Execution 
+6. Test Cycle Closure 
+Each stage has its deliverables. For example, during Test Planning, we produce the Test Plan Document; 
+during Test Execution, we produce Defect Reports. 
+-------------------------------------------------
+1. Requirement Analysis : 
+In requirement analysis, I review BRD, FRD, user stories, and acceptance criteria to understand end-to-end business flows, 
+identify testable requirements and gaps, 
+clarify ambiguities with the BA or Product Owner, define test scope and test types, participate in grooming sessions, and ensure requirements are clear and testable before starting test design
 
- 1.requirement analysis:read BRD/FRD
-                        check requirement is testable or not
-                        communicate with stakeholder for non-testable requirement
-                        Provide clarification/feasibility
- 2.test planning : define test paln 
-                    test strategy
-                    estimation :duration,cost
-                    resource allocation
-                    approve test plan from manager
- 3.test design : ts/tc creation 
-                 ts/tc review
-                 RTM
-                  test data,test scripting
-  4.test execution: apply tc on application
-                    defect find & report to devloper
-                    snapshot-->test artifact
-                    test defect report /test execution report
+//🔹 Practical / Experience Based
+Q1: What do you do if requirements are unclear?
 
-  5.test closure: review test report & defect report 
-                   TSR
-    consolidate tc result in document to sign off test process
+I first document the ambiguity and raise a clarification with the Business Analyst or Product Owner. If needed, I discuss it during grooming or stand-up meetings. I avoid assumptions and ensure the requirement is clarified before designing test cases. If timelines are tight, I note the risk and proceed with the most reasonable interpretation after team alignment.
 
+//eg //Q.Can you give an example of a requirement gap you found?
+1.A requirement mentioned that the page should ‘load quickly’ without defining acceptable load time. I asked the PO for the threshold and noted it in test planning
+2.“An API integration requirement just said ‘sync data with partner system’ but didn’t specify frequency, error handling, or retry logic. Misunderstanding this could break the system, so I documented and clarified all edge cases.”
+3.“The discount engine said ‘apply best offer automatically,’ but didn’t define priority rules when multiple discounts apply. This could have led to incorrect billing, so I confirmed the business logic with the PO before testing.”
 
+                                                                     OR
 
-=====================================================================================================================================================================================
+"In my experience, the requirements I’ve worked with were usually clear. However, if I ever encounter incomplete requirements, my approach would be to document the gaps, clarify with the BA or PO, discuss in grooming or stand-ups, and avoid assumptions. I’d also note any risks if timelines are tight, so testing stays accurate and on track."
 
+Q2. What do you do if requirements are incomplete?
+"In my experience, requirements have usually been clear, but if I encounter incomplete requirements, I would first identify what’s missing and document it. Then I’d clarify with the BA or Product Owner, discuss during grooming or stand-ups if needed, and ensure no assumptions are made. If timelines are tight, I’d note the risks and proceed only after team alignment on the best possible approach."
+
+Q3.How do you identify ambiguous requirements?
+"I identify ambiguous requirements by carefully reviewing them for missing details, vague terms, or conflicting information. For example, if a requirement uses words like ‘fast,’ ‘user-friendly,’ or ‘appropriate’ without measurable criteria, I consider it ambiguous. I also look for gaps in business rules, acceptance criteria, or edge cases. Once identified, I document the ambiguity and seek clarification from the BA or Product Owner before proceeding with testing or design."
+
+Q4.How do you ensure acceptance criteria are testable?
+"I ensure acceptance criteria are clear, measurable, and unambiguous, specifying expected behavior, inputs, and outputs. If anything is vague, I clarify with the BA/PO and make sure criteria cover positive and negative scenarios for complete test coverage
+
+//🔹 Scenario Based
+Q1.What if a developer interprets a requirement differently from QA?
+"If a developer interprets a requirement differently, I discuss it directly with them to align our understanding before testing, ensuring we’re on the same page."
+
+Q2.How do you handle last-minute requirement changes?
+"I first assess the impact of the change on existing test cases, timelines, and dependencies. Then I discuss it with the team and the BA/PO to clarify details and priorities. I update test cases accordingly and document the changes, while noting any risks to ensure smooth delivery without compromising quality."
+
+Q3.What if Product Owner is unavailable to clarify a requirement?
+"In my experience, the Product Owner has always been available when needed. But if they weren’t, I would proactively clarify with the BA or team, document any assumptions, and ensure alignment so work continues smoothly."
+
+🔹 Agile Focused
+
+What is your role in sprint grooming?
+How do you handle user stories without acceptance criteria?
+How do you write test scenarios from user stories?
+------------------------------------------------------------------------------------------------------------------------------------------------------
+ 2.Test Planning :
+Test planning is the process of defining the testing approach for a project or release. It includes deciding the scope of testing, objectives, strategy, resources, environment, tools, deliverables, entry and exit criteria, risks and mitigation, and timelines with milestones. Essentially, it’s a roadmap that ensures testing is organized, effective, and aligned with project goals."
+
+//Why it is important
+It’s important because it organizes testing, ensures coverage, manages risks, and helps deliver a high-quality product.
+
+🔹 Basic
+Q1.What are the main components of a Test Plan?
+"A Test Plan typically includes scope, objectives, strategy, resources, environment, deliverables, entry/exit criteria, risks, and schedule.
+
+Q.2 What is the difference between Test Plan and Test Strategy?
+A Test Plan is a project-specific document detailing what, how, when, and who will test. A Test Strategy is a high-level document defining the overall testing approach and methodology.
+eg.
+For a Retail Management System, my Test Plan defines what to test—like inventory, sales, billing, and reporting—how we’ll test (functional, regression, integration, performance), the QA team, tools, timelines, and risk mitigation. The Test Strategy is high-level, guiding the overall approach across releases—manual testing for critical flows, automation for regression, load testing for peak sales, and ensuring all integrations with POS and payment gateways work reliably. The Test Plan is the project roadmap, and the Test Strategy ensures consistent, quality testing across projects.
+
+🔹 Scenario / Experience Based :
+Q3.How do you define scope in a Test Plan?
+For a Retail Management System, the in-scope testing includes modules like Inventory Management, Sales, Billing, Customer Management, and Reporting. Out-of-scope items are HR and Payroll modules, and any third-party integrations not part of this release. Defining this scope ensures the QA team focuses on business-critical features and prevents effort on unrelated modules
+                                          OR
+Answer (Honest + Positive):
+"In my experience, the test scope is usually already defined in the Test Plan. My role is to review it carefully to understand what is in-scope and out-of-scope, ensure coverage of all critical modules, and focus testing on the areas that matter most. If I ever notice missing areas, I discuss them with the BA or Test Lead before execution."
+
+Q4.How do you handle a situation when resources are limited for testing?
+When resources are limited, I prioritize testing based on risk and criticality of features, focusing on high-impact areas first. I may combine manual and automated testing where feasible, optimize test cases to cover maximum functionality efficiently, and communicate any risks or coverage gaps to the team and stakeholders.
+
+Q5.Can you give an example of a risk you included in a Test Plan and how it was mitigated?
+In my experience, the Test Plan is prepared by the Test Lead. As a QA, I review it carefully to understand the scope, objectives, risks, and timelines. I ensure that my test cases, execution, and reporting align with the plan. If I notice anything missing or unclear, I discuss it with the Lead or BA for clarification.
+
+🔹 Agile / Practical
+
+How do you prepare a Test Plan for Agile projects?
+How do you handle changing requirements in your Test Plan?
+How do you ensure test coverage is adequate in your plan?
+------------------------------------------------------------------------------------------------------------------------------------------------------
+3. Test Case Development  :
+Test Case Development is where we design detailed test cases, scripts, and test data to cover all functional, integration, regression, and negative scenarios. Each test case is mapped to requirements via the RTM, reviewed for accuracy, and updated as requirements evolve, ensuring complete coverage before execution.
+
+Q.What are the key elements of a good test case?
+A good test case is clear, concise, and maintainable. Key elements include: a unique ID, a brief description, preconditions, clear test steps, relevant test data, expected results, postconditions, priority/severity, and execution status. It should also ensure traceability to requirements for full coverage and easy defect tracking.
+
+Q.write any test case
+Ex:
+-->Test Case ID: RMS-SALES-001
+-->Title / Description: Verify that the system calculates total billing amount correctly, including discounts and taxes.
+-->Preconditions: User is logged in; items are added to the cart; applicable discount and tax rates are configured.
+-->Test Steps:
+	1.Navigate to the cart.
+	2.Apply a discount code.
+	3.Click “Checkout.”
+	4.Verify the total billing amount includes item prices, discount, and tax.
+-->Test Data:
+	Items: 2x Item A ($50 each), 1x Item B ($100)
+	Discount: 10%
+	Tax: 5%
+-->Expected Result: Total amount = [(50*2 + 100) - 10%] + 5% tax = $199.5
+-->Postconditions: Order created in the system.
+-->Priority: High
+-->Requirement Mapping (RTM): Req-INV-05, Req-BILL-02
+-->Status / Execution Notes: Pass/Fail during execution
+
+🔹 Experience / Scenario Based
+
+Q. How do you ensure test cases cover all requirements?
+I follow a requirements-based approach by reviewing all functional and business requirements, creating a traceability matrix to map each requirement to test cases, including positive, negative, and boundary scenarios, and reviewing with stakeholders to ensure completeness
+
+Q. How do you handle incomplete or ambiguous requirements when creating test cases?
+In my experience, requirements are usually clear. If there’s ever ambiguity, I clarify with my TL and document assumptions in the test cases to ensure all functionality is tested.
+
+Q.Can you give an example of a complex test case you designed?
+One complex test case I designed was for a payment gateway integration with multiple payment methods (credit card, UPI, wallet) in an RETALOGIC application. The complexity was due to handling different transaction scenarios—successful payment, failed payment, network timeout, partial refunds, and currency conversion.
+
+To cover this, I created a matrix of test scenarios, defined test data for each payment type, included positive, negative, and boundary cases, and mapped them to requirements in a traceability matrix. I also coordinated with the developer team to validate edge cases like network interruptions and duplicate transactions. This ensured end-to-end coverage and reduced defects in production.
+
+Q.How do you prepare test data for testing different scenarios?
+I prepare test data by first analyzing the requirements and identifying all possible scenarios—positive, negative, and boundary cases. I use a mix of realistic, valid, and invalid data, including edge cases, to ensure comprehensive coverage. For dynamic or large datasets, I leverage tools or scripts to generate data efficiently and maintain data privacy, ensuring the test environment mimics real-world conditions as closely as possible.
+
+Q.How do you prioritize test cases for execution?
+I prioritize test cases based on risk and business impact—first covering critical functionalities and high-risk areas, then regression and lower-priority tests based on time and release needs.
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+4. Test Environment Setup :
+required hardware, software, tools, and configurations are prepared to execute test cases in an environment that closely mirrors production.
+
+Q. How did you set up test environment ? 
+In my current project, the test environment is usually pre-configured by the team, so I receive a ready-to-use setup. My responsibility is to verify environment stability, required access, and data availability before starting execution. If any issue arises, I coordinate with my TL or DevOps team to resolve it quickly.
+
+🔹 Practical
+
+Q. What challenges have you faced in test environment setup?
+In my project, the test environment is generally pre-configured, so setup challenges are minimal. However, I have faced situations like environment downtime, incorrect test data, or access issues. In such cases, I coordinate with my TL or DevOps team to resolve them quickly and ensure testing stays on track.
+
+Q. How do you verify the environment is ready for testing?
+In my current project, the environment is usually stable and pre-verified by the team, so I can start testing directly. However, I still do a quick basic check like opening the application and verifying login access before beginning test execution.
+
+🔹 Scenario Based
+
+Q. What would you do if the test environment is unstable?
+If the test environment is unstable, I first identify and document the issue, then immediately inform my TL or the DevOps team. Meanwhile, I focus on preparing test cases or test data so that testing can resume quickly once the environment is stable.
+
+Q. How do you proceed if the required environment is not available on time?
+If the required environment is not available on time, I inform my TL immediately and adjust my work by preparing or reviewing test cases and test data in parallel. Once the environment is ready, I proceed with execution without delay.
+
+🔹 Agile / DevOps
+
+Q. How do you coordinate with DevOps teams for environment setup?
+In my project, the environment is usually set up by the DevOps team. I coordinate with them through my TL to report any access or environment issues, share required details, and confirm once the environment is ready for testing.
+
+Q. What is the difference between test environment and production environment?
+A test environment is used to validate application functionality and integrations before release, while the production environment is the live system used by real users. The test environment mirrors production but uses test data, allowing us to find defects safely without impacting customers.
+------------------------------------------------------------------------------------------------------------------------------------------------------
+5. Test Execution :
+In the test execution phase, I run test cases in the test environment, validate actual results against expected results, log defects for failures, perform re-testing and regression testing, and track overall execution progress to ensure application quality.
+
+🔹 Experience Based
+
+Q. How do you decide which test cases to execute first?
+I prioritize test cases based on risk, business impact, and critical functionality. High-priority tests covering core features and areas prone to defects are executed first, followed by regression and lower-risk tests.
+
+Q. How do you handle high-priority defects during execution?
+When a high-priority defect is found, I immediately log it with detailed steps, severity, and test data, and notify the TL and development team. I then work closely with them to reproduce, retest, and verify the fix, while adjusting test execution to ensure critical functionality is still covered.
+
+Q.What if most test cases are failing due to environment issues?
+If most test cases fail due to environment issues, I immediately stop execution and report the problem to my TL or DevOps team. I document the failures clearly as environment-related, so the team can fix the issues, and meanwhile focus on preparing test cases or reviewing scenarios to save time .
+
+Q. How do you manage tight deadlines during test execution?
+Under tight deadlines, I prioritize high-risk and critical test cases first, and optimize execution using exploratory testing or available automation. I also keep the TL updated to ensure timely coverage without compromising quality.
+
+Q.How do you report test execution status to stakeholders?
+"In my project, the TL usually shares overall test execution status with stakeholders. My responsibility is to update the TL with execution progress, results, and any defects I encounter, so they can provide accurate reporting.
+---------------------------------------------------------------------------
+5.Test Cycle Closure
+In test closure, I ensure all test cases are executed, defects are tracked, prepare test summary reports, analyze defect trends, archive test artifacts, and obtain stakeholder sign-off to formally close the phase
+
+🔹 Basic
+Q. Why is test closure important in STLC?
+Test closure is important because it ensures all planned testing is completed, defects are tracked, and lessons are learned. It helps improve future testing, provides formal sign-off, and ensures that the product is ready for release with documented quality .
+
+🔹 Practical / Experience Based
+Q.What key metrics do you include in a Test Summary Report?
+A Test Summary Report typically includes metrics like total test cases, executed vs. pending, pass/fail counts, defect summary by severity, defect trends, test coverage, and overall quality assessment. It may also include risks, blockers, and recommendations for release readiness.
+
+//defect trends : where the product is weak, which areas need more attention, and whether the quality is improving over time
+
+Q.How do you handle open defects at closure?
+At closure, I ensure all defects are reviewed—critical defects are either resolved or formally accepted by stakeholders. I document open defects in the Test Summary Report, including severity, impact, and any mitigation, so the team and stakeholders are aware before releasing the product.
+
+🔹 Scenario Based
+
+Q. What steps do you take if stakeholders are not satisfied with test coverage?
+In my project, the TL handles stakeholder concerns about test coverage. My role is to support by updating or preparing test cases as needed and providing execution details or data to help the TL address their concerns
+
+//situation-based Q 
+If stakeholders are not satisfied with test coverage, I would first understand their concerns and review the gaps in requirements vs. test cases. I would then update or prepare the necessary test cases and provide the TL with execution details and evidence, so we can address the concerns efficiently.
+
+Q.How do you document lessons learned for process improvement?
+For lessons learned, I document issues faced during testing, root causes of defects, process gaps, and suggestions for improvement. I compile these in a lessons learned report or test closure document, and share them with the team to improve future testing efficiency and quality.
+
+🔹 Tools / Documentation
+
+Q. Which reports or tools do you use to share closure metrics?
+I use tools like JIRA, TestRail, or Quality Center to track test execution and defects. Closure metrics are shared via Test Summary Reports, Defect Summary Reports, and Traceability Matrices for clear visibility.
+
+Q.How do you archive test cases and artifacts for future reference?
+I archive test cases and artifacts by organizing them in a shared repository or test management tool, clearly labeling them with version and release details. This ensures they are easily accessible for future reference, audits, or regression testing .
+============================================================================================================================================================
+
+Q. What is Test Case? 
+A Test Case is a set of conditions and steps that determine whether a software feature works as expected. 
+Includes: Test Case ID, description, preconditions, steps, expected result, actual result, status. 
+Example: Test the “Forgot Password” feature—steps include entering an email, checking if a reset link is 
+received. 
+----------------------------------------------------------------------------------------------------------------
+Test Scenario :
+
+A Test Scenario is a high-level description of what to test. It outlines what functionality or feature needs to 
+be validated without going into detailed steps. 
+• Focuses on user journeys rather than step-by-step execution. 
+• Useful when we want to ensure end-to-end coverage. 
+Example: 
+For an e-commerce site: 
+Scenario – Verify that a user can place an order successfully. 
+This scenario will cover login → searching → adding to cart → payment → order confirmation. 
 ==========================================================================================================================================================
-
-Q.What is Test Case? 
-test case is a set of positive and negative executable steps derived from a test scenario
-
-==========================================================================================================================================================
-
-Q Test Case Design Techniques
-Error guessing: prone area is guessed by experience tester based on this prior experience of same type of 
-application.
-
-Boundry value analysis :BVA  helps to discover the errors caused by extreme values by CHOOSES THE BEST DATA at & 
-immediately above & below the boundaries of input domain of data.
+What are Test Design Techniques?
+ 
+Test Design Techniques are systematic approaches to creating test cases that ensure maximum coverage with minimum effort. 
+They help testers focus on critical areas, avoid duplication, and discover more defects. 
+They are generally divided into: 
+1. Black-Box Techniques – Based on requirements, without looking at the code. 
+2. White-Box Techniques – Based on code structure. 
+3. Experience-Based Techniques – Based on tester’s knowledge and experience. 
+	a.Error guessing: prone area is guessed by experience tester based on this prior experience of same type of application.
+Example: If a login page requires a password of 8–12 characters, you can use Boundary Value Analysis to 
+check passwords of 7, 8, 12, and 13 characters. 
+------------------------------------------------------------------
+Boundry value analysis :
+ 
+BVA focuses on testing at the edges of input ranges, as defects often occur at boundaries. 
+Example: 
+If the valid input is 18–60 for age: 
+Test values: 17 (just below), 18 (minimum), 60 (maximum), 61 (just above). 
+This ensures that both lower and upper limits are tested, along with just-outside values. 
 eg.A bank allows ATM withdrawals between ₹100 and ₹50,000 per transaction.     
 100                                                      50000 
  99    101(min+-1)                         49999     50001
 
-Equivalence partitioning:input data divided into partition of valid & invalid values group them & test only 1 input
-of each group
-eg. valid input 18-65
-    invalid input <18 ,65<
+----------------------------------------------------------------------
 
-==========================================================================================================================================================
+Equivalence partitioning :
 
-Q. Test Case Format:
+Equivalence Partitioning divides test data into groups (partitions) that are expected to be treated the same by 
+the system. If one value in a group works, all should work; if one fails, all fail. 
+Example: 
+Suppose a field accepts numbers from 1 to 100. 
+Partitions: 
+• Valid: 1 to 100 (e.g., test with 50) 
+• Invalid: < 1 (e.g., 0) and > 100 (e.g., 101) 
+Benefit: Reduces the number of test cases without losing coverage. 
 
-Test Case ID: TC_001
-Test Title / Name: Verify login with valid credentials
-Module / Feature: Login
-Test Type: Functional
-Preconditions: User must have a valid account
-Test Data:
- • Username: user@example.com
- • Password: P@ssword123
-Test Steps:
- 1. Open login page
- 2. Enter valid credentials
- 3. Click Login
-Expected Result: User is redirected to dashboard
-Actual Result: User successfully logged in
-Status: Pass
-Severity / Priority: Medium / High
-Remarks / Comments: Works as expected
+---------------------------------------------------------------------------------
+Decision Table Testing : 
+Decision Table Testing is used for systems with complex business rules. It helps ensure all possible 
+combinations of inputs and outcomes are tested. 
+Example: Loan approval: 
+Conditions: 
+1. Credit score > 700 
+2. Income > ₹30,000 
+   Actions: Approve / Reject 
 
-===========================================================================================================================================================
+Credit > 700   Income > 30k       Action 
+Y 		Y	          Approve 
+Y 		N 		 Reject 
+N 		Y		 Reject 
+N 		N 		Reject
 
+----------------------------------------------------------
+State Transition Testing  : 
+State Transition Testing checks how the system behaves when changing from one state to another based on 
+events/inputs. 
 
+Example: ATM machine: 
+• State: Card inserted → Enter PIN → Valid PIN → Access account. 
+• Test invalid PIN thrice → State changes to “Card blocked.” 
+Used when the software has finite states and rules for transitions. 
+---------------------------------------------------------------
+Error Guessing :
 
+Error Guessing relies on the experience and intuition of the tester to guess where defects are likely to be. 
+• Not a formal technique. 
+• Often used alongside other methods. 
+Example: A tester may guess that an email field might accept invalid formats like test@.com and try those 
+inputs. 
 ======================================================================================================================================================
 
-Q. Requirement Traceability Matrix
+Q. Requirement Traceability Matrix :
+
+The RTM is a document that maps requirements to test cases. 
+Purpose: 
+• Ensure complete coverage (no missed requirements). 
+• Helps in impact analysis when requirements change. 
+Structure: 
+| Requirement ID | Requirement Description | Test Case ID(s) | Status | 
+Example: 
+If Req ID REQ-101 is “User should reset password,” RTM will link it to all test cases covering reset 
+functionality. 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 The RTM is a document which is used to trace or track the requirment .
 In this documents we check for every requirment ,there is ts/tc created & it is executd during the excution phase
 & rtm is used to ensure that every requirement is tested, & there is no requirement is missed out
-
-
 =========================================================================================================================================================
 
-Q.Test Plan and contents available in a Test Plan? 
-Test plan document is a document which contains the plan for all the testing 
-activities to be done to deliver a quality product. Test Plan document is derived 
-from the Product Description, SRS, or Use Case documents for all future activities 
-of the project. It is usually prepared by the Test Lead or Test Manager. 
-
-describes software testing areas and activities
+Test Plan and contents available in a Test Plan? 
+A Test Plan is a detailed document outlining the testing strategy, scope, schedule, resources, and objectives.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Test Plan document is derived from the Product Description, SRS, or Use Case documents for all future activities of the project. 
+It is usually prepared by the Test Lead or Test Manager. 
 
 It outlines the test strategy, objectives, test schedule, required resources (human resources, software, and hardware), test estimation and test deliverables
 
@@ -1428,7 +1648,7 @@ o Entry & Exit criteria;Entry – requirements approved & test environment ready
 ============================================================================================================================================================
 
 Q. Defect Life Cycle
-
+The Defect Life Cycle (Bug Life Cycle) describes the stages a defect goes through from discovery to closure.
 
                 new   ;scrum master validate
                  |
@@ -1444,24 +1664,46 @@ reopened      fixed
              verified     |    rejected
                  |        |      |
               closed  <-----------
- Explain the steps for Bug Cycle? 
- Once the bug is identified by the tester, it is assigned to the development manager in open 
-status 
- If the bug is a valid defect the development team will fix it. 
- If it is not a valid defect, the defect will be ignored and marked as rejected 
- The next step will be to check whether it is in scope. If the bug is not the part of the current 
-release then the defects are postponed 
- If the defect or bug is raised earlier then the tester will assign a DUPLICATE status 
- When bug is assigned to developer to fix, it will be given a IN-PROGRESS status 
- Once the defect is repaired, the status will change to FIXED at the end the tester will give 
-CLOSED status if it passes the final test.
 
-• Status of Defects: current state of a defect
+Typical stages: 
+1. New: Tester logs the defect. 
+2. Assigned: Defect is assigned to a developer. 
+3. Open: Developer starts working on it. 
+4. Fixed: Developer fixes the defect. 
+5. Retest: Tester retests to verify the fix. 
+6. Closed: Defect is confirmed fixed. 
+7. Reopened: If the defect reappears. 
+Example: 
+You find the payment button unresponsive → log it → dev fixes → you retest → if working fine, you close it.
+==========================================================================================================================================================
+Q.What is a Bug/Defect in Software Testing? 
+A defect (or bug) is a deviation of the software from its expected behavior or requirement. 
+Example: 
+Expected: Clicking “Add to Cart” should increase the cart count. 
+Actual: Clicking does nothing → This is a defect. 
 
+Q. Bug, Error, Failure
+
+| Term    | What it is                              | Example Scenario                      |
+| ------- | ----------------------                  | ------------------------------------- |
+| Error   | Human mistake                           | Misunderstanding a requirement        |
+| Bug     | Deviation found during testing.         | Wrong formula coded in software       |
+| Failure | Observable malfunction 	            | Program crashes or gives wrong result |
+
+1.developer writes if (x = 5) instead of if (x == 5). This is a bug in the code
+
+2.DAILY_LIMIT = 2000  # should be 500
+  if withdrawal_amount <= DAILY_LIMIT:
+    account.balance -= withdrawal_amount
+    dispense_cash(withdrawal_amount)
+
+3.A customer comes to the ATM and withdraws $1500 in one day.
+According to the rules, this shouldn’t be allowed, but the ATM lets it happen.
+The system fails to behave as expected.
+This is a failure because it’s an observable incorrect behavior
 =====================================================================================================================================================
-
 Q.What is Bug Severity?
-impact on application functionality 
+Impact on the system’s functionality. 
 It can be Critical, Major or Minor,cosmatic. 
 how much effect will be there on the system because of a particular defect.
 
@@ -1471,24 +1713,24 @@ how much effect will be there on the system because of a particular defect.
 | 4️⃣   | **User’s account balance shows negative** after deposit                                                           	| Serious defect, impacts trust and accounting logic 
 | 5️⃣   | **Transaction history not displaying** after performing transactions                                           		| Core feature broken — functional issue 
 
-
+-------------------------------------------------------------------------------------------
 Q.What is Bug Priority? 
-order in which a defect should be resolved.
+order in which a defect should be resolved / Urgency of fixing the defect. 
 It can be High, Medium or Low. Most of 
 status is based on the customer requirement.
 
         | **Scenario**                                                       | **Explanation**                                            |
 | ----- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
 | 1️⃣   | **Bank login page not loading**                             								       | Customers can’t access the system — urgent business impact 
-| 2️⃣   | **“Submit” button missing** on Credit Card Payment page          					     | Stops users from completing transactions                   
+| 2️⃣   | **“Submit” button missing** on Credit Card Payment page          					      | Stops users from completing transactions                   
 | 3️⃣   | **Incorrect bank name or branch name** shown on printed statements 					| Impacts brand credibility, must be fixed before release    
 | 4️⃣   | **Error message displayed after successful fund transfer**         						| Causes confusion and customer support issues               
 | 5️⃣   | **Password reset email not being sent**                           								| Users can’t log in — critical for customer access          
-\
+
 ==========================================================================================================================================================
 
-Q.Defect Report :
-formal document used to record issues, errors, or problems found in a product
+Q. Defect Report :
+A defect report is a record in a bug-tracking system that documents a software issue, including steps to reproduce, expected and actual results, and severity, so developers can fix and testers can verify the defect.
 
 Defect ID: D-101
 Title: Login button not working on Chrome v118
@@ -1503,58 +1745,43 @@ Priority: High
 Environment: Chrome v118, Windows 11
 Attachments: Screenshot attached
 Status: Open
-
-==========================================================================================================================================================
-
-Q. Bug, Error, Failure
-
-| Term    | What it is             | Example Scenario                      |
-| ------- | ---------------------- | ------------------------------------- |
-| Error   | Human mistake          | Misunderstanding a requirement        |
-| Bug     | Defect in code         | Wrong formula coded in software       |
-| Failure | Observable malfunction | Program crashes or gives wrong result |
-1.developer writes if (x = 5) instead of if (x == 5). This is a bug in the code
-
-2.DAILY_LIMIT = 2000  # should be 500
-if withdrawal_amount <= DAILY_LIMIT:
-    account.balance -= withdrawal_amount
-    dispense_cash(withdrawal_amount)
-
-3.A customer comes to the ATM and withdraws $1500 in one day.
-According to the rules, this shouldn’t be allowed, but the ATM lets it happen.
-The system fails to behave as expected.
-This is a failure because it’s an observable incorrect behavior
-
 ========================================================================================================================================================
+Q . How do you write a good Bug Report? 
 
-Q.Defect Tracking Tool : JIRA
-Tool is software used to log, track, manage, and report defects (bugs) or issues in a system or application
-
-Example in JIRA:
-Defect Logged: QA tester logs a defect after finding a bug.
-Triage / Review: Team reviews defect, sets priority and severity.
-Assignment: Assigned to a developer for fixing.
-In Progress: Developer works on fixing the bug.
-Resolved: Developer marks the defect as resolved.
-Testing / Verification: QA retests the defect.
-Closed: If the defect is fixed and verified, it is closed.
-
-========================================================================================================================================================
-====================================================================================================================================================================================
-Q4. White Box Testing
-white-box testing validates how the code implements logic, handles branching, and manages edge cases.
-
-Q5. Grey Box Testing
+A good bug report should be clear, concise, and complete. 
+Include: 
+• Bug ID 
+• Title/Summary 
+• Steps to Reproduce  
+• Expected Result 
+• Actual Result 
+• Screenshots/Logs 
+• Environment details 
+• Severity/Priority 
+Example: 
+Title: Payment fails when using PayPal. 
+Steps: Add item → Checkout → Choose PayPal → Click Pay. 
+Expected: Payment completes successfully. 
+Actual: “Transaction Failed” error appears.
+======================================================================================================================================================= 
+Q. White Box Testing
+Based on code structure, checks internal paths, branches, loops. 
+Done by developers or testers with coding skills. 
+Example: Unit Testing, Code Coverage Testing. 
+------------------------------------------------------
+Q. Grey Box Testing
 hybrid software testing method that combines aspects of both Black Box Testing and White Box Testing.
 “Grey Box Testing allows  to write more context-aware test cases. 
 For example, while testing APIs in  projects, I used my knowledge of expected DB changes to validate that the API not only responded correctly but updated the system state as expected.
+-----------------------------------------------------------
+Q. Black Box Testing
 
-Q6. Black Box Testing
-Black Box Testing is a software testing approach in which the internal structure, code, or implementation details of the application are not known to the tester. Instead, the focus is on validating the functionality, inputs, outputs, and user interactions against specified requirements or use cases
-
-Q7.Functionality Testing
-validates whether a software application behaves according to the specified functional requirements
-
+ Based on requirements without code knowledge. Example: Functional Testing, UI Testing.
+ focus is on validating the functionality, inputs, outputs, and user interactions against specified requirements or use cases
+=========================================================================================================================================================
+Q .Functionality Testing
+Functional Testing verifies that the software’s features work according to the specified requirements.
+Example: For a banking app, functional testing ensures that money transfers, balance checks, and account statements work as expected.
 
 Functional: 
              Behaviour    :radio button should only 1 selected
@@ -1563,72 +1790,16 @@ Functional:
              Backend testing :user created in db ,crud
              service testing : User Authentication Service, Password Reset Service, Inventory Update Service, Customer Search Service,
              calculation based :scoring, forecasting, or compensation
-
-
-
-Q14.Build
-It combines all program files, libraries, and resources  into a single build file
-
-GENRAL STEPS FOLLOWED:
-Code Compilation – Source code is compiled into executable format.
-Unit Testing – Developers run automated unit tests.
-Packaging – Code is packaged into .jar, .war, or .apk file.
-Deployment – Build is deployed to a QA/test environment.
-Notification – Testers are informed that a new build is available.
-
-
-Q. Build number
-A build number uniquely identifies each version of the application created during development. 
-It helps track and differentiate between builds
------>After a successful build, the build file (e.g., .war or .apk) is deployed to a testing server or QA environment using tools like Jenkins or manually via FTP/Tomcat. Testers then access the application through a test URL to begin testing.
-eg.
-Host: ftp.bankserver.com
-Username: dev_team
-Password: ********
-Port: 21
-
-
-Q.Realase
-Release is a stable and production-ready version of the software that is delivered to end users or customers after successful testing
-
-Q.What is Bug /defect  Leakage? 
-A bug which is actually missed by the testing team while testing and the build was released to the Production.
-If now that bug (which was missed by the testing team) was found by the end user or customer then we call it as Bug Leakage.
-
-
-• Smoke Testing/Dry Run :
-           build is ready or not /stability
-              critical situations checked
-               before accepting build
-            Day 0” check
-
-
-• Difference between smoke and sanity testing
---build is ready /stable for testing|to ensure code changes working well
---devlpoer/tester                   | tester
---before accepting build for testing|after accepting build for testing
---part of build accepting test      |imp. test cases from regression are executed due to lack of time
---s.t. fail rejected                |1000tc,500imp tc
-
-• Adhoc Testing:
-informal testing type.
-When there is limited time in hand to test the system
-no tc,documents,test techniques
-done when formal testing is completed
-
-• Exploratory Testing
-experienced based techniques
-done when insufficient documents
-session based it is(timeframe:due to time pressure)
-explore all possible ways 
-
-Q.Non-functional Testing
+---------------------------------------------------------------------
+Q. Non-functional Testing
 Non-Functional Testing is the process of validating how well a system performs under certain conditions, ensuring that the software meets specified quality attributes like speed, stability, usability, and security.
 
-compatibilty :                version,browser,hardware ->size ram ,hard disk,
-                              mobile platform,network:speed,bandwidth,capacity
-                              note unexpected behaviour like looks,broswer name &version in
-                              test report & dev change accordingly
+ -----------------------------------------
+
+Q. What is Compatibility Testing? 
+Compatibility Testing ensures the application works across different devices, browsers, operating systems, and 
+network environments. 
+Example: Checking if a travel booking site works on Chrome, Firefox, Safari, and Edge on both Windows and  Mac.              
 
 Types of Compatibility Testing by Application Type
 1. Web Application
@@ -1662,12 +1833,17 @@ Purpose: Validate the application’s stability and look/feel on multiple operat
 Example:
 ✅ Test banking web portal on Windows 11, Ubuntu, and macOS (same hardware via VMs).
 
-Q.performace :(response time & speed)
-measures how well a software application performs under a particular workload
-   -----------------------------------------------------------       
-oload :
+-------------------------------------------------------------------------------------------
+
+Q. What is Performance Testing? 
+Performance Testing checks the speed, responsiveness, and stability of a system under expected workloads. 
+• Identifies bottlenecks and ensures performance goals are met. 
+Example: Testing if a banking site loads the account summary within 3 seconds for 500 concurrent users.
+
+----------------------------------------------------------------------------------------------     
+What is Load Testing? 
 checks how a system behaves when it is subjected to a specific expected load
-behavior , reliability , load
+eg.
 Suppose a banking portal is expected to handle 2,000 concurrent users.
 During load testing, testers simulate 2,000 users performing actions like:
 
@@ -1676,8 +1852,10 @@ Checking account balance
 Transferring funds
 Viewing transaction history
 ✅  Ensure response time remains acceptable (e.g., each page loads within 3 seconds) and no crashes occur
-----------------------------------------------------------------------------
-ostress:break point of server, stability , extreme traffic
+------------------------------------------------------------------------------------------------------------
+What is Stress Testing? 
+
+break point of server, stability , extreme traffic
 how a system behaves under extreme or beyond-normal load conditions
 
 Suppose a banking system normally handles 2,000 concurrent users.
@@ -1689,7 +1867,8 @@ Can it recover once load returns to normal?
 ✅ The system should slow down but not lose data or crash permanently. It should recover automatically when the load decreases.
 
 --------------------------------------------------------------------------------------
-odata volume:upload time,to verify s/w handle large amount of data
+Q. What is data volume ?
+upload time,to verify s/w handle large amount of data
 The banking database initially has 1,000 customer records — app works fine.
 In volume testing, testers insert 10 million records into the same database.
 Then they check:
@@ -1698,10 +1877,16 @@ Whether reports still generate correctly.
 If the system slows down or crashes.
 
 ✅ System should still perform within acceptable limits, even with large data
+---------------------------------------------------------------------------
+Q. What is Scalability Testing? 
+Scalability Testing checks whether the system can scale up or down to handle increased or decreased 
+workloads. 
+Example: Increasing the number of transactions in a payment system from 100/sec to 1,000/sec and checking if 
+it scales properly.
 
 --------------------------------------------------------------------------------------------
 
-o What is Soak Testing / Endurance Testing?
+Q. What is Soak Testing / Endurance Testing / Stability Testing?
 Running a system at high load for a prolonged period of time to identify the 
 performance problems is called Soak Testing.
 testing an online banking system:
@@ -1714,9 +1899,9 @@ Response time (does it get slower over time?)
 Any crashes or database disconnections
 
 ✅ The system should remain stable, responsive, and consistent throughout the test period — no memory leaks or slowdowns.
-
+ Running a live video stream for 72 hours to ensure no memory leaks or crashes.
 -----------------------------------------------------------------------------------------------------
-o Spike Testing
+Q.What is Spike Testing
 online banking site normally handles 1,000 users.
 During Spike Testing, you simulate:
 A sudden jump from 1,000 to 5,000 users in a few seconds (e.g., salary day).
@@ -1730,7 +1915,8 @@ How fast does it recover when load returns to normal?
 ✅ The system might slow briefly but should not crash — and should recover automatically when load decreases.
 
 -----------------------------------------------------------------------------------------------------------
-Q.Usability:Usability Testing checks how easily users can understand, navigate, and interact with the application to achieve their goals
+Q. What is UsabilityTesting 
+Usability Testing checks how easily users can understand, navigate, and interact with the application to achieve their goals
           look & feel
           ease of use
           speed of processing:main focus is to improve the user experience on how fast the
@@ -1740,16 +1926,23 @@ Whether users can easily find the “Fund Transfer” option.
 If the login process is simple and error messages are clear.
 Whether pages load quickly after clicking “Submit”.
 If the design and layout are clean and user-friendly.
----------------------------------------------------------------------------
-Q.Session time out:when a user stays inactive for a certain period of time, the system automatically logs them out for security reasons
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+• Focuses on UI design, navigation, and user satisfaction. 
+• Often involves real users providing feedback. 
+Example: In a food delivery app, testers check if users can easily search for a restaurant, apply filters, and place 
+an order without confusion. 
+Importance: Good usability increases customer satisfaction and reduces training/support needs. 
+----------------------------------------------------------------------------------------------------------------------------------------------------
+Q. Session time out:
+when a user stays inactive for a certain period of time, the system automatically logs them out for security reasons
 online banking portal and do nothing for 5 minutes,
 the system will automatically log you out and show a message like:
 “Your session has expired due to inactivity.
 
- HTTP:used for transferring data between a web browser and a web server.eg.http://www.example.com
+ HTTP: used for transferring data between a web browser and a web server.eg.http://www.example.com
 
 HTTPS:HTTPS is the secure version of HTTP — it uses SSL/TLS (Secure Sockets Layer,TLS (Transport Layer Security) encryption to make data transfer safe
----------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------
 Q. Globalization Testing: adapted to various languages and regions without any changes.
                               currency and number format
                               Multilingual Content 
@@ -1763,10 +1956,128 @@ Q. Globalization Testing: adapted to various languages and regions without any c
                             Mobile number format:+91,+44 uk
                             pin code:india6 digit,usa 4digit
                              address: japan :postal code, state, city
+Running the same app in US, India, Japan, France.
+Checking language, currency, time zone, and cultural formats.
+👉 Testing type: Globalization Testing
+1. Running the same website in US, UAE, Germany, China.
+2. Supporting multiple time zones correctly.
+3. Handling international phone numbers.
+4. Accepting global credit cards.
+5. Displaying multilingual customer support.
+6. Delivering region-specific content automatically.
+7. Handling different legal/privacy rules (GDPR).
+8. Auto-detecting user location and language.
+9. Testing app performance from different countries.
+10. Ensuring consistent branding globally.
+------------------------------------------------------------------------------------------
 
-Internationalization testing :checks if the product can be adapted for multiple countries
+Internationalization testing :checks if the product can be adapted for  multiple languages 
+A website stores all text in language files instead of hardcoding English.
+Later, French or Japanese can be added easily.
+👉 Testing type: Internationalization Testing
+
+🌍 Real-Time Applications Using Internationalization (i18n)
+1. Google Search / Gmail
+
+Supports 100+ languages.
+Language can be switched without reinstalling.
+Handles RTL languages (Arabic, Hebrew).
+Date, time, and number formats change by locale.
+Why i18n?
+Core system designed to load language resources dynamically.
+
+2. Amazon
+Same codebase supports multiple countries.
+Currency, date format, and language change dynamically.
+Product descriptions pulled from locale files.
+Why i18n?
+Text and formats are not hardcoded.
+
+3. Netflix
+UI language changes based on user profile.
+Supports subtitles and scripts worldwide.
+Handles different text lengths gracefully.
+
+4. Facebook / Instagram
+Automatically detects browser language.
+Supports RTL layouts.
+Stores multilingual content in Unicode.
+
+5. Uber
+App works in multiple languages.
+Address formats vary per country.
+Supports local number & date formats.
+
+6. Airbnb
+Language switch available instantly.
+Price and date formats change by region.
+Same UI adapts to different text lengths.
+
+7. Microsoft Office
+One installation supports many languages.
+Language packs can be added without reinstalling.
+UI adjusts dynamically.
+
+8. PayPal
+Currency formats change automatically.
+Supports multiple regional languages.
+Local legal text loaded per region.
+
+9. Spotify
+UI text loads per selected language.
+Handles long translated text in menus.
+Supports global character sets.
+
+10. YouTube
+Supports global languages.
+RTL layout for Arabic.
+Localized metadata and captions.
+------------------------------------------------------------------------------------------
 Localization testing : checks if it functions correctly in one specific local region or language.
-No text overlap or layout issue due to longer translations
+                       An app originally in English is translated into Spanish with:
+			Text translated
+			Currency changed to €
+			Address format changed
+			👉 Testing type: Localization Testing
+1. Translating English text into French.
+2. Changing currency symbol $ → ¥ for Japan.
+3. Changing date format MM/DD/YYYY → YYYY/MM/DD.
+4. Displaying local tax rules (VAT, GST).
+5. Using local language fonts.
+6. Adapting colors or icons for cultural meaning.
+7. Showing local address format (ZIP code position).
+8. Translating error messages.
+9. Changing first-day of week (Sunday vs Monday).
+10. Showing local payment methods (Paytm in India, Alipay in China).
+
+=======================================================================================================================================================
+
+• Smoke Testing/Dry Run :
+           build is ready or not /stability
+              critical situations checked
+               before accepting build
+            Day 0” check
+
+
+• Difference between smoke and sanity testing
+--build is ready /stable for testing|to ensure code changes working well
+--devlpoer/tester                   | tester
+--before accepting build for testing|after accepting build for testing
+--part of build accepting test      |imp. test cases from regression are executed due to lack of time
+--s.t. fail rejected                |1000tc,500imp tc
+
+• Adhoc Testing:
+informal testing type.
+When there is limited time in hand to test the system
+no tc,documents,test techniques
+done when formal testing is completed
+
+• Exploratory Testing
+experienced based techniques
+done when insufficient documents
+session based it is(timeframe:due to time pressure)
+explore all possible ways 
+
 =======================================================================================================================================================
 Q.What is Regression Testing?
 
@@ -1817,7 +2128,37 @@ Q. static testing vs dynamic testing?
   3. prevent defect                        |  find & fix defects
   4. less time                             |  more time taking
   5. reviewing the documents               |  execute the test cases on application
-========================================================================================
+========================================================================================================================================================
+Q14.Build
+It combines all program files, libraries, and resources  into a single build file
+
+GENRAL STEPS FOLLOWED:
+Code Compilation – Source code is compiled into executable format.
+Unit Testing – Developers run automated unit tests.
+Packaging – Code is packaged into .jar, .war, or .apk file.
+Deployment – Build is deployed to a QA/test environment.
+Notification – Testers are informed that a new build is available.
+
+
+Q. Build number
+A build number uniquely identifies each version of the application created during development. 
+It helps track and differentiate between builds
+----->After a successful build, the build file (e.g., .war or .apk) is deployed to a testing server or QA environment using tools like Jenkins or manually via FTP/Tomcat. Testers then access the application through a test URL to begin testing.
+eg.
+Host: ftp.bankserver.com
+Username: dev_team
+Password: ********
+Port: 21
+
+
+Q.Realase
+Release is a stable and production-ready version of the software that is delivered to end users or customers after successful testing
+
+Q.What is Bug /defect  Leakage? 
+A bug which is actually missed by the testing team while testing and the build was released to the Production.
+If now that bug (which was missed by the testing team) was found by the end user or customer then we call it as Bug Leakage.
+
+===========================================================================================================================================================
 Q: Explain the QA role in the Agile SDLC.
 
 A:
@@ -1838,12 +2179,30 @@ Q: How do you define ‘continuous testing’?
 A:
 “Continuous testing means testing features as soon as they are developed, not waiting for the end of development. It ensures quicker feedback and early defect detection
 
-======================================================================================
+========================================================================================================================================================
 
+Q.Defect Tracking Tool : JIRA
+Tool is software used to log, track, manage, and report defects (bugs) or issues in a system or application
+
+Example in JIRA:
+Defect Logged: QA tester logs a defect after finding a bug.
+Triage / Review: Team reviews defect, sets priority and severity.
+Assignment: Assigned to a developer for fixing.
+In Progress: Developer works on fixing the bug.
+Resolved: Developer marks the defect as resolved.
+Testing / Verification: QA retests the defect.
+Closed: If the defect is fixed and verified, it is closed.
+======================================================================================
+Difference between Manual Testing and Automation Testing. 
+• Manual Testing: Human testers execute test cases without tools. It’s flexible and good for exploratory 
+or usability testing. 
+• Automation Testing: Uses scripts/tools to run tests automatically; suitable for regression, performance, 
+and repetitive tasks. 
+====================================================================================================================================================
 updated on 22-12-2025@18.14
 updated on 06-01-2026,7/1@18.22
 updated on 09-01-2026@18.28
-updated on 13-1-2026@8.9
+updated on 13-1-2026@8.9,18.01
 
 
 
