@@ -13,27 +13,6 @@ Q.WHAT IS SDLC
 It’s the process that defines how software is planned, developed, tested, deployed, and maintained to ensure quality and efficiency.
 //The goal of the SDLC life cycle model is to deliver high-quality, maintainable software that meets the user's requirements.
 
- Requirements are gathered to define customer management, sales tracking, and support features
-			|
-			|
-			v
-the system is designed with secure architecture and workflows; 
-			|
-			|
-			v
-CRM modules are developed and integrated; 
-			|
-			|
-			v
-the portal is thoroughly tested for functionality and performance; 
-			|
-			|
-			v
-deployed for organizational use; 
-			|
-			|
-			v
-and continuously maintained with updates, enhancements, and bug fixes.
 ------------------------------------------------------------------------------------------------------------------------------------------------
 
 Q. different phases of SDLC
@@ -112,7 +91,7 @@ Stage 1: req. gathering :It involves collecting, documenting, and managing the r
 		|				Inventory registers (digital record)
                                                 reorder & safety stock policies
 						GST/tax compliance documents, SLA document
-		|				Supplier contracts,Business KPIs
+		|				Supplier contracts,Business KPIs(Key Performance Indicator)
 
 		|				Findings:
 						Current problems (manual errors, slow billing)
@@ -357,7 +336,7 @@ maintenance phase is the stage of the software lifecycle where a live, productio
 1.Bug Fixing: The process of finding and fixing errors and problems in the software.
 2.Enhancements: The process of adding new features or improving existing features to meet the evolving needs of the users.
 3.Performance Optimization: The process of improving the speed, efficiency, and reliability of the software.
-4.Porting and Migration: The process of adapting the software to run on new hardware or software platforms.
+4.Porting and Migration: The process of adapting the software to run on new hardware or software platforms.(new feature :porting,new software :migration)
 
 
 ✅ Planned Maintenance :
@@ -422,7 +401,7 @@ National healthcare platforms
 Citizen ID systems
 Customs & immigration systems
 
-Document-Driven :The waterfall model depended on documentation to ensure that the project is well-defined and the project team is working towards a clear                                                                                            set of goals. 
+Document-Driven :The waterfall model depended on documentation to ensure that the project is well-defined and the project team is working towards a clear set of goals. 
 
 //How Agile Is Different (Even Though It Has Documentation)
 In Agile:
@@ -464,11 +443,13 @@ System architecture
 Database schema
 Security mechanisms (encryption, access control)
 Hardware + software interaction (EVM, servers)
+
 Example : Separate modules for:
 Voter authentication
 Vote casting
 Vote storage
 Result counting
+
 QA role :
 Review design documents
 Understand data flow
@@ -485,6 +466,7 @@ Login & authentication module
 Vote recording module
 Encryption module
 Result calculation module
+
 QA role : No execution yet (mostly)
 Prepare: Detailed test cases , Test data ,Traceability matrix (RTM)
 📌 Changes are discouraged at this stage.
@@ -510,6 +492,7 @@ Regression testing performed
 System is deployed in a controlled environment
 Often deployed in phases (pilot → full rollout)
 Strict approval required
+
 QA role :
 Support deployment verification
 Perform smoke tests
@@ -520,6 +503,7 @@ Bug fixes (if any)
 Security patches
 System monitoring
 Minor updates (very controlled)
+
 QA role :
 Verify fixes
 Perform regression testing
@@ -566,7 +550,7 @@ Each loop of the spiral is called a phase of the software development process.
 ✔️ Large systems ( defense, aerospace,Battlefield Communication System (Secure Military Network))
 ✔️ High-risk software (safety-critical apps, AI systems)
 ✔️ Projects where requirements evolve over time
-✔️ Projects requiring regular customer feedback eg.banking appliocation
+✔️ Projects requiring regular customer feedback 
 1️⃣ Defense Systems
 Missile guidance software
 Radar & surveillance systems
@@ -581,7 +565,7 @@ Command decision-support systems
 ----------------------------------------------------------------
 Spiral Loop 1 – Concept & Feasibility
 Planning
-Objective: Develop a new missile guidance concept
+Objective: Develop a new missile system
 Define basic requirements (range, accuracy, speed)
 
 Risk Analysis
@@ -661,11 +645,10 @@ spiral vs waterfall method :
  
 -----------------------------------------------------------------------------------------------------------------------------
 • Prototype Model
-SDLC approach where an early working model / simplified model / mock-up of the software  is built to collect user feedback and 
-refine requirements before full development starts.
+SDLC approach where an early working model / simplified model / mock-up of the software  is built to collect user feedback and refine requirements before full development starts.
 Shows basic features, screens, or workflows to refine their expectations.
-Example: A startup MVP (Minimum Viable Product) or AI-based prototype to test user interest.,ATM Prototype
-interactive prototypes (using tools like Figma or Adobe XD)
+
+The prototype model is used whenever building the full system first is too costly, risky, or uncertain. It allows testing, validation, and feedback before large-scale investment.
 
 Prototype Model Flow:
 1. Collect Requirement  2. Build Quick Prototype  3. User Evaluates Prototype  4. Modify Prototype Based on Feedback
@@ -688,19 +671,19 @@ Smart City Traffic Management – Prototype Model (Easy Version)
 
 
 1️⃣ Requirements Gathering – What do we want?
-Decide what the system should do.
-Example: Show traffic congestion, alert jams, and suggest alternative routes.
+Decide what the system should do.(stakeholders like city officials,traffic police,engg basic goal defined)
+Example: Show traffic congestion, alert jams, and suggest alternative routes.Give emergency vehicles green signals,Monitor traffic in real time.
 Simple action: Draw a simple sketch of a dashboard with roads colored green/red for traffic.
 
 2️⃣ Quick Design – Make a small test version
 Build a small working version to see if the idea works.
-Example: Use 2–3 main roads and simulate traffic with dummy data.
-Purpose: Check how the dashboard looks and works before building the whole system.
+Example: Use 2–3 main roads and simulate traffic with dummy data.Basic idea of how sensor data will appear on screen of traffic
+Purpose: Check how the dashboard looks and works before building the whole system.Initial design blueprint.
 
 3️⃣ Implementation – Make it work
 Build a working prototype with real or simulated sensors.
 Example: Dashboard updates traffic status in real time. Road A = red (busy), Road B = yellow (slow).
-Purpose: See the system working in action, not just a sketch.
+Purpose: See the system working in action, not just a sketch.Buttons to change traffic light timing.
 
 4️⃣ Evaluation & Feedback – Ask users what they think
 Show the prototype to city managers or test users.
@@ -713,7 +696,7 @@ Example: Add predicted traffic alerts, suggest alternate routes, improve dashboa
 Purpose: Make the system better before full deployment.
 
 6️⃣ Deployment – Launch full system
-Connect all real sensors and cameras for the entire city.
+Connect all real sensors and cameras for the entire city.Real sensors, cameras, and networks are integrated.Deployed first in a small city area, then city-wide.
 Example: Live traffic updates for all roads, alerts sent to citizens’ apps.
 Benefit: Because we tested with a prototype first, the system works correctly and safely.
 ----------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -835,7 +818,7 @@ Define data flow, system architecture, and module interactions.
 Plan test cases for each design phase (as per the V-Model’s “Verification” side).
 Map each requirement to a corresponding validation step.
 Ex
-Designing how data flows from patient registration → doctor consultation → billing → pharmacy while maintaining data security (HIPAA compliance).
+Designing how data flows from patient registration → doctor consultation → billing → pharmacy while maintaining data security (HIPAA compliance : Health Insurance Portability and Accountability Act).
 
 3. Module Design & Coding (V&V – Verification)
 
@@ -873,11 +856,16 @@ Example (HMS):
 After deployment, hospital staff use the system daily. Later, an update adds a new “Digital Prescription” module developed and tested using the same V&V + Prototype cycle.
 
 =========================================================================================================================================================
+Q . Types of Testing / Whats are level of testing?
+     unit 
+     Integration
+     System
+     Acceptance
 
-Q . Types of Testing: 
 
 [1]Unit Testing: Test individual modules 
-(e.g., billing calculation :
+
+(e.g., billing calculation Module :
 Correct total price calculation,Correct tax (GST/VAT) applied,Correct discount calculation)
 Correct final amount after applying discounts, delivery charges, platform fees , bank/wallet discount ,GST .
 Correct GST extraction from price.
@@ -945,6 +933,10 @@ public class TestFlipkartCheckout {
     }
 }
 
+//check whether the individual unit or module of the source code is working properly. 
+white box testing
+done by devloper in devloper environment
+easy to fix defect
 ------------------------------------------------------------------------------------------------------------------------------------------
 [2]Integration Testing: Test interaction between modules
 
@@ -1078,7 +1070,40 @@ Transaction ID		Stored
 Amount			Correct
 Duplicate charges	None
 
------------------------------------------------------------------
+//extra ++++++++++++++++++++++++++++++++++++++++++++++++
+testing the interface between the two software units. 
+Integration testing is done by three ways. Big Bang Approach, 
+                                           Top-Down Approach, 
+                                           Bottom-Up Approach
+to check communication between modules is as expected
+Displays category --> Electronics product page
+
+Big Bang Approach /  Non incremental integration testing
+:combine all modules once & verify functionality of each modules.
+Because it delays testing until all modules are developed, increases risk, and debugging becomes complex
+
+
+(1)Top-Down Approach:, testing starts from the highest-level modules (e.g., UI or controller logic) and progressively moves downward to lower-level modules (e.g., services, database, etc). You start testing from the main module and proceed step by step to submodules.
+stub is used as a placeholder to simulate its output.
+eg.
+Dashboard → Account → Transaction → Database
+
+(2)Bottom-up Approch:testing starts with the lowest-level modules (like database or utility classes) and integrates upwards towards the main or parent modules.
+eg.
+ Database Module — stores all data
+(account details, balance, transactions, customer info)
+
+ Transaction Module — performs operations
+(fetch balance, record deposits/withdrawals)
+
+ Fund Transfer Module — handles money transfer between accounts
+(debit sender, credit receiver)
+
+ User Interface (UI) — what the customer sees on the app or website
+(login screen, transfer page, confirmation message
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 [3]System Testing: Test full retail system as a whole
 
 Objective:
@@ -1155,7 +1180,16 @@ Inventory quantity is accurately reduced and replenished
 Low-stock alerts are triggered at the right threshold
 Updated stock values are consistent across all system interfaces
 No manual intervention is required for stock synchronization
------------------------------------------------------------
+
+//extra++++++++++++++++++++++++++++++++++++++++++++++++++++
+Testing the fully integrated application to evaluate the system’s compliance with its specified requirements is called System Testing .
+End to End testing. 
+Verifying the completed system to ensure that the application works as intended or not.
+eg.
+UI → Login → Dashboard → Fund Transfer → Transaction → Database → Notification 
+UI → Login → Dashboard → Select Pickup & Drop → Schedule Ride Option → Backend Booking Module → Payment Module → Database Update → Notification → Ride Confirmation
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 [4]User Acceptance Testing (UAT): Ensuring the system meets user needs 
 
 UAT Test Case 1: Product Sale at POS
@@ -1240,98 +1274,8 @@ Test cases
 Bug reports
 Tested application
 
-===========================================================================================================================================================
-
 -----------------------------------------------------------------------------------------------------------------------------------------------
-============================================================================================================================================================
-System testing consists of three different kinds of testing activities as described below.
-
-Alpha testing: Alpha testing is the system testing performed by the development team.
-
-Beta testing: Beta testing is the system testing performed by a friendly set of customers.
-
-Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
-Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
-
-Q4. White Box Testing
-white-box testing validates how the code implements logic, handles branching, and manages edge cases.
-
-Q5. Grey Box Testing
-hybrid software testing method that combines aspects of both Black Box Testing and White Box Testing.
-“Grey Box Testing allows  to write more context-aware test cases. 
-For example, while testing APIs in  projects, I used my knowledge of expected DB changes to validate that the API not only responded correctly but updated the system state as expected.
-
-Q6. Black Box Testing
-Black Box Testing is a software testing approach in which the internal structure, code, or implementation details of the application are not known to the tester. Instead, the focus is on validating the functionality, inputs, outputs, and user interactions against specified requirements or use cases
-
-Q7.Functionality Testing
-validates whether a software application behaves according to the specified functional requirements
-
-
-Functional: 
-             Behaviour    :radio button should only 1 selected
-             Input domain : type of datatype, length 
-             Error handling : it give proper error message
-             Backend testing :user created in db ,crud
-             service testing : User Authentication Service, Password Reset Service, Inventory Update Service, Customer Search Service,
-             calculation based :scoring, forecasting, or compensation
-
-Q9.Whats are level of testing?
-     unit 
-     Integration
-     System
-     Acceptance
-
-Q10.what is unit testing?
-check whether the individual unit or module of the source code is working properly. 
-white box testing
-done by devloper in devloper environment
-easy to fix defect
-
-Q11.What is Integration Testing? 
-testing the interface between the two software units. 
-Integration testing is done by three ways. Big Bang Approach, 
-                                           Top-Down Approach, 
-                                           Bottom-Up Approach
-to check communication between modules is as expected
-Displays category --> Electronics product page
-
-Big Bang Approach /  Non incremental integration testing
-:combine all modules once & verify functionality of each modules.
-Because it delays testing until all modules are developed, increases risk, and debugging becomes complex
-
-
-(1)Top-Down Approach:, testing starts from the highest-level modules (e.g., UI or controller logic) and progressively moves downward to lower-level modules (e.g., services, database, etc). You start testing from the main module and proceed step by step to submodules.
-stub is used as a placeholder to simulate its output.
-eg.
-Dashboard → Account → Transaction → Database
-
-(2)Bottom-up Approch:testing starts with the lowest-level modules (like database or utility classes) and integrates upwards towards the main or parent modules.
-eg.
- Database Module — stores all data
-(account details, balance, transactions, customer info)
-
- Transaction Module — performs operations
-(fetch balance, record deposits/withdrawals)
-
- Fund Transfer Module — handles money transfer between accounts
-(debit sender, credit receiver)
-
- User Interface (UI) — what the customer sees on the app or website
-(login screen, transfer page, confirmation message
-
-
-
-Q12. What is System Testing? 
-Testing the fully integrated application to evaluate the system’s compliance with its specified requirements is called System Testing .
-End to End testing. 
-Verifying the completed system to ensure that the application works as intended or not.
-eg.
-UI → Login → Dashboard → Fund Transfer → Transaction → Database → Notification 
-UI → Login → Dashboard → Select Pickup & Drop → Schedule Ride Option → Backend Booking Module → Payment Module → Database Update → Notification → Ride Confirmation
-
-
-Q13. What is User Acceptance Testing UAT? 
+//extra++++++++++++++++++++++++++++++++++++++
 pre-production testing.  
 This is done by the end users / client 
 It allows the customer to accept or reject the application. 
@@ -1354,35 +1298,16 @@ Q. What is Gamma Testing?
 Gamma testing is done when the software is ready for release with specified 
 requirements. It is done at the client place.
 broder audience       ]
+============================================================================================================================================================
+System testing consists of three different kinds of testing activities as described below.
 
-Q14.Build
-It combines all program files, libraries, and resources  into a single build file
+Alpha testing: Alpha testing is the system testing performed by the development team.
 
-GENRAL STEPS FOLLOWED:
-Code Compilation – Source code is compiled into executable format.
-Unit Testing – Developers run automated unit tests.
-Packaging – Code is packaged into .jar, .war, or .apk file.
-Deployment – Build is deployed to a QA/test environment.
-Notification – Testers are informed that a new build is available.
+Beta testing: Beta testing is the system testing performed by a friendly set of customers.
 
-
-Q. Build number
-A build number uniquely identifies each version of the application created during development. 
-It helps track and differentiate between builds
------>After a successful build, the build file (e.g., .war or .apk) is deployed to a testing server or QA environment using tools like Jenkins or manually via FTP/Tomcat. Testers then access the application through a test URL to begin testing.
-eg.
-Host: ftp.bankserver.com
-Username: dev_team
-Password: ********
-Port: 21
-
-
-Q.Realase
-Release is a stable and production-ready version of the software that is delivered to end users or customers after successful testing
-
-Q.What is Bug /defect  Leakage? 
-A bug which is actually missed by the testing team while testing and the build was released to the Production.
-If now that bug (which was missed by the testing team) was found by the end user or customer then we call it as Bug Leakage.
+Acceptance testing: After the software has been delivered, the customer performs acceptance testing to determine whether to accept the delivered software or reject it
+Once the software has been thoroughly tested, it's time to deploy it to the customer or end-users
+=====================================================================================================================================================================================
 
 Q. What is STLC? 
 Software Testing Life Cycle 
@@ -1416,6 +1341,260 @@ Q.STLC phases?
   5.test closure: review test report & defect report 
                    TSR
     consolidate tc result in document to sign off test process
+
+
+
+=====================================================================================================================================================================================
+
+==========================================================================================================================================================
+
+Q.What is Test Case? 
+test case is a set of positive and negative executable steps derived from a test scenario
+
+==========================================================================================================================================================
+
+Q Test Case Design Techniques
+Error guessing: prone area is guessed by experience tester based on this prior experience of same type of 
+application.
+
+Boundry value analysis :BVA  helps to discover the errors caused by extreme values by CHOOSES THE BEST DATA at & 
+immediately above & below the boundaries of input domain of data.
+eg.A bank allows ATM withdrawals between ₹100 and ₹50,000 per transaction.     
+100                                                      50000 
+ 99    101(min+-1)                         49999     50001
+
+Equivalence partitioning:input data divided into partition of valid & invalid values group them & test only 1 input
+of each group
+eg. valid input 18-65
+    invalid input <18 ,65<
+
+==========================================================================================================================================================
+
+Q. Test Case Format:
+
+Test Case ID: TC_001
+Test Title / Name: Verify login with valid credentials
+Module / Feature: Login
+Test Type: Functional
+Preconditions: User must have a valid account
+Test Data:
+ • Username: user@example.com
+ • Password: P@ssword123
+Test Steps:
+ 1. Open login page
+ 2. Enter valid credentials
+ 3. Click Login
+Expected Result: User is redirected to dashboard
+Actual Result: User successfully logged in
+Status: Pass
+Severity / Priority: Medium / High
+Remarks / Comments: Works as expected
+
+===========================================================================================================================================================
+
+
+
+======================================================================================================================================================
+
+Q. Requirement Traceability Matrix
+The RTM is a document which is used to trace or track the requirment .
+In this documents we check for every requirment ,there is ts/tc created & it is executd during the excution phase
+& rtm is used to ensure that every requirement is tested, & there is no requirement is missed out
+
+
+=========================================================================================================================================================
+
+Q.Test Plan and contents available in a Test Plan? 
+Test plan document is a document which contains the plan for all the testing 
+activities to be done to deliver a quality product. Test Plan document is derived 
+from the Product Description, SRS, or Use Case documents for all future activities 
+of the project. It is usually prepared by the Test Lead or Test Manager. 
+
+describes software testing areas and activities
+
+It outlines the test strategy, objectives, test schedule, required resources (human resources, software, and hardware), test estimation and test deliverables
+
+o Description : Testing the Internet Banking module for secure customer login and fund transfer
+o Objective : To ensure users can perform secure transactions and account operations without errors
+o Test Scope : In-scope – Login, Fund Transfer, Balance Enquiry; Out-of-scope – Loan Module, ATM Serviceso Approach : Strategy and method used to perform testing
+oApproach: Manual and automation testing using Selenium; regression testing after each release
+o Assumption, Risk, Mitigation plan :Assuming test data is available; risk of network downtime mitigated by backup servers
+o Types of testing : Functional, Regression, Security, UAT, Performance
+o Roles & Responsibilities : QA Team – test execution; QA Lead – review and reporting; Dev Team – bug fixes
+o Hardware & Software requirement : Windows 11 PCs, Chrome browser, SQL Database, Banking App v5.0
+o Defect tracking : Defects logged and tracked in JIRA with severity and priority levels.
+o Entry & Exit criteria;Entry – requirements approved & test environment ready; Exit – all critical tests passed, no high-severity defects open.
+
+============================================================================================================================================================
+
+Q. Defect Life Cycle
+
+
+                new   ;scrum master validate
+                 |
+               assign  :devloper assign
+                 |
+  -------------->open--------------------------
+  |              |          |    |             |
+reopened      fixed
+  |              |          |    |            differed-->next release
+  -------------test
+                 |     deupli    |
+                 |       cate    |
+             verified     |    rejected
+                 |        |      |
+              closed  <-----------
+ Explain the steps for Bug Cycle? 
+ Once the bug is identified by the tester, it is assigned to the development manager in open 
+status 
+ If the bug is a valid defect the development team will fix it. 
+ If it is not a valid defect, the defect will be ignored and marked as rejected 
+ The next step will be to check whether it is in scope. If the bug is not the part of the current 
+release then the defects are postponed 
+ If the defect or bug is raised earlier then the tester will assign a DUPLICATE status 
+ When bug is assigned to developer to fix, it will be given a IN-PROGRESS status 
+ Once the defect is repaired, the status will change to FIXED at the end the tester will give 
+CLOSED status if it passes the final test.
+
+• Status of Defects: current state of a defect
+
+=====================================================================================================================================================
+
+Q.What is Bug Severity?
+impact on application functionality 
+It can be Critical, Major or Minor,cosmatic. 
+how much effect will be there on the system because of a particular defect.
+
+	 |**Scenario**|                                                                                  | **Explanation**  |                                |1️⃣ | Fund transfer completes, but the **amount is deducted from sender and not credited to receiver**    		| Critical data loss and financial mismatch          
+| 2️⃣   | **Interest calculation is wrong** in Savings Account                                                                 	| Affects financial accuracy and compliance          
+| 3️⃣   | **System crashes** when user clicks “Submit” on Loan Application                                               	| Causes application failure and testing blockage    
+| 4️⃣   | **User’s account balance shows negative** after deposit                                                           	| Serious defect, impacts trust and accounting logic 
+| 5️⃣   | **Transaction history not displaying** after performing transactions                                           		| Core feature broken — functional issue 
+
+
+Q.What is Bug Priority? 
+order in which a defect should be resolved.
+It can be High, Medium or Low. Most of 
+status is based on the customer requirement.
+
+        | **Scenario**                                                       | **Explanation**                                            |
+| ----- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
+| 1️⃣   | **Bank login page not loading**                             								       | Customers can’t access the system — urgent business impact 
+| 2️⃣   | **“Submit” button missing** on Credit Card Payment page          					     | Stops users from completing transactions                   
+| 3️⃣   | **Incorrect bank name or branch name** shown on printed statements 					| Impacts brand credibility, must be fixed before release    
+| 4️⃣   | **Error message displayed after successful fund transfer**         						| Causes confusion and customer support issues               
+| 5️⃣   | **Password reset email not being sent**                           								| Users can’t log in — critical for customer access          
+\
+==========================================================================================================================================================
+
+Q.Defect Report :
+formal document used to record issues, errors, or problems found in a product
+
+Defect ID: D-101
+Title: Login button not working on Chrome v118
+Description / Steps to Reproduce:
+Open the website in Chrome v118
+Enter valid username and password
+Click the Login button
+Expected Result: User is redirected to the dashboard
+Actual Result: Clicking the Login button does nothing
+Severity: Critical
+Priority: High
+Environment: Chrome v118, Windows 11
+Attachments: Screenshot attached
+Status: Open
+
+==========================================================================================================================================================
+
+Q. Bug, Error, Failure
+
+| Term    | What it is             | Example Scenario                      |
+| ------- | ---------------------- | ------------------------------------- |
+| Error   | Human mistake          | Misunderstanding a requirement        |
+| Bug     | Defect in code         | Wrong formula coded in software       |
+| Failure | Observable malfunction | Program crashes or gives wrong result |
+1.developer writes if (x = 5) instead of if (x == 5). This is a bug in the code
+
+2.DAILY_LIMIT = 2000  # should be 500
+if withdrawal_amount <= DAILY_LIMIT:
+    account.balance -= withdrawal_amount
+    dispense_cash(withdrawal_amount)
+
+3.A customer comes to the ATM and withdraws $1500 in one day.
+According to the rules, this shouldn’t be allowed, but the ATM lets it happen.
+The system fails to behave as expected.
+This is a failure because it’s an observable incorrect behavior
+
+========================================================================================================================================================
+
+Q.Defect Tracking Tool : JIRA
+Tool is software used to log, track, manage, and report defects (bugs) or issues in a system or application
+
+Example in JIRA:
+Defect Logged: QA tester logs a defect after finding a bug.
+Triage / Review: Team reviews defect, sets priority and severity.
+Assignment: Assigned to a developer for fixing.
+In Progress: Developer works on fixing the bug.
+Resolved: Developer marks the defect as resolved.
+Testing / Verification: QA retests the defect.
+Closed: If the defect is fixed and verified, it is closed.
+
+========================================================================================================================================================
+====================================================================================================================================================================================
+Q4. White Box Testing
+white-box testing validates how the code implements logic, handles branching, and manages edge cases.
+
+Q5. Grey Box Testing
+hybrid software testing method that combines aspects of both Black Box Testing and White Box Testing.
+“Grey Box Testing allows  to write more context-aware test cases. 
+For example, while testing APIs in  projects, I used my knowledge of expected DB changes to validate that the API not only responded correctly but updated the system state as expected.
+
+Q6. Black Box Testing
+Black Box Testing is a software testing approach in which the internal structure, code, or implementation details of the application are not known to the tester. Instead, the focus is on validating the functionality, inputs, outputs, and user interactions against specified requirements or use cases
+
+Q7.Functionality Testing
+validates whether a software application behaves according to the specified functional requirements
+
+
+Functional: 
+             Behaviour    :radio button should only 1 selected
+             Input domain : type of datatype, length 
+             Error handling : it give proper error message
+             Backend testing :user created in db ,crud
+             service testing : User Authentication Service, Password Reset Service, Inventory Update Service, Customer Search Service,
+             calculation based :scoring, forecasting, or compensation
+
+
+
+Q14.Build
+It combines all program files, libraries, and resources  into a single build file
+
+GENRAL STEPS FOLLOWED:
+Code Compilation – Source code is compiled into executable format.
+Unit Testing – Developers run automated unit tests.
+Packaging – Code is packaged into .jar, .war, or .apk file.
+Deployment – Build is deployed to a QA/test environment.
+Notification – Testers are informed that a new build is available.
+
+
+Q. Build number
+A build number uniquely identifies each version of the application created during development. 
+It helps track and differentiate between builds
+----->After a successful build, the build file (e.g., .war or .apk) is deployed to a testing server or QA environment using tools like Jenkins or manually via FTP/Tomcat. Testers then access the application through a test URL to begin testing.
+eg.
+Host: ftp.bankserver.com
+Username: dev_team
+Password: ********
+Port: 21
+
+
+Q.Realase
+Release is a stable and production-ready version of the software that is delivered to end users or customers after successful testing
+
+Q.What is Bug /defect  Leakage? 
+A bug which is actually missed by the testing team while testing and the build was released to the Production.
+If now that bug (which was missed by the testing team) was found by the end user or customer then we call it as Bug Leakage.
+
 
 • Smoke Testing/Dry Run :
            build is ready or not /stability
@@ -1631,259 +1810,6 @@ Reports, Notifications, etc.
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-==========================================================================================================================================================
-
-Q.What is Test Case? 
-test case is a set of positive and negative executable steps derived from a test scenario
-
-==========================================================================================================================================================
-
-Q Test Case Design Techniques
-Error guessing: prone area is guessed by experience tester based on this prior experience of same type of 
-application.
-
-Boundry value analysis :BVA  helps to discover the errors caused by extreme values by CHOOSES THE BEST DATA at & 
-immediately above & below the boundaries of input domain of data.
-eg.A bank allows ATM withdrawals between ₹100 and ₹50,000 per transaction.     
-100                                                      50000 
- 99    101(min+-1)                         49999     50001
-
-Equivalence partitioning:input data divided into partition of valid & invalid values group them & test only 1 input
-of each group
-eg. valid input 18-65
-    invalid input <18 ,65<
-
-==========================================================================================================================================================
-
-Q. Test Case Format:
-
-Test Case ID: TC_001
-Test Title / Name: Verify login with valid credentials
-Module / Feature: Login
-Test Type: Functional
-Preconditions: User must have a valid account
-Test Data:
- • Username: user@example.com
- • Password: P@ssword123
-Test Steps:
- 1. Open login page
- 2. Enter valid credentials
- 3. Click Login
-Expected Result: User is redirected to dashboard
-Actual Result: User successfully logged in
-Status: Pass
-Severity / Priority: Medium / High
-Remarks / Comments: Works as expected
-
-===========================================================================================================================================================
-
-Q.STLC phases?
-
-                        
-
-                            OR
-
-Q . Procedure to Write and Execute Test Case
-
-   1.requirement analysis
-   2.test planning
-   3.test design
-   4.test execution
-   5.test closure
-
- 1.requirement analysis:read BRD/FRD
-                        check requirement is testable or not
-                        communicate with stakeholder for non-testable requirement
-                        Provide clarification/feasibility
- 2.test planning : define test paln 
-                    test strategy
-                    estimation :duration,cost
-                    resource allocation
-                    approve test plan from manager
- 3.test design : ts/tc creation 
-                 ts/tc review
-                 RTM
-                  test data,test scripting
-  4.test execution: apply tc on application
-                    defect find & report to devloper
-                    snapshot-->test artifact
-                    test defect report /test execution report
-
-  5.test closure: review test report & defect report 
-                   TSR
-    consolidate tc result in document to sign off test process 
-
-Q. Test case Review Process
-
-
-
-                       OR
-
-Q.Test Case Review Process in STLC
-🔹 STLC Overview
-
-STLC consists of multiple phases:
-
-Requirement Analysis
-
-Test Planning
-
-Test Case Design (Test Case Development) ✅
-
-Test Environment Setup
-
-Test Execution
-
-Defect Reporting & Tracking
-
-Test Closure
-
-======================================================================================================================================================
-
-Q. Requirement Traceability Matrix
-The RTM is a document which is used to trace or track the requirment .
-In this documents we check for every requirment ,there is ts/tc created & it is executd during the excution phase
-& rtm is used to ensure that every requirement is tested, & there is no requirement is missed out
-
-
-=========================================================================================================================================================
-
-Q.Test Plan and contents available in a Test Plan? 
-Test plan document is a document which contains the plan for all the testing 
-activities to be done to deliver a quality product. Test Plan document is derived 
-from the Product Description, SRS, or Use Case documents for all future activities 
-of the project. It is usually prepared by the Test Lead or Test Manager. 
-
-describes software testing areas and activities
-
-It outlines the test strategy, objectives, test schedule, required resources (human resources, software, and hardware), test estimation and test deliverables
-
-o Description : Testing the Internet Banking module for secure customer login and fund transfer
-o Objective : To ensure users can perform secure transactions and account operations without errors
-o Test Scope : In-scope – Login, Fund Transfer, Balance Enquiry; Out-of-scope – Loan Module, ATM Serviceso Approach : Strategy and method used to perform testing
-oApproach: Manual and automation testing using Selenium; regression testing after each release
-o Assumption, Risk, Mitigation plan :Assuming test data is available; risk of network downtime mitigated by backup servers
-o Types of testing : Functional, Regression, Security, UAT, Performance
-o Roles & Responsibilities : QA Team – test execution; QA Lead – review and reporting; Dev Team – bug fixes
-o Hardware & Software requirement : Windows 11 PCs, Chrome browser, SQL Database, Banking App v5.0
-o Defect tracking : Defects logged and tracked in JIRA with severity and priority levels.
-o Entry & Exit criteria;Entry – requirements approved & test environment ready; Exit – all critical tests passed, no high-severity defects open.
-
-============================================================================================================================================================
-
-Q. Defect Life Cycle
-
-
-                new   ;scrum master validate
-                 |
-               assign  :devloper assign
-                 |
-  -------------->open--------------------------
-  |              |          |    |             |
-reopened      fixed
-  |              |          |    |            differed-->next release
-  -------------test
-                 |     deupli    |
-                 |       cate    |
-             verified     |    rejected
-                 |        |      |
-              closed  <-----------
- Explain the steps for Bug Cycle? 
- Once the bug is identified by the tester, it is assigned to the development manager in open 
-status 
- If the bug is a valid defect the development team will fix it. 
- If it is not a valid defect, the defect will be ignored and marked as rejected 
- The next step will be to check whether it is in scope. If the bug is not the part of the current 
-release then the defects are postponed 
- If the defect or bug is raised earlier then the tester will assign a DUPLICATE status 
- When bug is assigned to developer to fix, it will be given a IN-PROGRESS status 
- Once the defect is repaired, the status will change to FIXED at the end the tester will give 
-CLOSED status if it passes the final test.
-
-• Status of Defects: current state of a defect
-
-=====================================================================================================================================================
-
-Q.What is Bug Severity?
-impact on application functionality 
-It can be Critical, Major or Minor,cosmatic. 
-how much effect will be there on the system because of a particular defect.
-
-	 |**Scenario**|                                                                                  | **Explanation**  |                                |1️⃣ | Fund transfer completes, but the **amount is deducted from sender and not credited to receiver**    		| Critical data loss and financial mismatch          
-| 2️⃣   | **Interest calculation is wrong** in Savings Account                                                                 	| Affects financial accuracy and compliance          
-| 3️⃣   | **System crashes** when user clicks “Submit” on Loan Application                                               	| Causes application failure and testing blockage    
-| 4️⃣   | **User’s account balance shows negative** after deposit                                                           	| Serious defect, impacts trust and accounting logic 
-| 5️⃣   | **Transaction history not displaying** after performing transactions                                           		| Core feature broken — functional issue 
-
-
-Q.What is Bug Priority? 
-order in which a defect should be resolved.
-It can be High, Medium or Low. Most of 
-status is based on the customer requirement.
-
-        | **Scenario**                                                       | **Explanation**                                            |
-| ----- | ------------------------------------------------------------------ | ---------------------------------------------------------- |
-| 1️⃣   | **Bank login page not loading**                             								       | Customers can’t access the system — urgent business impact 
-| 2️⃣   | **“Submit” button missing** on Credit Card Payment page          					     | Stops users from completing transactions                   
-| 3️⃣   | **Incorrect bank name or branch name** shown on printed statements 					| Impacts brand credibility, must be fixed before release    
-| 4️⃣   | **Error message displayed after successful fund transfer**         						| Causes confusion and customer support issues               
-| 5️⃣   | **Password reset email not being sent**                           								| Users can’t log in — critical for customer access          
-\
-==========================================================================================================================================================
-
-Q.Defect Report :
-formal document used to record issues, errors, or problems found in a product
-
-Defect ID: D-101
-Title: Login button not working on Chrome v118
-Description / Steps to Reproduce:
-Open the website in Chrome v118
-Enter valid username and password
-Click the Login button
-Expected Result: User is redirected to the dashboard
-Actual Result: Clicking the Login button does nothing
-Severity: Critical
-Priority: High
-Environment: Chrome v118, Windows 11
-Attachments: Screenshot attached
-Status: Open
-
-==========================================================================================================================================================
-
-Q. Bug, Error, Failure
-
-| Term    | What it is             | Example Scenario                      |
-| ------- | ---------------------- | ------------------------------------- |
-| Error   | Human mistake          | Misunderstanding a requirement        |
-| Bug     | Defect in code         | Wrong formula coded in software       |
-| Failure | Observable malfunction | Program crashes or gives wrong result |
-1.developer writes if (x = 5) instead of if (x == 5). This is a bug in the code
-
-2.DAILY_LIMIT = 2000  # should be 500
-if withdrawal_amount <= DAILY_LIMIT:
-    account.balance -= withdrawal_amount
-    dispense_cash(withdrawal_amount)
-
-3.A customer comes to the ATM and withdraws $1500 in one day.
-According to the rules, this shouldn’t be allowed, but the ATM lets it happen.
-The system fails to behave as expected.
-This is a failure because it’s an observable incorrect behavior
-
-========================================================================================================================================================
-
-Q.Defect Tracking Tool : JIRA
-Tool is software used to log, track, manage, and report defects (bugs) or issues in a system or application
-
-Example in JIRA:
-Defect Logged: QA tester logs a defect after finding a bug.
-Triage / Review: Team reviews defect, sets priority and severity.
-Assignment: Assigned to a developer for fixing.
-In Progress: Developer works on fixing the bug.
-Resolved: Developer marks the defect as resolved.
-Testing / Verification: QA retests the defect.
-Closed: If the defect is fixed and verified, it is closed.
-
-========================================================================================================================================================
 
 Q. static testing vs dynamic testing?
   1. it is done early stage of devlopment  |  done later stage of coding
@@ -1917,6 +1843,7 @@ A:
 updated on 22-12-2025@18.14
 updated on 06-01-2026,7/1@18.22
 updated on 09-01-2026@18.28
+updated on 13-1-2026@8.9
 
 
 
