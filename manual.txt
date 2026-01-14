@@ -2049,40 +2049,105 @@ Localization testing : checks if it functions correctly in one specific local re
 8. Translating error messages.
 9. Changing first-day of week (Sunday vs Monday).
 10. Showing local payment methods (Paytm in India, Alipay in China).
-
+------------------------------------------------------------------------------------------
+Q.  What is Security Testing? 
+Security Testing ensures the system is protected against unauthorized access, vulnerabilities, and attacks. 
+Example: Testing if an e-commerce site prevents SQL Injection and Cross-Site Scripting (XSS). 
+------------------------------------------------------------------------------------------
+Q. What is Accessibility Testing? 
+Accessibility Testing ensures the application can be used by people with disabilities. 
+Example: Checking if a website supports screen readers and has proper alt text for images. 
+-------------------------------------------------------------------------------------------
+Q . What is Installation Testing? 
+Verifying that software installs, updates, and uninstalls correctly. 
+------------------------------------------------------------------------------------------
+Q. What is Recovery Testing? 
+Checking if the system recovers after a crash or failure.
+------------------------------------------------------------------------------------------
+Q. What is Compliance Testing? 
+Ensuring the software meets regulations and standards. 
+------------------------------------------------------------------------------------------
+Q. What is Configuration Testing? 
+Verifying the system works with different configurations (hardware, OS, browsers). 
 =======================================================================================================================================================
+Q. What is Smoke Testing  /Dry Run? Why is it called so? 
 
-• Smoke Testing/Dry Run :
-           build is ready or not /stability
-              critical situations checked
-               before accepting build
-            Day 0” check
+Smoke Testing is a preliminary check to verify that the most critical functionalities of an application work 
+before conducting more detailed testing. 
+• Also known as Build Verification Testing (BVT). 
+• Ensures the application is stable enough for further testing. 
+Example: In an e-commerce app, smoke testing might include logging in, searching for a product, adding to cart, and logging out. 
+Why called “Smoke Testing”? In hardware testing, if a device smoked after powering on, it failed the initial test. 
+The software analogy means, “If the build fails basic tests, it’s not worth continuing.”
 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+           
+		build is ready or not /stability
+                critical situations checked
+                before accepting build
+                Day 0” check
+Start
+  ↓
+Launch CRM Application
+  ↓
+Login Page Displayed?
+  ↓
+Enter Valid Credentials
+  ↓
+Login Successful?
+  ↓
+Dashboard Loaded?
+  ↓
+Navigate to Lead Module
+  ↓
+Create New Lead
+  ↓
+Lead Saved Successfully?
+  ↓
+Navigate to Contact Module
+  ↓
+Open Contact Record
+  ↓
+Navigate to Account Module
+  ↓
+Create / View Account
+  ↓
+Navigate to Opportunity Module
+  ↓
+Create / Update Opportunity
+  ↓
+Search for Record
+  ↓
+Search Results Displayed?
+  ↓
+Logout
+  ↓
+End
+//or
+Open CRM → Login → Dashboard → Core Modules Check 
+(Leads → Contacts → Accounts → Opportunities) 
+→ Search → Logout
 
-• Difference between smoke and sanity testing
---build is ready /stable for testing|to ensure code changes working well
---devlpoer/tester                   | tester
---before accepting build for testing|after accepting build for testing
---part of build accepting test      |imp. test cases from regression are executed due to lack of time
---s.t. fail rejected                |1000tc,500imp tc
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+           smoke 		    VS                 sanity testing
 
-• Adhoc Testing:
-informal testing type.
-When there is limited time in hand to test the system
-no tc,documents,test techniques
-done when formal testing is completed
-
-• Exploratory Testing
-experienced based techniques
-done when insufficient documents
-session based it is(timeframe:due to time pressure)
-explore all possible ways 
+--build is ready /stable for testing	|	to ensure code changes working well
+--devlpoer/tester                   	| 	tester
+--before accepting build for testing	|	after accepting build for testing
+--part of build accepting test      	|	imp. test cases from regression are executed due to lack of time
+--s.t. fail rejected                	|	1000tc,500imp tc ,Example: If a bug in “password reset” is fixed, sanity testing will focus only on that functionality. 
 
 =======================================================================================================================================================
 Q.What is Regression Testing?
 
-Repeated testing of an already tested program, after modification, to discover any 
-defects introduced or uncovered .
+Regression Testing ensures that new changes (code updates, bug fixes, enhancements) have not broken existing 
+features. 
+• It’s repeated after every change in the application. 
+• Often automated for efficiency. 
+Example: If a payment gateway’s UI is updated, regression testing ensures that login, search, cart, and other 
+existing features still work. 
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 1. New functionalities are added to the application
 2. Change Requirement (In organizations, we call it as CR)
 3. Defect Fixing
@@ -2110,7 +2175,47 @@ Fund Transfer
 Loan, Cards, Investments
 Reports, Notifications, etc.
 
------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Q. What is Exploratory Testing? How is it different from Ad-hoc Testing? 
+
+Exploratory Testing is simultaneous learning, test design, and execution without pre-written test cases. 
+• Done by experienced testers to uncover unexpected defects. 
+Difference: 
+• Exploratory: Structured with a charter (goal). 
+• Ad-hoc: Completely unstructured and random. 
+Example: While exploring a social media app, a tester tries unusual profile names or long status updates to see 
+if the system handles them. 
+
+//Because experience does not mean the tester already knows the system.
+It means the tester knows how to quickly learn and investigate the system effectively.
+
+//ad-hoc Real-time Example (CRM Project)
+Build is ready for production
+Manager says:
+“We have 30 minutes — just do a quick random check.”
+
+Tester:
+Logs in
+Opens random modules
+Saves some records
+Clicks around quickly
+✔ Used as a last-minute confidence check//usually just before release
+
+//Expolatory tesing Real-time Example (CRM Project)
+A new “Bulk Lead Import” feature is delivered.
+No detailed test cases available yet
+Tester creates a charter:
+“Explore Bulk Lead Import to find validation, performance, and usability issues in 90 minutes.”
+
+Tester tries:
+Uploading valid/invalid files
+Large data files
+Duplicate records
+Wrong formats
+Bugs are logged
+Later, formal test cases are written
+✔ Very common in Agile/Scrum projects
+=====================================================================================================================================================================================
 
 
 | **Type**               | **What It Tests**            | **How It’s Done**          | **Example (Banking App)**        | **Goal**                        |
@@ -2128,8 +2233,128 @@ Q. static testing vs dynamic testing?
   3. prevent defect                        |  find & fix defects
   4. less time                             |  more time taking
   5. reviewing the documents               |  execute the test cases on application
+• Static Testing: Reviews, walkthroughs, inspections (no code execution). 
+• Dynamic Testing: Executing code to find defects. 
 ========================================================================================================================================================
-Q14.Build
+Q . What is the purpose of Test Documentation? 
+
+Test documentation serves as a knowledge base for the testing process, ensuring that testing is structured, 
+traceable, and repeatable. 
+Its main purposes are: 
+• To communicate testing scope, approach, and progress to stakeholders. 
+• To provide evidence that testing was carried out. 
+• To help in knowledge transfer to new team members. 
+• To track coverage and ensure all requirements are tested. 
+Examples of Test Documentation: 
+• Test Plan 
+• Test Cases 
+• Test Scenario Documents 
+• Traceability Matrix 
+• Test Summary Report 
+==========================================================================================
+Q . What are Entry and Exit Criteria in Testing? 
+
+• Entry Criteria: Conditions that must be met before testing begins. 
+Example: Test environment ready, test data prepared, build deployed. 
+• Exit Criteria: Conditions that must be met before ending testing. 
+Example: All planned test cases executed, critical defects fixed, test summary report prepared. 
+========================================================================================
+Q.What is a Test Summary Report? 
+A Test Summary Report (TSR) is prepared at the end of the testing phase to summarize: 
+• Scope of testing 
+• Test execution results 
+• Defect details and their status 
+• Coverage analysis 
+• Risks and recommendations 
+=========================================================================================
+Q. What is Use Case Testing? 
+Use Case Testing is based on user scenarios describing how the system will be used in real life. 
+• Focuses on end-to-end workflows. 
+• Helps find gaps in integration points. 
+Example: E-commerce: A “Place Order” use case will include login, product selection, adding to cart, 
+payment, and confirmation.
+==========================================================================================
+Q.What is Pairwise Testing? 
+Pairwise Testing is a combinatorial technique where testers create test cases covering all possible pairs of 
+input parameters. 
+• Reduces the total number of test cases while covering important interactions.
+Example: 
+Browser (Chrome, Firefox, Edge) × OS (Windows, Mac, Linux) → Instead of testing all 9 combinations, 
+pairwise covers each pair at least once.  
+=========================================================================================
+Q. What is Defect Leakage? 
+Defect Leakage happens when a bug escapes from one testing phase and is found in a later stage. 
+Example: A bug missed during system testing but found during UAT. 
+------------------------------------------------------------------------------------------
+Q. What is Defect Density? 
+Defect Density = Number of confirmed defects / Size of the software module. 
+It helps measure the quality of code. 
+Example: 10 defects found in 500 lines of code → Density = 0.02 defects per LOC.
+------------------------------------------------------------------------------------------
+Q . What is Defect Clustering? 
+Defect Clustering means that most defects are found in a small number of modules due to high complexity or 
+poor design. 
+Example: 80% of bugs being in the payment gateway module. 
+-----------------------------------------------------------------------------------------
+Q. What is a Bug Triage? 
+Bug Triage is a meeting to prioritize and assign defects based on severity, priority, and business impact. 
+-----------------------------------------------------------------------------------------
+Q . What is a Showstopper Defect? 
+A showstopper is a critical defect that blocks testing progress. 
+Example: Application crashes immediately after login. 
+-----------------------------------------------------------------------------------------
+Q . What is a Latent Defect? 
+A defect that exists but is not detected during testing and appears later under specific conditions. 
+Example: A bug in a tax calculation system that only appears at year-end. 
+----------------------------------------------------------------------------------------
+Q . What is a Masked Defect? 
+A defect hidden by another defect. 
+Example: A crash in the payment page hides a bug in the discount calculation. 
+-----------------------------------------------------------------------------------------
+Q .  What is Root Cause Analysis (RCA)? 
+RCA identifies the underlying cause of a defect to prevent recurrence. 
+Example: Investigating why a login bug occurred → Found incorrect password hashing logic. 
+-----------------------------------------------------------------------------------------
+Q . What is a Bug Life Cycle Tool? Give examples. 
+Bug Life Cycle tools manage defects from logging to closure. 
+Examples: Jira, Bugzilla, Mantis, Azure DevOps. 
+-----------------------------------------------------------------------------------------
+Q .What is the purpose of logging defects early? 
+Catching bugs early reduces the cost of fixing them, as the cost of a defect increases in later stages of SDLC. 
+-----------------------------------------------------------------------------------------
+Q. What is Agile Testing? 
+Agile Testing is testing that follows Agile principles, where testing and development happen simultaneously. 
+-----------------------------------------------------------------------------------------
+Q. What are User Stories? 
+User Stories describe features from the end-user perspective. 
+Example: “As a user, I want to reset my password so that I can regain access to my account.” 
+-----------------------------------------------------------------------------------------
+Q. What is Acceptance Criteria in Agile? 
+Conditions that a user story must meet to be considered complete. 
+-----------------------------------------------------------------------------------------
+Q . What is Sprint Testing? 
+Sprint Testing is testing within a sprint cycle, including functional and regression tests.
+-----------------------------------------------------------------------------------------
+Q.  What is Continuous Integration in Agile? 
+Continuous Integration means developers frequently merge code changes into a shared repository, followed by 
+automated builds and tests. 
+------------------------------------------------------------------------------------------
+Q . What is Shift-Left Testing? 
+Shift-Left means starting testing earlier in the SDLC to find bugs sooner. 
+------------------------------------------------------------------------------------------
+Q.  What is a Product Backlog? 
+A prioritized list of all desired features, enhancements, and fixes. 
+------------------------------------------------------------------------------------------------------
+68. What is a Sprint Retrospective? 
+A meeting at the end of a sprint to discuss what went well and what to improve. 
+----------------------------------------------------------------------------------------------------------------
+Q. What is a Definition of Done (DoD)? 
+A checklist that a product increment must meet to be considered complete. 
+ --------------------------------------------------------------------------------------------------------------------------------
+Q. What is Pair Testing? 
+Two testers (or a tester and a developer) work together on the same feature to increase coverage and find more bugs. 
+====================================================================================================================================================================================
+Q .Build
 It combines all program files, libraries, and resources  into a single build file
 
 GENRAL STEPS FOLLOWED:
@@ -2138,7 +2363,7 @@ Unit Testing – Developers run automated unit tests.
 Packaging – Code is packaged into .jar, .war, or .apk file.
 Deployment – Build is deployed to a QA/test environment.
 Notification – Testers are informed that a new build is available.
-
+-------------------------------------------------------------------------------------------------------------------
 
 Q. Build number
 A build number uniquely identifies each version of the application created during development. 
@@ -2150,10 +2375,10 @@ Username: dev_team
 Password: ********
 Port: 21
 
-
+--------------------------------------------------------------------------------------------------------------------
 Q.Realase
 Release is a stable and production-ready version of the software that is delivered to end users or customers after successful testing
-
+------------------------------------------------------------------------------------------------------------------------
 Q.What is Bug /defect  Leakage? 
 A bug which is actually missed by the testing team while testing and the build was released to the Production.
 If now that bug (which was missed by the testing team) was found by the end user or customer then we call it as Bug Leakage.
@@ -2163,24 +2388,89 @@ Q: Explain the QA role in the Agile SDLC.
 
 A:
 “In Agile, QA is involved from the start — reviewing requirements, writing test cases in parallel with development, running smoke and story-level tests each sprint, performing regression, and providing early feedback to ensure quality throughout the sprint.”
-
+-------------------------------------------------------------------------------------------------------
 Q: How does QA contribute early in Agile?
 
 A:
 “QA participates in requirement refinement, identifies missing scenarios, prepares test data and cases while developers code, and gives early feedback on risks and edge cases before testing begins.
-
+--------------------------------------------------------------------------------------------------------
 Q: What is regression testing in SDLC? When is it done?
 
 A:
 “Regression testing verifies that new code changes have not broken existing functionality. In Agile, it’s done every sprint after new features or bug fixes. In traditional models, it’s done after major development phases.
-
+----------------------------------------------------------------------------------------------------------
 Q: How do you define ‘continuous testing’?
 
 A:
 “Continuous testing means testing features as soon as they are developed, not waiting for the end of development. It ensures quicker feedback and early defect detection
 
 ========================================================================================================================================================
+71. What are Test Metrics? 
+Test metrics are measurements that track the effectiveness of testing. 
+Examples: Test coverage, defect density, test execution rate. 
+ -------------------------------------------------------------------------------
+72. What is Test Coverage? 
+Test coverage measures how much of the application’s functionality is tested. 
+ ----------------------------------------------------------------------------------------------------------
+73. What is Requirement Coverage? 
+Requirement coverage ensures that all requirements have at least one test case linked. 
+ ----------------------------------------------------------------------------------------------------------
+74. What is Code Coverage? 
+Code coverage measures the percentage of source code executed during testing. 
+ ----------------------------------------------------------------------------------------------------------
+75. What is Test Execution Status? 
+It shows the percentage of planned tests that are executed and their pass/fail rates. 
+ ----------------------------------------------------------------------------------------------------------
+76. What is Test Case Effectiveness? 
+Measures the ability of test cases to detect defects. 
+----------------------------------------------------------------------------------------------------------
+77. What is Defect Removal Efficiency (DRE)? 
+DRE = (Defects found in testing / Total defects) × 100. 
+ ----------------------------------------------------------------------------------------------------------
+78. What is Test Productivity? 
+Number of test cases created or executed per tester per day. 
+----------------------------------------------------------------------------------------------------------
+79. What is Mean Time to Detect (MTTD)? 
+Average time taken to detect a defect after it is introduced. 
+---------------------------------------------------------------------------------------------------------- 
+80. What is Mean Time to Repair (MTTR)? 
+Average time taken to fix a defect after it is reported. 
+=====================================================================================================================================================================
 
+81. What challenges do you face in Manual Testing? 
+• Unclear requirements 
+• Limited time for testing 
+• Frequent changes in requirements 
+• Incomplete test data 
+---------------------------------------------------------------------------------------------------------- 
+82. How do you handle requirement changes during testing? 
+By impact analysis, updating test cases, and communicating with stakeholders. 
+---------------------------------------------------------------------------------------------------------- 
+83. How do you test when requirements are unclear? 
+By exploratory testing, involving business analysts, and validating with prototypes. 
+---------------------------------------------------------------------------------------------------------- 
+84. How do you prioritize test cases? 
+Based on risk, business impact, and criticality. 
+---------------------------------------------------------------------------------------------------------- 
+85. How do you ensure maximum coverage in less time? 
+By using risk-based testing, prioritizing core features, and automation for regression. 
+---------------------------------------------------------------------------------------------------------- 
+86. What do you do when a developer disagrees with a bug? 
+Provide clear reproduction steps, evidence (screenshots/logs), and reference requirements. 
+----------------------------------------------------------------------------------------------------------
+87. How do you manage testing under tight deadlines? 
+Focus on critical features, do smoke tests first, and parallelize execution.
+----------------------------------------------------------------------------------------------------------
+88. How do you test with limited test data? 
+Use data generation tools or create synthetic test data. 
+----------------------------------------------------------------------------------------------------------
+89. How do you report testing progress to management? 
+Through daily status reports, dashboards, and defect trend charts. 
+ ----------------------------------------------------------------------------------------------------------
+90. How do you ensure quality when there’s pressure to release? 
+Run smoke tests, critical regression tests, and communicate risks clearly. 
+
+==================================================================================================================================================================
 Q.Defect Tracking Tool : JIRA
 Tool is software used to log, track, manage, and report defects (bugs) or issues in a system or application
 
@@ -2199,10 +2489,335 @@ or usability testing.
 • Automation Testing: Uses scripts/tools to run tests automatically; suitable for regression, performance, 
 and repetitive tasks. 
 ====================================================================================================================================================
+Q .why testing is needed?
+requirment fullfill
+expected vs actual same
+fit for use
+
+4. What are the principles of Software Testing? 
+1. Testing shows presence of defects 
+2. Exhaustive testing is impossible 
+3. Early testing 
+4. Defect clustering 
+5. Pesticide Paradox 
+6. Testing is context depending 
+7. Absence of error fallacy
+
+5. What is Exhaustive Testing? 
+Testing all the functionalities using all valid and invalid inputs and preconditions is 
+known as Exhaustive testing.
+ 
+6. What is Early Testing? 
+Defects detected in early phases of SDLC are less expensive to fix. So conducting 
+early testing reduces the cost of fixing defects.
+
+7. What is Defect clustering? 
+Defect clustering in software testing means that a small module or functionality 
+contains most of the bugs or it has the most operational failures.
+--small module large chunk of defects or high defect density
+ 
+8. What is Pesticide Paradox? 
+Pesticide Paradox in software testing is the process of repeating the same test 
+cases, again and again, eventually, the same test cases will no longer find new 
+bugs. So to overcome this Pesticide Paradox, it is necessary to review the test 
+cases regularly and add or update them to find more defects.
+--test wear out 
+
+9. What is Defect Cascading in Software Testing? 
+Defect cascading in Software testing means triggering of other defects in an 
+application. When a defect is not identified or goes unnoticed while testing, it 
+invokes other defects. It leads to multiple defects in the later stages and results in 
+an increase in a number of defects in the application. 
+For example, if there is a defect in an accounting system related to negative 
+taxation then the negative taxation defect affects the ledger which in turn affects 
+other reports such as Balance Sheet, Profit & Loss etc.,
+
+10. What are Quality Assurance and Quality Control?
+Quality Assurance: It is process-oriented activities. It
+ensures the prevention of defects ,in the process used to make Software Application.
+So the defects don’t arise when the Software Application is being developed.
+Quality Control: It is product-oriented activities. It executes
+the program or code to identify the defects in the Software Application.
+
+16.WHat is incremental / iterative model?
+
+v1-----R/G-A-D-C-T-D-M&S ---eg.whatsapp--message
+
+V2-----R/G-A-D-C-T-D-M&S--voice calll
+
+V3------new functinality --status + defect fix
+
+v4------video call,payment,uber+whatsapp so on.....
+
+17.when to use iterative model?
+1.project has lengthy devlopment schedule
+2.when customer demands a quick release of the product
+3.you can devlope priotrized requirement first
+
+18.pros & cons?
+-->early market presence
+customer feedback for every version
+deduct errors
+good to use when requirments are known up-front
+-->costly
+need for good planing
+
+28.Static review techniqes?
+review--informal review, walk through,Inspection
+static analysis--data flow , control flow , cyclomatic complexity
+
+29.what is review ?
+conducts on documents to ensure correctness & comleteness
+it is a process to detect & remove errrors & defects from documents
+requirement review,design review, code review, test paln review,tc review etc.
+
+30. What is Walk Through? 
+informal meeting conducts to learn, gain understanding, and find defects. 
+author leads the meeting and clarifies the queries raised by the peers in the meeting. 
+informal review
+not pre-planned done whenever reqiured.
+find more anomlies.
+scribe is mandatory(recorder).
+
+31. What is Inspection? 
+Inspection is a formal meeting lead by moderator 
+pre-meeting preparation(The document under inspection is prepared and checked thoroughly by
+ the reviewers before the meeting.) 
+follow-up process required for logged defects
+proper schduled of  meeting is maked
+
+32. Who are all involved in an inspection meeting?
+Author;create document under review
+Moderator:run review meetings,follow-up ,mediate,drive success
+Reviewer(s) : check & find defects
+Scribe/Recorder : meeting points record 
+Manager.:manage,execute,allocate time for review
+
+
+34.you worked on RTM?
+yes.
+I Involved in RTM ,while we are creating tc/tc documents at that same time also we are working
+on RTM Documents,as we are creating ts, we are filling ts/tc id against RTM.
+in parallel we are writing ts/tc id in rtm.
+
+35.types of RTM?
+we used excel sheet
+1.forward T.M   --in my organization we was working on forward.t.m--  BR|FR|tc
+2.Backward T.M   -- ts|tc|BR|FR
+
+57.what is agile?
+-->we have used this for automobile finance project.
+-->agile is software devlopment approch where a self sufficient & cross functional
+-->where team works, on making continous deliveres through iteration & envlove throughout the
+    process by gathering feedback from the end user.
+-->sprint wise delivery
+-->flexible model & costly than previous models.
+
+57.types of agile?
+lean ,
+kanban,
+scrum
+xp
+dsdm
+fdd
+
+58.Architecture of agile?
+stakeholder :tell the requirement
+    |
+product owner:collect --"--
+    |
+product backlog:overall requirement of whole prj.
+    |
+sprint backlog:sprintwise requirment
+    |
+user stories:detail description of each & requirement
+    |
+test case design
+    |
+test case excution
+
+59.sprint?
+predefined time frame in which work has to be completed & make it ready  for review & ready
+for prdocution deployment.
+
+60.differ agile scirimony / meetings /testimony?
+   1.sprint planning meeting:user story discussuion (2hr)
+                             resource allocation
+                             user story prioritize
+   2.daily stand up meeting:every day(15min)
+   3.sprint review meeting:organized to discuss completed work in the sprint(2hr)
+                           & take feedback from customer
+   4.sprint retrospective / improment meeting:what was sucessful & should be retained?
+                                             what was not sucessful & could be improved?
+                                            how to incorporate the improvement & retain the
+                                                successes in the future?
+
+61.objective of retrospective / improment meeting?
+--identifying relevent process improvements
+--work on how to implement these improvements
+--how to retain improvements based on the context of project.
+
+62.How you give estimation in your project?
+ 1day-->1story point
+in my origanization we are giving it in form of story point & for us 1day=1story point,so we 
+are providing story point based on our knowledge & complexity of user stories ,but actully
+time span is more or less than the actual one.
+
+63.what is your work in agile?
+--actually while working in agile our sprint start on monday & it was for 2 week so on the 
+every monday we have s.p.meeting were we discussed the u.s. in depth 
+--after that i was starting my work on the execution of the privious u.s. from privious spirnt
+then if there was any defect then retesting ,i will do then
+--i will start my test design were i have creating the ts/tc & taking review from TL then
+once the review is completed i have start my test excution & if i have found any defect then
+i will raise defect .
+
+64.Role and Responsibilty as testor?
+  --requirement understand ,analysis
+  --TS,TC Creation
+  --review of ts/tc
+  --test execution
+  --defect find & report
+  --RTM
+  --interaction with client & stakeholder
+
+65.agile pros & cons?
+   pros:sprint wise delivery
+        each spirnt customer feedback
+        working s/w delivery to customer
+         early customer feedback
+        change requirement easy
+  cons:time^,cost^,long duration
+
+66.What is Test Environment? 
+Test Environment is the combination of hardware and software on which Test Team 
+performs testing. 
+Example: 
+• Application Type: Web Application 
+• OS: Windows 
+• Web Server: IIS 
+• Web Page Design: Dot Net 
+• Client Side Validation: JavaScript 
+• Server Side Scripting: ASP Dot Net 
+• Database: MS SQL Server 
+• Browser: IE/FireFox/Chrome
+
+67.Enviroment types in SDLC?
+   1.Devloper env:unit testing
+   2.QA/SIT env:testor 
+   3.staging /UAT env:testor perform uat testing
+   4.production env:after UAT verification  code is branced to prod.env
+   5.live:real user ,if fail rollback to prod.env
+
+
+68.If suppose you found any issue in UAT & suppose it is not reproduable when you are working
+in your environment ?
+1st i will check it it env issue on uat,sit,dev if not present the env issues
+
+74.DRE?
+defect removal efficiency
+Act as compass in determining & quantifing th quality of your softwaer product
+DRE%=Total defect in QA                      100
+     ----------------------x100     ==       ----x100=83%
+     Total defect in QA+UAT                  120
+
+above>80%=good testing
+50-80%=moderate DRE
+50%.=LOW DRE
+
+75.CR?
+change request /request for change
+during devlopment or after launch also
+cost estimation PO
+it is form like prj.name,date,req no,change description etc.
+
+77. What is Retesting?
+To ensure that the defects which were found and posted in the earlier build were 
+fixed or not in the current build.
+Build 1.0 was released. 
+Test team found some defects (Defect Id 1.0.1, 1.0.2) and posted. 
+Build 1.1 was released, 
+now testing the defects 1.0.1 and 1.0.2 in this build is retesting
+
+85.worked on TSR?TEST SUMMARY REPORT
+Yes
+TSR we are providing once complition of SDLC cycle.
+
+86.did you created TSR?
+Yes
+actually in my 1st project,i was created  
+
+87.which component are involved in your TSR?more explain about it?
+1.purpose
+2.application overview
+3.testing scope -in scope,out of scope,item not tested
+4.matrix --test case matrix  --pass,fail,execute  ,total defect,defect close,open
+         --defect matrix --module wise
+5.type of testing performed--smoke
+                           --sit
+                            --regression
+                            --sanity
+  defination of all
+6.test environment & tool
+7.lesson learnt
+8.recommandation
+9.best practies
+10.exit criter
+11.conclusion/sign off
+
+88.you worked on non-functional testing?
+yes
+there are basically n number of non-functional testingcarried out in the organzation like
+perforamce,recovery,security etc ,like but actually in my carrer i did'nt have much exposure 
+on the non-functional testing because i did'nt get chance to work on that.
+
+89.What is Exhaustive Testing? 
+Testing all the functionalities using all valid and invalid inputs and preconditions is 
+known as Exhaustive testing. 
+
+90. What is A/B Testing / Bucket Testing /  Split Testing?
+Bucket testing is a method to compare two versions of an application against each 
+other to determine which one performs better.
+
+94.What is HotFix? 
+defect handle as a high priority & severity 
+fix it immediately. in production env./live env.
+zero down time for user.
+
+95.patch?
+
+
+97.Realese in 3 day , 1U.S addedyou sign off u.s or ask more time?
+team up
+if it is nesscessary ,we can crete test plan,how many acceptance criteria is there suppose ,
+it is 3-4 ,if test data is ready/not ready we create
+
+98.retrospective meeting what you give feedback/suggestion?
+some kind of mock-up is required like html buttons,events behaviuor etc
+
+100.in client demo you came across a defect?
+we will test it earlier but due to somehow it is broken so we will retest & refix as soon as
+possible.
+
+101.describe where u applied "pairwise testing"?
+Instead of testing all possibile cominations,focus on testing all possible pairs of input
+(email,name)(dob,mob.no)(address,city)
+
+102.download app -ve senario?
+net connection off & download,
+platform support
+
+103.What is Soak Testing / Endurance Testing?
+Running a system at high load for a prolonged period of time to identify the 
+performance problems is called Soak Testing.
+
+
+==========================================================================================
 updated on 22-12-2025@18.14
 updated on 06-01-2026,7/1@18.22
 updated on 09-01-2026@18.28
 updated on 13-1-2026@8.9,18.01
+updated on 14-1-2026@07.04
 
 
 
