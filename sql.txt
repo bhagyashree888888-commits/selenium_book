@@ -151,6 +151,38 @@ User Accounts in Apps
 Instead of using an auto-incrementing integer ID (1, 2, 3…), many systems use a UUID to identify users.
 in public-facing URLs & Tokens used for secure, hidden IDs
 Example: 550e8400-e29b-41d4-a716-446655440000
+--------------------------------------------------------------------------------------------------------------------------
+Q . How do you fetch all records where a column contains a specific substring? 
+ 
+SELECT * FROM employees WHERE name LIKE '%John%'; 
+
+QA note: Common when verifying search functionalities. 
+------------------------------------------------------------------------
+Q . How do you convert a string to uppercase in SQL? 
+ 
+SELECT UPPER(name) FROM employees; 
+
+QA note: Useful when testing case-insensitive search. 
+-------------------------------------------------------------------------
+Q . How do you find the length of a string in SQL? 
+ 
+• MySQL: 
+  
+SELECT LENGTH(name) FROM employees;
+ 
+• SQL Server: 
+
+SELECT LEN(name) FROM employees; 
+
+QA note: Used in field length validation. 
+---------------------------------------------------------------------------
+Q . How do you handle special characters in SQL queries? 
+
+Escape them using backslash or double quotes depending on DB: 
+
+SELECT * FROM employees WHERE name LIKE '%\_%'; 
+
+QA relevance: Needed for search feature testing.
 ======================================================================================================================
 
 Q. What are Datatypes ?
@@ -204,8 +236,8 @@ CREATE TABLE product (
 
 | **Category**                    | **Data Types / Notes**                                                                                                              |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------
-| **1. Numeric Types**            | `TINYINT`, `SMALLINT`, `MEDIUMINT`, `INT` / `INTEGER`, `BIGINT`, `DECIMAL(p,s)` / `NUMERIC(p,s)`, `FLOAT`, `DOUBLE` / 							`REAL`, `BIT` |
-| **2. String / Character Types** | `CHAR(n)`, `VARCHAR(n)`, `TINYTEXT`, `TEXT`, `MEDIUMTEXT`, `LONGTEXT`, `ENUM('val1','val2',...)`, 										`SET('val1','val2',...)`          |
+| **1. Numeric Types**            | `TINYINT`, `SMALLINT`, `MEDIUMINT`, `INT` / `INTEGER`, `BIGINT`, `DECIMAL(p,s)` / `NUMERIC(p,s)`, `FLOAT`, `DOUBLE` / 							        `REAL`, `BIT` |
+| **2. String / Character Types** | `CHAR(n)`, `VARCHAR(n)`, `TINYTEXT`, `TEXT`, `MEDIUMTEXT`, `LONGTEXT`, `ENUM('val1','val2',...)`, 										       `SET('val1','val2',...)`          |
 | **3. Date / Time Types**        | `DATE`, `DATETIME`, `TIMESTAMP`, `TIME`, `YEAR`                                                                                     |
 | **4. Boolean / Logical Types**  | `BOOLEAN` (alias for `TINYINT(1)`), `BOOL` (alias)                                                                                  |
 | **5. Binary Types**             | `TINYBLOB`, `BLOB`, `MEDIUMBLOB`, `LONGBLOB`, `BINARY(n)`, `VARBINARY(n)`                                                           |
@@ -234,12 +266,20 @@ DECIMAL: 1.12345678901234567890 -- exact
 	large-scale simulations DOUBLE
 More precise than FLOAT, can store very large or very small numbers.
 
+--------------------------------------------------------------------------
+Q. How do you select only numeric values from a column containing mixed data? 
+
+SELECT * FROM table_name WHERE column_name REGEXP '^[0-9]+$'; 
+
+QA note: Used when validating number-only input fields.
+
 ==================================================================================
 
 Q . What is the difference between CHAR and VARCHAR? 
-Answer: 
+
 • CHAR(n) – Fixed-length storage. Always takes n bytes even if data is shorter. 
 • VARCHAR(n) – var is Variable-length storage. Uses only the space required. //VARCHAR(n) can go up to 65,535 bytes.
+
 QA relevance: Helps understand storage behavior when validating DB schemas. 
 
 ---------------------------------------------------------------------------------------------------------------------
@@ -425,6 +465,37 @@ It belongs to the child table (product)
 REFERENCES customer(customer_id)
 It must match a value in
 customer.customer_id (parent table)
+--------------------------------------------------------------------------
+Q . Explain the difference between UNION and UNION ALL. 
+
+• UNION – Combines results from two queries and removes duplicates. 
+• UNION ALL – Combines results and keeps duplicates. 
+Example: 
+
+SELECT city FROM customers 
+UNION 
+SELECT city FROM suppliers; 
+
+
+
+
+
+QA note: If you’re validating reports that should include duplicates (e.g., sales transactions), UNION ALL is the 
+right choice. 
+---------------------------------------------------------------------------Q . How do you replace NULL values with a default value? 
+ 
+SELECT COALESCE(department, 'Not Assigned') AS department_name 
+FROM employees; 
+
+QA note: Useful when validating how missing data is displayed in the application. 
+----------------------------------------------
+Q .  What is the difference between CHAR and VARCHAR? 
+
+• CHAR(n) – Fixed-length storage. Always takes n bytes even if data is shorter. 
+• VARCHAR(n) – Variable-length storage. Uses only the space required. 
+
+QA relevance: Helps understand storage behavior when validating DB schemas. 
+ 
 
 --------------------------------------------------------------------------
 1️⃣ Add Primary Key to an existing column:
@@ -715,9 +786,16 @@ INSERT INTO Enrollment (StudentID, Subject) VALUES (1, 'English');
 INSERT INTO Enrollment (StudentID, Subject) VALUES (2, 'Math');
 
 //Trying to insert (1, 'Math') again will fail because of the composite primary key.        ERROR occur
+--------------------------------------------------------------------------
+Q .  How do you retrieve the last inserted record? 
+
+SELECT * FROM employees ORDER BY id DESC LIMIT 1; 
+SELECT TOP 1 * FROM employees ORDER BY id DESC; 
+
+QA use case: After inserting a test record, you can confirm it was correctly added. 
 ============================================================================================================================
 Q . What is the difference between DELETE, TRUNCATE, and DROP? 
-Answer: 
+ 
 • DELETE – Removes specific rows from a table based on a WHERE clause. 
 The table structure remains. Row level
 Transaction logs are kept, so you can rollback if needed. 
@@ -997,6 +1075,15 @@ Categories: Stationery, Electronics
 Use Case:
 QA checks coverage for campaigns or stock availability.
 Ensures all city-category combinations are included in reports.
+-----------------------------------------------------------------------------------------------------------------------------------------------------
+Q .  How do you join more than two tables in SQL? 
+
+SELECT o.order_id, c.customer_name, p.product_name 
+FROM orders o 
+JOIN customers c ON o.customer_id = c.customer_id 
+JOIN products p ON o.product_id = p.product_id; 
+
+QA note: Often used in end-to-end data verification. 
 ============================================================================================================================================================
 Q Data Definition Language (DDL)
 DDL is a subset of SQL used to define, modify, and manage the structure of database objects such as tables, schemas, indexes, and views.
@@ -1087,6 +1174,15 @@ DELETE	Only intended rows deleted, cascade delete effects, foreign key constrain
 SELECT	Correct data returned, filters and joins work, performance on large datasets
 //NULL is allowed in a column only if the column is defined as nullable
 //Duplicate is allowed only if there is no UNIQUE or PRIMARY KEY constraint.
+--------------------------------------------------------------------------
+Q .  How do you delete duplicate rows but keep one instance? 
+ 
+DELETE e1 
+FROM employees e1 
+JOIN employees e2 
+ON e1.email = e2.email AND e1.id > e2.id;
+ 
+QA relevance: Common when cleaning up test databases. 
 ===========================================================================================================================================================
 • Data Query Language (DQL)
 DQL is a subset of SQL (Structured Query Language) used to query or fetch data from a database.
@@ -1108,7 +1204,7 @@ SELECT * FROM Students;
 | 103     | 1          | 70     | Completed |
 | 104     | 3          | 90     | Cancelled |
 
----------------------------------------------------------------------------
+================================================================================
 
 //What is the difference between WHERE and HAVING?
 
@@ -1129,7 +1225,47 @@ QA Perspective:
 Verify filter works correctly.
 Edge cases: Amount = 50 (boundary check), NULL amounts.
 Test with multiple conditions: WHERE Amount > 50 AND Status = 'Completed'.
--------------------------------------------
+
+---------------------------------------------------------------------------
+Q . How do you find the second highest salary from a table? 
+
+SELECT MAX(salary) AS second_highest 
+FROM employees 
+WHERE salary < (SELECT MAX(salary) FROM employees); 
+
+Alternative (with OFFSET in some DBs): 
+
+SELECT salary 
+FROM employees 
+ORDER BY salary DESC 
+OFFSET 1 ROW FETCH NEXT 1 ROW ONLY; 
+
+QA use case: Useful in validating ranking logic in leaderboards or reports.
+--------------------------------------------------------------------------
+Q. How do you update multiple columns in a single query? 
+
+UPDATE employees 
+SET salary = salary * 1.1, 
+    department = 'Engineering' 
+WHERE department = 'IT'; 
+
+QA relevance: Sometimes needed for bulk test data modification. 
+-------------------------------------------------------------------------------
+
+Q . How do you find all employees hired in the last 30 days? 
+• MySQL: 
+
+SELECT * FROM employees 
+WHERE hire_date >= CURDATE() - INTERVAL 30 DAY; 
+
+• SQL Server: 
+
+SELECT * FROM employees 
+WHERE hire_date >= DATEADD(DAY, -30, GETDATE()); 
+
+QA use case: Useful in validating “recently added” features. 
+
+=====================================================================
 4. GROUP BY
 Purpose: Groups rows that have the same values in specified columns, often used with aggregate functions like COUNT, SUM, AVG.
 SELECT column, COUNT(*)
@@ -1153,9 +1289,20 @@ QA Perspective:
 Verify aggregation is correct (sum, count, avg, etc.).
 Edge cases: customer with no orders → not included unless LEFT JOIN used.
 Test with duplicate rows to ensure aggregation counts correctly.
-------------------------------------------------
+---------------------------------------------------------------------------
+Q . How do you find duplicate records in a table? 
+
+SELECT email, COUNT(*) 
+FROM users 
+GROUP BY email 
+HAVING COUNT(*) > 1; 
+
+Explanation: 
+• GROUP BY groups records by email. 
+• HAVING COUNT(*) > 1 filters only those emails that appear more than once. 
+QA use case: To validate if the application prevents duplicate entries. 
+===================================================================
 5. HAVING
-Filters   after aggregation..
 SELECT column, COUNT(*)
 FROM table_name
 GROUP BY column
@@ -1179,7 +1326,7 @@ QA Perspective:
 Test that HAVING filters aggregates, not individual rows.
 Edge case: customer with exactly $100 → not included.
 Compare results with/without HAVING for correctness.
-------------------------------------------------
+=======================================================================
 
 6. ORDER BY
 Purpose: Sorts the result set by one or more columns.
@@ -1220,6 +1367,17 @@ ORDER BY TotalSpent DESC;
 | 1          | 120        |
 | 3          | 90         |
 
+Q.  How do you retrieve the top 5 records from a table? 
+
+• In SQL Server: 
+
+SELECT TOP 5 * FROM employees ORDER BY salary DESC; 
+
+• In MySQL/PostgreSQL: 
+
+SELECT * FROM employees ORDER BY salary DESC LIMIT 5; 
+
+QA note: Often used in ranking verification or leaderboards. 
 ============================================================================================================================================================
 
 • Functions in SQL
@@ -1247,6 +1405,22 @@ SELECT SUM(Balance) AS TotalBalance FROM Accounts;
 SELECT AVG(Balance) AS AverageBalance FROM Accounts;
 SELECT COUNT(*) AS TotalAccounts FROM Accounts;
 
+Q. How do you get the count of rows without using COUNT(*)? 
+
+You can use an identity column’s MAX() or check row existence: 
+
+SELECT MAX(id) FROM employees; 
+
+But note — this method fails if rows have been deleted. 
+QA use case: In certain performance-heavy queries, testers may use alternative approaches for faster validation.
+-----------------------------------------------------------------------
+Q . .How do you find the total salary for each department? 
+
+SELECT department, SUM(salary) AS total_salary 
+FROM employees 
+GROUP BY department; 
+
+QA use case: Used when validating aggregated reports. 
 ============================================================================================================================================================
 
 •Sub Query
@@ -1413,6 +1587,15 @@ TCL (Transaction Control Language) commands are used to manage transactions in a
 | **SAVEPOINT**       | Sets a point within a transaction to which you can roll back |
 | **SET TRANSACTION** | Defines transaction properties (like read/write mode)        |
 
+Q .  How do you handle transactions in SQL for testing? 
+
+BEGIN TRANSACTION; 
+UPDATE employees SET salary = salary * 1.1; 
+ROLLBACK; -- to undo 
+
+QA note: Transactions are useful for temporary data changes during testing without permanent effects. 
+ 
+
 ============================================================================================================================================================
 -----> Data Control Language (DCL)
 DCL (Data Control Language) is used to control access, permissions, and security of data within a database.
@@ -1420,6 +1603,58 @@ DCL (Data Control Language) is used to control access, permissions, and security
 | ---------- | ----------------------------------------------- |
 | **GRANT**  | Gives specific privileges to users              |
 | **REVOKE** | Removes privileges that were previously granted |
+
+
+===========================================================================
+
+Q. What is an index in SQL? 
+
+An index is a database object that improves query performance by allowing faster retrieval of rows. 
+Types: 
+• Clustered – Changes the physical storage order. 
+• Non-clustered – Keeps a separate lookup structure. 
+
+QA importance: Knowing indexes helps explain why some queries are slow during performance 
+testing.
+
+===========================================================================
+Q . How do you pivot data in SQL? 
+ 
+SELECT * 
+FROM (SELECT department, salary FROM employees) AS src 
+PIVOT (AVG(salary) FOR department IN ([IT], [HR], [Finance])) AS pvt; 
+
+QA use case: Needed in report testing for aggregated data. 
+=========================================================================
+
+Q .  What are stored procedures and how can QA test them? 
+
+A stored procedure is a precompiled collection of SQL statements stored in the database. 
+ 
+CREATE PROCEDURE GetHighSalaryEmployees() 
+BEGIN 
+    SELECT * FROM employees WHERE salary > 10000; 
+END; 
+
+QA Testing Approach: 
+• Call the procedure with various inputs. 
+• Validate outputs match expected results. 
+• Check for performance issues. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ===========================================================================
@@ -1456,9 +1691,11 @@ CREATE TABLE customer (
 
 
 
+
 updated on 1-1-26@08.28,@18.29
 updated on 2-1-26 @18.23
 updated on 4-1-26@22.55@18.17
+UPDATED on 14-01-2026@18.14
 
 
 
