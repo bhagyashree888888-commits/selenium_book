@@ -496,7 +496,14 @@ Q .  What is the difference between CHAR and VARCHAR?
 
 QA relevance: Helps understand storage behavior when validating DB schemas. 
  
+--------------------------------------------------------------------------
+Q . How do you find employees who don’t have any orders? 
 
+SELECT e.employee_id, e.name 
+FROM employees e 
+LEFT JOIN orders o ON e.employee_id = o.employee_id 
+WHERE o.order_id IS NULL; 
+QA use case: Helpful in testing negative scenarios. 
 --------------------------------------------------------------------------
 1️⃣ Add Primary Key to an existing column:
 ALTER TABLE customer
@@ -793,6 +800,17 @@ SELECT * FROM employees ORDER BY id DESC LIMIT 1;
 SELECT TOP 1 * FROM employees ORDER BY id DESC; 
 
 QA use case: After inserting a test record, you can confirm it was correctly added. 
+--------------------------------------------------------------------------------------
+//default
+Q . How do you get the difference between two dates in SQL? 
+ 
+• MySQL: 
+SELECT DATEDIFF(end_date, start_date) AS days_diff FROM projects; 
+
+• SQL Server: 
+SELECT DATEDIFF(DAY, start_date, end_date) AS days_diff FROM projects; 
+
+QA note: Useful when verifying SLA breaches or duration calculations. 
 ============================================================================================================================
 Q . What is the difference between DELETE, TRUNCATE, and DROP? 
  
@@ -898,6 +916,21 @@ QA Perspective:
 Verify all left table rows appear, even if there’s no match.
 Check NULLs for unmatched rows.
 Edge cases: left table empty → result should be empty.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Q. How do you find records present in one table but not in another? 
+
+SELECT *  
+FROM table1 
+WHERE id NOT IN (SELECT id FROM table2); 
+
+Or with LEFT JOIN: 
+
+SELECT t1.*  
+FROM table1 t1 
+LEFT JOIN table2 t2 ON t1.id = t2.id 
+WHERE t2.id IS NULL; 
+
+QA note: Essential for validating data migrations. 
 --------------------------------------------------------------------------
 3. RIGHT JOIN
    ➤ Returns: All rows from the right table and matching rows from the left table (NULL if no match).
@@ -1084,6 +1117,16 @@ JOIN customers c ON o.customer_id = c.customer_id
 JOIN products p ON o.product_id = p.product_id; 
 
 QA note: Often used in end-to-end data verification. 
+---------------------------------------------------------------------------------------
+Q.  How do you check if two tables have the same data? 
+
+SELECT * FROM table1 
+EXCEPT 
+SELECT * FROM table2; 
+ 
+SELECT * FROM table2 
+EXCEPT 
+SELECT * FROM table1; 
 ============================================================================================================================================================
 Q Data Definition Language (DDL)
 DDL is a subset of SQL used to define, modify, and manage the structure of database objects such as tables, schemas, indexes, and views.
@@ -1326,6 +1369,15 @@ QA Perspective:
 Test that HAVING filters aggregates, not individual rows.
 Edge case: customer with exactly $100 → not included.
 Compare results with/without HAVING for correctness.
+-------------------------------------------------------------------------------
+Q. How do you check for duplicate rows based on multiple columns? 
+
+SELECT first_name, last_name, COUNT(*) 
+FROM employees 
+GROUP BY first_name, last_name 
+HAVING COUNT(*) > 1; 
+
+QA note: Prevents duplicate data entry validation failures.
 =======================================================================
 
 6. ORDER BY
@@ -1378,6 +1430,101 @@ SELECT TOP 5 * FROM employees ORDER BY salary DESC;
 SELECT * FROM employees ORDER BY salary DESC LIMIT 5; 
 
 QA note: Often used in ranking verification or leaderboards. 
+------------------------------------------------------------------------------------
+Q.  How do you retrieve distinct department names from a table? 
+
+SELECT DISTINCT department FROM employees;  
+
+QA note: Prevents duplicate results when validating dropdown options. 
+--------------------------------------------------------------------------------------
+Q .  How do you select random rows from a table? 
+
+• MySQL: 
+
+SELECT * FROM employees ORDER BY RAND() LIMIT 5; 
+
+• SQL Server: 
+
+SELECT TOP 5 * FROM employees ORDER BY NEWID(); 
+
+QA use case: Useful for random sampling in test data validation. 
+------------------------------------------------------------------------------------------
+Q. How do you find employees whose salary is within the top 3 highest salaries in the 
+company? 
+ 
+You can use DISTINCT with ORDER BY and LIMIT (or TOP in SQL Server): 
+
+SELECT DISTINCT salary 
+FROM employees 
+ORDER BY salary DESC 
+LIMIT 3; 
+
+Then use this in a WHERE IN: 
+
+SELECT *  
+FROM employees 
+WHERE salary IN ( 
+    SELECT DISTINCT salary 
+    FROM employees 
+    ORDER BY salary DESC 
+    LIMIT 3 
+); 
+QA relevance: This is a common check when validating leaderboard rankings or incentive eligibility. 
+--------------------------
+
+Suppose a table employees:
+| id | department |
+| -- | ---------- |
+| 1  | Sales      |
+| 2  | HR         |
+| 3  | Sales      |
+| 4  | IT         |
+| 5  | HR         |
+
+SELECT DISTINCT department
+FROM employees;
+
+RESULT :
+Sales
+HR
+IT
+-----------
+DISTINCT on Multiple Columns :
+
+SELECT DISTINCT department, job_title
+FROM employees;
+
+DISTINCT with COUNT : //Counts unique departments.
+
+SELECT COUNT(DISTINCT department)
+FROM employees;
+------------------------------------------------------------------------------------
+Q. What’s the difference between BETWEEN and IN? 
+
+• BETWEEN – For ranges (inclusive). 
+
+SELECT * FROM employees WHERE salary BETWEEN 5000 AND 10000; 
+
+• IN – For specific values.
+ 
+SELECT * FROM employees WHERE department IN ('HR', 'IT'); 
+
+QA note: Choosing the right filter ensures accurate query results. 
+------------------------------------------------------------------------------------
+Q .  What is the difference between EXISTS and IN? 
+
+• IN – Retrieves a list of values and checks if a column matches any of them. 
+• EXISTS – Returns TRUE if a subquery returns any rows, often more efficient for large datasets. 
+Example: 
+
+SELECT name FROM employees 
+WHERE department_id IN (SELECT id FROM departments); 
+ 
+SELECT name FROM employees e 
+WHERE EXISTS (SELECT 1 FROM departments d WHERE e.department_id = d.id); 
+
+QA use case: Choosing between the two can improve query speed in backend validation. 
+
 ============================================================================================================================================================
 
 • Functions in SQL
@@ -1421,6 +1568,42 @@ FROM employees
 GROUP BY department; 
 
 QA use case: Used when validating aggregated reports. 
+---------------------------------------------------------------------
+Q .  How do you get all records except the highest salary? 
+
+SELECT * 
+FROM employees 
+WHERE salary < (SELECT MAX(salary) FROM employees); 
+
+QA note: Often used in ranking validations. 
+------------------------------------------------------------------------
+Q . How do you find the number of employees hired each year? 
+
+SELECT YEAR(hire_date) AS hire_year, COUNT(*) AS num_employees 
+FROM employees 
+GROUP BY YEAR(hire_date); 
+
+QA use case: Used when validating historical trends.
+-------------------------------------------------------------------------
+Q.  How do you select records with salaries higher than the department average? 
+
+SELECT * 
+FROM employees e 
+WHERE salary > ( 
+    SELECT AVG(salary) 
+    FROM employees 
+    WHERE department = e.department 
+); 
+
+QA note: Useful when testing “top performer” logic.
+---------------------------------------------------------------------------------
+Q. How do you find the highest salary in each department? 
+
+SELECT department, MAX(salary) AS max_salary 
+FROM employees 
+GROUP BY department; 
+
+QA use case: Validating top-earner logic per group. 
 ============================================================================================================================================================
 
 •Sub Query
@@ -1485,8 +1668,30 @@ Downtown → (5000+3000)/2 = 4000
 Uptown → (7500+4500)/2 = 6000
 Midtown → 9000
 Outer query filters branches with AvgBalance > 5000 → Uptown, Midtown
+------------------------------------------------------------------------------------------
+Q .  What is a correlated subquery? 
+
+A correlated subquery depends on the outer query for its values. 
+Example: 
+SELECT e1.name, e1.salary 
+FROM employees e1 
+WHERE salary > ( 
+    SELECT AVG(salary) 
+    FROM employees e2 
+    WHERE e1.department = e2.department 
+); 
+
+QA note: Used when comparing row-specific values to group aggregates. 
 
 ============================================================================================================================================================
+Q.  How do you check if a table has any rows without fetching the data? 
+
+SELECT CASE WHEN EXISTS (SELECT 1 FROM employees)  
+            THEN 'Data exists'  
+            ELSE 'No data' END; 
+
+QA note: Helps in quick verification during automation without fetching full datasets. 
+===========================================================================================
 Q . What is normalization and why is it important in databases? 
 
 Normalization is a database design technique used to organize data in a relational database efficiently
@@ -1641,7 +1846,17 @@ QA Testing Approach:
 • Validate outputs match expected results. 
 • Check for performance issues. 
 
+=========================================================================
+Q.  What is a view in SQL, and why might QA use it? 
+A view is a virtual table created from a query. 
+Example: 
 
+CREATE VIEW high_salary_employees AS 
+SELECT * FROM employees WHERE salary > 10000; 
+
+QA uses: 
+• To simplify complex queries during testing. 
+• To create a filtered dataset for regression tests. 
 
 
 
@@ -1696,6 +1911,7 @@ updated on 1-1-26@08.28,@18.29
 updated on 2-1-26 @18.23
 updated on 4-1-26@22.55@18.17
 UPDATED on 14-01-2026@18.14
+updated on 16-01-2026@08.14
 
 
 
