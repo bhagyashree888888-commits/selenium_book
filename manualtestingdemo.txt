@@ -7,6 +7,66 @@ Issues at the API level can affect multiple downstream systems, and API tests pr
 For example, in an e-commerce application, the Add to Cart API must correctly handle stock availability, pricing, and user authentication before the UI can display it.
 Example: In an e-commerce app, the Add to Cart API must correctly handle stock availability, pricing, and
 user authentication before the UI can display it
+//json
+{
+"key":"value",
+"key":"value",
+"key":{
+key:"value",
+key:"value"
+}
+}
+
+//basic egs:
+Post
+https://jsonplaceholder.typicode.com/posts
+{
+  "title": "My First Post",
+  "body": "Learning CRUD API",
+  "userId": 101
+}
+O/P: 201 Created 
+
+GET 
+https://jsonplaceholder.typicode.com/posts/?userId=101
+O/P:{
+  "title": "My First Post",
+  "body": "Learning CRUD API",
+  "userId": 101
+}
+O/P: 200 OK
+
+Delete
+https://jsonplaceholder.typicode.com/posts/1
+O/P:204 No Content
+
+PUT
+https://jsonplaceholder.typicode.com/posts/1
+{
+  "id": 1,
+  "title": "Updated Title",
+  "body": "Updated Body",
+  "userId": 101
+}
+O/P:200 OK
+204 NO Content (if no body returened)
+
+PATCH
+https://jsonplaceholder.typicode.com/posts/1
+{
+  "title": "Partially Updated"
+}
+O/P:200 OK
+204 NO Content (if no body returened)
+
+
+| Method | Query Param Allowed? |
+| ------ | -------------------- |
+| GET    | ✅ Yes                |
+| POST   | ❌ No                 |
+| PUT    | ❌ No                 |
+| PATCH  | ❌ No                 |
+| DELETE | ❌ No                 |
 
 ===============================================================================================================
 2. What are the different types of APIs?
@@ -58,8 +118,50 @@ Format: GraphQL query (JSON response)
     email
   }
 }
+🟢 1. Query → (READ) (whereas in REST ->GET)
+🟣 2. Mutation → (WRITE)   (Whereas in rest it is-> POST/PUT/PATCH/DELETE)
+Used for:
+Create
+Update
+Delete
+🟡 3. Subscription → (REAL-TIME)
+Used for:
+👉 Live updates
+👉 Notifications
+👉 Chats
+👉 Live tracking (Whereas in REST it is Websocket)
 //GraphQL: query language for requests, JSON responses
 REST: HTTP-based requests, usually JSON responses
+//over-fetching,under-fetching
+👉 Over-fetching = receiving unnecessary data
+eg.frontend only needs:name
+GET /users/1
+{
+  "id": 1,
+  "name": "Rahul",
+  "email": "rahul@gmail.com",
+  "address": {
+    "city": "Pune",
+    "state": "MH"
+  },
+  "phone": "99999",
+  "company": "TCS"
+}
+👉 Under-fetching = making multiple requests to get required data
+Frontend needs:
+user name
+user posts
+
+But REST gives:
+GET /users/1
+
+Only:
+{
+  "id": 1,
+  "name": "Rahul"
+}
+Now frontend must call again:
+GET /users/1/posts
 
 🔹 gRPC (Google Remote Procedure Call-oldname)
 gRPC is a high-performance RPC framework that uses a binary protocol with Protocol Buffers (Protobuf) for serialization.
@@ -112,6 +214,7 @@ They are commonly used in services like weather apps, mapping platforms, and oth
 Partner APIs are shared only with specific business partners and are not publicly accessible.
 They are more secure than public APIs and are commonly used in integrations such as payment gateways, logistics services, or B2B platforms.
 [Logistics services = planning, implementing, and controlling the flow of goods, services, and information from the point of origin to the point of consumption.]
+Backend integration base url: https://api.razorpay.com/v1/
 
 🔹 Private (Internal) APIs
 Private, or internal, APIs are used only within an organization and are not exposed to external users.
