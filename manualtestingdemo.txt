@@ -268,14 +268,14 @@ It prepares internal API calls for each of these actions.
 -----------------------------------------------------------------------
 Step 3: Server Calls Multiple APIs Internally
 Here’s what happens behind the scenes:
-Flight API call
+a. Flight API call
 
 GET /flights?from=NYC&to=LAX&date=2026-01-10
 
-
 Checks availability of flights.
 Returns flight confirmation ID and seat info.
-Hotel API call
+
+b.Hotel API call
 
 POST /hotels/reserve
 Body: { "location": "Los Angeles", "nights": 3 }
@@ -283,11 +283,11 @@ Body: { "location": "Los Angeles", "nights": 3 }
 
 Reserves a hotel room.
 Returns booking confirmation number.
-Payment API call
+
+c.Payment API call
 
 POST /payments
 Body: { "method": "credit_card", "amount": 1200 }
-
 
 Processes the payment.
 Returns payment transaction ID and status.
@@ -429,8 +429,10 @@ Field selection is built-in by default
 Clients can request nested data easily
 One endpoint, flexible queries
 
-=============================================================================================================================================
+=====================================================================================================================================
+
 3. What is the difference between SOAP and REST APIs?
+
 SOAP (Simple Object Access Protocol)
 SOAP is an older, strict standard for APIs that primarily uses XML.
 It has built-in support for security and transactions, making it suitable for critical enterprise applications.
@@ -465,12 +467,12 @@ Uses: URL + query parameters / request body
 Format: HTTP (JSON usually)
 GET /users/1?fields=name,email
 
-==============================================================================================================================================
+=====================================================================================================================================
 | Feature             | HTTP                                         | HTTPS                                                                                 |
-| ------------------- | -------------------------------------------- | ------------------------------------------------------------------------------------- |
+| ------------------- | ------------------------------------------------------------------------------------------------------------ |
 | **Full Form**       | HyperText Transfer Protocol                  | HyperText Transfer Protocol Secure                                                    |
 | **Security**        | Not secure                                   | Secure (data is encrypted)                                                            |
-| **Data Encryption** | ❌ No encryption                             | ✅ Uses SSL/TLS encryption                                                             |
+| **Data Encryption** | ❌ No encryption                    |Uses SSL/TLS encryption(Secure Sockets Layer/Transport Layer Security)                                                            |
 | **Port**            | 80                                           | 443                                                                                   |
 | **URL Prefix**      | `http://`                                    | `https://`                                                                            |
 | **Data Integrity**  | No guarantee; data can be modified           | Ensures data integrity; prevents tampering                                            |
@@ -480,7 +482,7 @@ GET /users/1?fields=name,email
 | **Use Cases**       | Blogs, public websites, informational pages  | Banking, e-commerce, login pages, confidential data transfer                          |
 | **Security Risks**  | Data can be intercepted, modified, or stolen | Man-in-the-middle attacks are prevented; encrypted transmission                       |
 
-==============================================================================================================================================
+=====================================================================================================================================
 4. Explain HTTP methods in API testing.
 
 • GET – Retrieve data from the server.
@@ -491,7 +493,7 @@ GET /users/1?fields=name,email
 
 HEAD 	 	Same as GET but returns only headers metadata (no body)
 OPTIONS	 	when you want to know what actions are allowed on a resource before making the actual request.        
-TRACE 	 	Use TRACE only for debugging to see how a request is modified as it travels through intermediaries—never for normal application logic             
+TRACE 	 	Use TRACE only for debugging to see how a request is modified as it travels through intermediaries—never for normal 		application logic             
 CONNECT	 	Creates a tunnel (used for HTTPS via proxy)    
 LINK	 	Establish relationship between resources       
 UNLINK		Remove relationship between resources          
@@ -514,7 +516,7 @@ GET:
 demo->GET->https://jsonplaceholder.typicode.com/posts/1
 
 1.Fetch support tickets for a customer
-GET /customers/456/tickets HTTP/1.1
+GET /customers/456/tickets 
 
 Check Issue component :is about viewing details of a customer’s tickets or problems
 In my project, we used the GET method to fetch customer support tickets in our CRM system. 
@@ -535,8 +537,8 @@ o/p:
 The backend usually sends a JSON response containing an array of tickets with relevant details:
 -------------------------------------------------------------------------------------------------
 2.2. Download FAQ PDF / Attachment
-GET /support/faqs/201/download HTTP/1.1
-Check Issue component: Downloading an FAQ document or PDF.
+GET /support/faqs/201/download 
+Check Issue component: Downloading an FAQ document or PDF with resource id 201.
 
 In my project:
 When a user clicks the “Download” button on an FAQ, the frontend sends a GET request like GET /support/faqs/201/download to the backend. The backend fetches the PDF file associated with the FAQ from the file storage or database and streams it back to the frontend for the user to download.
@@ -549,142 +551,223 @@ The file is streamed to the browser as a download, e.g., FAQ_201_Reset_Password.
 ---------------------------------------------------------------------------
 POST:
 1. Use when creating a new resource.
-POST /users HTTP/1.1
+POST https://api.myapp.com/users
+{
+  "name": "Riya Patil",
+  "email": "riya@gmail.com",
+  "password": "secure123",
+  "phone": "9876543210"
+}
 Real-time use:
 User registration (signup)
 Creating a new user account in database
 
 2. Use when submitting form data.
-POST /login HTTP/1.1
+POST https://api.myapp.com/auth/login
+{
+  "email": "rahul@gmail.com",
+  "password": "secure123"
+}
 Real-time use:
 User authentication (login)
 Submitting username and password
 
 3. Use when creating a child or dependent resource.
-POST /users/123/orders HTTP/1.1
+POST https://api.shop.com/users/123/orders 
+{
+  "productId": 987,
+  "quantity": 2,
+  "paymentMethod": "UPI",
+  "deliveryAddress": "Pune, Maharashtra"
+}
+| Part     | Meaning                                      |
+| -------- | -------------------------------------------- |
+| POST     | Create order                                 |
+| Base URL | [https://api.shop.com](https://api.shop.com) |
+| users    | Parent resource                              |
+| 123      | Specific user                                |
+| orders   | Child resource                               |
+
 Real-time use:
 Creating an order for a user
 Adding items to a user’s cart
 
 4. Use when uploading data or files.
-POST /files/upload HTTP/1.1
+POST https://api.myapp.com/users/123/profile-picture 
+{
+  "file": "profile.jpg"
+}
 Real-time use:
 Uploading images, documents, videos
 Profile picture upload
 
 5. Use when triggering server-side processing.
-POST /payments/process HTTP/1.1
+POST https://api.shop.com/payments 
+{
+  "userId": 123,
+  "orderId": 567,
+  "amount": 4999,
+  "paymentMethod": "Card"
+}
 Real-time use:
 Payment processing
 Sending emails, notifications, or background jobs
 ---------------------------------------------------------------------------
 PUT:
 1. Use when replacing an entire resource.
-PUT /users/123 HTTP/1.1
+PUT https://api.myapp.com/users/123
+{
+  "name": "nidhi Patil",
+  "email": "np@gmail.com",
+  "phone": "9876543210",
+  "address": "Pune",
+  "role": "customer"
+} 
 Real-time use:
 Updating full user profile (name, email, address, role)
 Admin editing all user details at once
 
 2. Use when creating or replacing a resource with a known ID.
-PUT /products/789 HTTP/1.1
+PUT https://api.shop.com/products/789
+{
+  "name": "Wireless Mouse",
+  "price": 999,
+  "stock": 50,
+  "category": "Electronics"
+} 
 Real-time use:
 Creating a product with a predefined ID
 Inventory management systems
 
 3. Use when overwriting an existing file or document.
-PUT /files/report.pdf HTTP/1.1
+PUT https://api.myapp.com/files/report.pdf
+binary file 
 Real-time use:
 Re-uploading a report
 Replacing old document versions
 
 4. Use when updating application configuration or settings.
-PUT /settings/notifications HTTP/1.1
+PUT https://api.myapp.com/users/123/settings/notifications
+{
+  "email": true,
+  "sms": false,
+  "push": true
+} 
 Real-time use:
 Enabling/disabling notification settings
 Saving user preferences
 
 5. Use when idempotent updates are required.
-PUT /orders/456/status HTTP/1.1
+PUT https://api.shop.com/orders/456/status 
+{
+  "status": "shipped"
+}
 Real-time use:
 Updating order status (retries won’t duplicate updates)
 Enterprise systems requiring safe retries
 ---------------------------------------------------------------------------
 PATCH:
 1. Use when partially updating a resource.
-PATCH /users/123 HTTP/1.1
+PATCH https://api.myapp.com/users/123
+{
+  "email": "sidhi.new@gmail.com",
+  "phone": "9876500000"
+} 
 Real-time use:
 Updating only email or phone number
 Editing profile details without changing entire data
 
 2. Use when updating a single field or attribute.
-PATCH /orders/456 HTTP/1.1
+PATCH https://api.shop.com/orders/456
+{
+  "status": "SHIPPED"
+} 
 Real-time use:
 Changing order status (PLACED → SHIPPED)
 Updating delivery date
 
 3. Use when performing small, incremental updates.
-PATCH /products/789 HTTP/1.1
+PATCH https://api.shop.com/products/789
+{
+  "price": 899,
+  "stock": 45
+} 
 Real-time use:
 Updating product price or stock count
 Flash sale price changes
 
 4. Use when toggling a setting or flag.
-PATCH /users/123/settings HTTP/1.1
+PATCH https://api.myapp.com/users/123/settings
+{
+  "emailNotifications": false,
+  "pushNotifications": true
+} 
 Real-time use:
 Enable/disable notifications
 Activate/deactivate account features
 
 5. Use when minimizing payload size.
-PATCH /profiles/123/avatar HTTP/1.1
+PATCH https://api.myapp.com/profiles/123/avatar 
+{
+  "avatarUrl": "https://cdn.example.com/images/avatar123.jpg"
+}
 Real-time use:
 Mobile apps updating only one field
 Low-bandwidth network updates
 --------------------------------------------------------------------------
 DELETE:
 1. Use when removing a resource permanently.
-DELETE /users/123 HTTP/1.1
+DELETE https://api.myapp.com/users/123 
 Real-time use:
 Deleting a user account
 Admin removing users from the system
 
 2. Use when deleting a file or document.
-DELETE /files/old-report.pdf HTTP/1.1
+DELETE https://api.myapp.com/files/old-report.pdf 
 Real-time use:
 Removing outdated documents
 Storage cleanup jobs
 
 3. Use when canceling or removing a transaction.
-DELETE /orders/456 HTTP/1.1
+DELETE https://api.shop.com/orders/456 
 Real-time use:
 Canceling an order
 Removing unpaid or failed orders
 
 4. Use when removing a relationship between resources.
-DELETE /users/123/roles/admin HTTP/1.1
+DELETE https://api.myapp.com/users/123/roles/admin 
 Real-time use:
 Revoking admin access
 Removing permissions or roles
 
 5. Use when performing soft delete or logical delete.
-DELETE /posts/789 HTTP/1.1
+DELETE https://api.blog.com/posts/789
 Real-time use:
 Marking post as deleted (archived)
 Hiding content without physical removal
 --------------------------------------------------------------------------
+//HEAD request works like GET but returns only response headers without response body.
 HEAD:
 1. You only need metadata
 Use HEAD if you want headers such as:
 Content-Length (size of the response)
 Content-Type
 Last-Modified
-ETag
-👉 Example: checking how large a file is before downloading it.
+ETag(Entity Tag)
+👉 Example: checking how large a file is before downloading it`.
+HEAD https://api.myapp.com/files/report.pdf
+Returns:
+Content-Length (file size)
+Last-Modified
 
 2. You want to check if a resource exists
 HEAD is ideal for:
 Verifying a URL
 Checking whether an API endpoint is reachable
 It’s faster and uses less bandwidth than GET.
+HEAD https://api.shop.com/products/555
+Response:HTTP/1.1 200 OK
+Content-Type: application/json
 
 3. Cache validation
 Use HEAD to:
@@ -692,163 +775,295 @@ Check whether cached content is still fresh
 Decide whether a new GET request is needed
 Common in browsers, CDNs, and proxies.
 
+//User opens product image:
+1️⃣ Proxy checks request
+2️⃣ CDN checks cached image
+3️⃣ If fresh → returned
+4️⃣ If outdated → CDN asks main server
+
 4. Before expensive or large downloads
 Use HEAD to:
 Determine file size
 Check if resumable downloads are supported (Accept-Ranges)
 This avoids unnecessary data transfer.
+
+//egs
+1.Check if User Exists
+HEAD https://api.myapp.com/users/123
+Server returns:
+Status: 200 / 404
+Content-Type
+Last-Modified
+📦 Real-time Use :
+Admin checks if user exists before action
+System validates account before login reset
 --------------------------------------------------------------------------
 OPTIONS:
 1. Use when checking which HTTP methods are supported.
-OPTIONS /users HTTP/1.1
-Real-time use:
+OPTIONS https://api.shop.com/users 
+# Response
+HTTP/1.1 204 No Content
+Allow: GET, POST, PUT, DELETE
+
+# Real-time use:
 Discovering allowed methods (GET, POST, PUT, DELETE)
 API documentation and testing
 
-2. Use in CORS preflight requests.
-OPTIONS /api/data HTTP/1.1
+2. Use in CORS(Cross-Origin Resource Sharing) preflight requests.
+OPTIONS /api/data 
 Real-time use:
 Browser checks cross-origin permissions
 Validating allowed headers and methods before actual request
+//elaboration of CORS:
+By default, browser blocks requests going to:
+Different domain / port / protocol
+This is called:
+👉 Same-Origin Policy
+Frontend:
+https://shop.com
+
+Calling API:
+https://api.shop.com
+Different domain → Cross-Origin ❗
+CORS allows server to say:
+✔️ “Yes, this frontend is allowed to access me”
+
+Server sends:
+Access-Control-Allow-Origin: https://shop.com
+Now browser allows request ✅
 
 3. Use for security and access validation.
-OPTIONS /admin HTTP/1.1
+OPTIONS /admin 
 Real-time use:
 API gateways verifying access rules
 Checking authentication/authorization requirements
 
+🛒 Example 1: Admin Panel Access
+User tries to open:
+GET https://api.shop.com/admin
+
+Before allowing this, API Gateway checks:
+
+OPTIONS /admin
+
+🔁 Server Response
+HTTP/1.1 204 No Content
+Allow: GET
+Authentication: Required
+Role: Admin
+
+Gateway now knows:
+✔️ GET allowed
+✔️ Login required
+✔️ Admin role needed
+If user is not admin → blocked ❌
+
 4. Use for client-side feature detection.
-OPTIONS /payments HTTP/1.1
+🛒 Example 3: Payment Refund
+Before refund API runs:
+OPTIONS /payments/refund
+
+Response:
+Allow: POST
+Authentication: Required
+Permission: RefundAccess
+
+Gateway checks:
+Does user have refund rights?
+
+If no → stop request
 Real-time use:
 Frontend checking if payment operations are enabled
 Versioned API compatibility checks
 
-5. Use for load balancer or proxy validation.
-OPTIONS /health HTTP/1.1
+5. Use for load balancer or proxy validation. 
 Real-time use:
 Load balancers verifying endpoint readiness
 Infrastructure monitoring tools
+
+
+🛒 Real E-Commerce Situations
+1. During Big Sale (like Flipkart Big Billion Days)
+Before traffic spike:
+
+OPTIONS /payment/health
+
+Checks:
+👉 Payment service alive?
+
+2.Microservice Monitoring
+Infra tools run every 30 sec:
+
+OPTIONS /inventory/health
+
+If unhealthy:
+➡️ Auto restart service
 ---------------------------------------------------------------------------
 TRACE:
-1. Use when debugging request path through servers.
-TRACE /api/test HTTP/1.1
+1. Use when debugging request path through servers. 
 Real-time use:
 Identifying how proxies modify requests
 Debugging network routing issues
 
+# Imagine an online store like:
+Amazon
+Flipkart
+
+When a user opens:
+GET /api/orders
+
+The request does NOT go directly to the server.
+It travels through:
+➡️ Browser
+➡️ ISP Network
+➡️ CDN
+➡️ Proxy
+➡️ Load Balancer
+➡️ API Gateway
+➡️ Order Service
+Many systems may modify the request.
+
+🚨 Problem Situation
+User says:
+❌ “Order history is not loading”
+But system works in testing.
+
+Engineers suspect:
+👉 Proxy or firewall is modifying request headers
+
+So they use:
+
+TRACE /api/orders
+
+Response:
+Via: proxy1
+X-Forwarded-For: 103.21.45.1
+User-Agent: Mobile-App
+Authorization: Removed
+
+Now developers see 👀
+⚠️ Proxy removed Authorization header
+So login token never reached Order Service.
+
 2. Use when verifying headers added by intermediaries.
-TRACE /login HTTP/1.1
+TRACE /login 
 Real-time use:
 Checking security headers added by gateways
 Inspecting authentication headers during testing
 
 3. Use for diagnosing proxy or firewall issues.
-TRACE /services/data HTTP/1.1
+TRACE /services/data 
+
+Response:
+Host: shop.com
+User-Agent: Chrome
+Authorization: Removed
+X-Forwarded-For: 103.22.1.5
+X-Security-Check: Passed
+Via: Gateway-1
+✔ See headers added by CDN / proxy / gateway
+✔ Check if auth token is altered
+✔ Verify security filters
+✔ Debug login failures
 Real-time use:
 Troubleshooting blocked requests
 Debugging enterprise network traffic
 
-4. Use in development or test environments only.
-TRACE /debug HTTP/1.1
-Real-time use:
-API debugging during development
-Verifying request integrity
-
-5. Use for detecting request tampering.
-TRACE /payment HTTP/1.1
-Real-time use:
-Identifying unexpected request changes
-Security audits in controlled environments
 --------------------------------------------------------------------------
 CONNECT:
+CONNECT method is not directly available in Postman because it is used for proxy tunneling at the network level, not for application-level API testing.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+QA does not test CONNECT directly but validates secure API behavior in proxy environments where CONNECT is used
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 1. Use when establishing a secure tunnel through a proxy.
-CONNECT example.com:443 HTTP/1.1
+CONNECT example.com:443 
 Real-time use:
 Browser establishing HTTPS connection via proxy
 Secure web browsing in corporate networks
 
 2. Use when accessing HTTPS websites from restricted networks.
-CONNECT google.com:443 HTTP/1.1
+CONNECT google.com:443 
 Real-time use:
 School or office networks with outbound restrictions
 Secure access through firewall-controlled proxies
 
 3. Use when creating encrypted communication channels.
-CONNECT api.bank.com:443 HTTP/1.1
+CONNECT api.bank.com:443 
 Real-time use:
 Secure financial API communication
 Protecting sensitive data in transit
 
 4. Use for VPN or secure tunnel setup.
-CONNECT vpn.company.com:1194 HTTP/1.1
+CONNECT vpn.company.com:1194 
 Real-time use:
 Remote employee VPN connections
 Secure internal network access
 
 5. Use for WebSocket over HTTPS (via proxy).
-CONNECT realtime.chat.com:443 HTTP/1.1
+CONNECT realtime.chat.com:443 
 Real-time use:
 Real-time chat applications
 Live trading or notification systems
 ---------------------------------------------------------------------------
 LINK:
 1. Use when creating a relationship between two resources.
-LINK /articles/101 HTTP/1.1
+does not create new data but connects existing data.
+LINK /articles/101 
 Real-time use:
 Linking an article to a category
 Associating content with tags
 
 2. Use when associating users with groups or roles.
-LINK /users/123/groups/admin HTTP/1.1
+LINK /users/123/groups/admin 
 Real-time use:
 Assigning admin role to a user
 Adding user to a team or group
 
 3. Use when connecting related records.
-LINK /orders/456/invoices/789 HTTP/1.1
+LINK /orders/456/invoices/789 
 Real-time use:
 Linking orders to invoices
 Financial and billing systems
 
 4. Use in content management systems.
-LINK /products/321/categories/electronics HTTP/1.1
+LINK /products/321/categories/electronics 
 Real-time use:
 Assigning products to categories
 E-commerce catalog management
 
 5. Use in knowledge graph or metadata systems.
-LINK /documents/55/references/78 HTTP/1.1
+LINK /documents/55/references/78 
 Real-time use:
 Linking related documents
 Knowledge base or document management systems
 -------------------------------------------------------------------------
 UNLINK:
 1. Use when removing a relationship between two resources.
-UNLINK /articles/101 HTTP/1.1
+UNLINK /articles/101 
 Real-time use:
 Removing an article from a category
 Detaching content from tags
 
 2. Use when revoking user roles or group memberships.
-UNLINK /users/123/groups/admin HTTP/1.1
+UNLINK /users/123/groups/admin 
 Real-time use:
 Removing admin role from a user
 Revoking group permissions
 
 3. Use when disconnecting related records.
-UNLINK /orders/456/invoices/789 HTTP/1.1
+UNLINK /orders/456/invoices/789 
 Real-time use:
 Unlinking an invoice from an order
 Financial data corrections
 
 4. Use in content or catalog management.
-UNLINK /products/321/categories/electronics HTTP/1.1
+UNLINK /products/321/categories/electronics 
 Real-time use:
 Removing product from a category
 Updating product classifications
 
 5. Use in document or knowledge management systems.
-UNLINK /documents/55/references/78 HTTP/1.1
+UNLINK /documents/55/references/78 
 Real-time use:
 Removing document references
 Cleaning outdated relationships
