@@ -969,6 +969,19 @@ Real-time use:
 Troubleshooting blocked requests
 Debugging enterprise network traffic
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++=
+🔹 How to Test TRACE in Postman
+TRACE is available directly in dropdown ✅
+
+Steps:
+Select:
+TRACE
+
+Send request
+Validate:
+✔️ Server echoes request
+✔️ Sensitive headers NOT exposed
+✔️ In prod → Expect 405 / 501 (disabled)
 --------------------------------------------------------------------------
 CONNECT:
 CONNECT method is not directly available in Postman because it is used for proxy tunneling at the network level, not for application-level API testing.
@@ -1036,6 +1049,34 @@ LINK /documents/55/references/78
 Real-time use:
 Linking related documents
 Knowledge base or document management systems
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+🔹 How to Test LINK in Postman
+Step 1:
+Open Postman
+
+Step 2:
+Click on method dropdown → select "Custom"
+
+Step 3:
+Type:
+
+LINK
+Step 4:
+Enter API URL
+
+Step 5:
+Add Headers (if needed)
+Example:
+Content-Type: application/json
+Authorization: Bearer token
+
+Step 6:
+Send request
+
+Validate:
+✔️ 200 / 204 status
+✔️ Relationship created
+✔️ Verify via GET API
 -------------------------------------------------------------------------
 UNLINK:
 1. Use when removing a relationship between two resources.
@@ -1068,6 +1109,17 @@ Real-time use:
 Removing document references
 Cleaning outdated relationships
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+🔹 How to Test UNLINK in Postman
+Same steps AS above👆
+
+Just use:
+UNLINK
+
+Validate:
+✔️ Relationship removed
+✔️ Mapping gone in GET response
+✔️ Proper error if not linked
 ================================================================================================================
 egs.
 Get -> https://jsonplaceholder.typicode.com/posts -> send =>200 OK
@@ -1123,7 +1175,8 @@ First request → charges $50.
 
 Retry with same idempotency key → no extra charge; the original response is returned.
 
-Idempotency is crucial whenever operations can be retried or executed multiple times due to failures, network issues, or distributed architectures. It prevents unintended effects like duplicates, extra charges, or inconsistent state.
+Idempotency is crucial whenever operations can be retried or executed multiple times due to failures, network issues, or distributed architectures. 
+It prevents unintended effects like duplicates, extra charges, or inconsistent state.
 
 ==========================================================================
 6. Difference between URI, URL, and Endpoint.
@@ -1143,7 +1196,7 @@ www.example.com  host
 443 → port
 /path/page.html → path to resource
 ?query=test → query parameters
-#section1 → fragment
+#section1 → fragment (not used in API testing only for UI knowledge)
 
 ===========================================================================
 7. Categories of HTTP status codes.
@@ -1257,6 +1310,23 @@ Compared to XML:
 • Smaller payloads.
 • No closing tags → faster parsing.
 • More readable for humans.
+{
+  "productId": 101,
+  "name": "Wireless Mouse",
+  "category": "Electronics",
+  "price": 29.99,
+  "stock": 120,
+  "ratings": 4.5
+}
+VS
+<product>
+  <productId>101</productId>
+  <name>Wireless Mouse</name>
+  <category>Electronics</category>
+  <price>29.99</price>
+  <inStock>true</inStock>
+  <ratings>4.5</ratings>
+</product>
 ============================================================================================================
 10. How do you validate an API response?
 Validation checks:
@@ -1265,11 +1335,45 @@ Validation checks:
 • Headers – Verify content type, caching.
 • Schema Validation – Ensure response matches defined structure
 
+//eg:
+GET https://api.example.com/products/101
+Authorization: Bearer : 12345-abcde-67890-fghij
+response:
+{
+  "productId": 101,
+  "name": "Wireless Mouse",
+  "category": "Electronics",
+  "price": 29.99,
+  "inStock": true,
+  "ratings": 4.5
+}
+1.Status Code
+Expect 200 OK → product exists
+
+2.Response Body
+productId is 101 ✅
+price is a number ✅
+inStock is true/false ✅
+ratings is float ✅
+
+3.Headers
+Content-Type: application/json ✅
+Authorization not leaked in response ✅
+
+4.Negative Testing
+GET product with invalid ID → Expect 404 Not Found
+GET product without token → Expect 401 Unauthorized
+
+5.Optional Checks
+Response time < 2 seconds ✅
+Schema validation against Swagger / OpenAPI ✅
+--------------------------------------------------
+To validate an API response, I check status code, response body and data types, headers, error scenarios, and optionally performance and schema compliance. For example, in an e-commerce GET product API, I would verify that the correct product details, price, and stock information are returned as expected.
 ===========================================================================================================
 11. What is Postman and why is it widely used in API testing?
 
-Postman is an API development and testing tool that allows testers and developers to send requests to APIs,
-analyze responses, and automate test scenarios.
+Postman is an API development(Back end Dev can create mock API and test) and testing tool that allows testers and developers to send requests to APIs,analyze responses, and automate test scenarios.
+
 Why it’s popular:
 • User-friendly UI – Even beginners can quickly send API requests.
 • Supports multiple protocols – HTTP, HTTPS, WebSocket, gRPC.
@@ -1282,8 +1386,8 @@ for re-use.
 ===========================================================================================================
 12. Explain the structure of a request in Postman.
 A request in Postman typically consists of:
-• Method (GET, POST, PUT, DELETE, PATCH)
-• URL/Endpoint (e.g., https://api.example.com/users)
+• Request Method (GET, POST, PUT, DELETE, PATCH)
+• URL/Endpoint (e.g., https://api.example.com/users:Protocol + Domain + Path + Query Parameters)
 • Headers (e.g., Content-Type: application/json)
 • Body (Raw JSON, Form-data, GraphQL query, etc.)
 • Authorization (Basic, Bearer Token, OAuth, etc.)
@@ -1298,11 +1402,14 @@ Importance:
 • Supports documentation generation.
 Example: You can create a User Management collection containing APIs for creating, updating, deleting, and
 retrieving users.
-
+E-commerce Collection
+ ├── Products API
+ ├── Orders API
+ ├── Payments API
+ └── Users API
 =========================================================================
 14. What are environments in Postman?
-Environments in Postman allow you to store and switch between sets of variables for different API contexts
-(Dev, Staging, Production).
+Environments in Postman allow you to store and switch between sets of variables for different API contexts (Dev, Staging, Production).
 Example:
 • Dev Base URL: https://dev.api.example.com
 • Prod Base URL: https://api.example.com
@@ -2213,13 +2320,14 @@ Cart icon count updates
 Price displayed
 Success message shown
 👉 UI only displays what API confirms
+===================================================
+Q.
+Pre-request and test scripts using JavaScript.
 
-
-
+====================================================
 updated on 23-12-2025
 updated on 24-12-2025 @17.25
 updated on 26-12-2025 @18.14
-
 updated on 27-12-2025@18.22
 
 
