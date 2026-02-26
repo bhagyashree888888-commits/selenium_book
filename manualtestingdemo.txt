@@ -2223,16 +2223,120 @@ pm.test("Schema valid", function() {
 • Use common pre-request & test scripts in globals
 • Version control collections.
 
+//int:
+I manage large Postman collections by organizing them into folders, using variables for reusability, moving common logic to collection-level scripts, modularizing collections, and maintaining them in version control. This improves scalability, readability, and CI execution efficiency.
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//Use Collection Variables :
+Avoid hardcoding values.
+Use:
+base_url
+tokens
+userId
+➡️ Makes requests reusable across environments
+| Variable | Initial Value (Dev)                                  | Initial Value (QA)                                 |
+| -------- | ---------------------------------------------------- | -------------------------------------------------- |
+| base_url | [https://dev.shop.com/api](https://dev.shop.com/api) | [https://qa.shop.com/api](https://qa.shop.com/api) |
+| token    | (leave blank)                                        | (leave blank)                                      |
+| userId   | (leave blank)                                        | (leave blank)                                      |
+Step 2: Login API
+Request:
+POST
+{{base_url}}/auth/login
+{
+  "email": "testuser@gmail.com",
+  "password": "123456"
+}
+//Move Common Logic to Pre-request Scripts:
+🛒 Example: Auto Generate Auth Token (E-commerce API)
+In almost every e-commerce system:
+➡️ Add to Cart
+➡️ Place Order
+➡️ View Orders
+➡️ Update Address
+
+All need:
+✅ Authorization Token :
+Instead of generating token in every request ❌
+We generate it once at collection level ✅
+if (!pm.environment.get("authToken")) {
+
+    pm.sendRequest({
+        url: pm.environment.get("baseUrl") + "/login",
+        method: 'POST',
+        header: {
+            'Content-Type': 'application/json'
+        },
+        body: {
+            mode: 'raw',
+            raw: JSON.stringify({
+                email: "testuser@gmail.com",
+                password: "Password123"
+            })
+        }
+    }, function (err, res) {
+        if (!err) {
+            let json = res.json();
+            pm.environment.set("authToken", json.token);
+        }
+    });
+}
+set value:
+{{authToken}}
 ===========================================================================
 98. How do you test APIs with complex JSON structures?
 
 • Use pm.response.json() to parse.
 • Use lodash in scripts to navigate deep fields:
 
-javascript
-CopyEdit
 let value = _.get(pm.response.json(), 'data.user.details.email');
 
+//int:
+To test APIs with complex JSON structures, I validate the schema, use JSON path for nested fields, verify dynamic data types, check array structures, and focus on critical business logic instead of full response matching. This ensures both structural integrity and functional correctness
++++++++++++++++++++++++++++++++++++++++++++++++
+//meaning:
+//validate schema
+This ensures:
+✔ Required fields exist
+✔ Data types are correct
+✔ Nested objects follow expected format
+
+Example checks:
+user.id → number
+user.address.city → string
+orders → array
+
+//check nested values like:
+response.orders[0].items[2].price
+response.user.profile.email
+This helps verify:
+✔ Correct values
+✔ Correct hierarchy
+
+//validate dynamic data seperately:
+Complex JSON often includes:
+IDs
+timestamps
+tokens
+
+Instead of exact match, I validate:
+✔ Type
+✔ Format
+✔ Pattern
+
+Example:
+ID is present
+Date is ISO format
+Email matches pattern
+
+//partial assertions:
+So instead of validating full response, I check:
+✔ Critical fields
+✔ Business logic values
+
+Example:
+orderStatus = "CONFIRMED"
+totalAmount > 0
 ===========================================================================
 99. How do you keep Postman environments in sync across teams?
 
@@ -2240,14 +2344,52 @@ let value = _.get(pm.response.json(), 'data.user.details.email');
 • Use Postman workspaces for live sync.
 • Keep secrets in separate secure environments
 
+//int:
+To keep Postman environments in sync, we maintain a shared team workspace with a single source , store environment files in Git for version control, enforce usage via CI pipelines, and manage secrets separately using secure variables. This ensures consistency across teams and prevents configuration drift.
++++++++++++++++++++++++
+//usage via ci pipeline means :Enforcing via CI pipeline means API tests are executed using a centralized environment file stored in version control, ensuring all builds run against the same configuration instead of relying on individual local setups.
 ===========================================================================
 100. If an API test fails in CI/CD, how do you troubleshoot?
 
-1. Check request/response logs from Newman.
-2. Compare environment variables in local vs CI/CD.
-3. Validate authentication & endpoint availability.
-4. Retry manually in Postman to isolate the issue.
+we analyze the CI pipeline logs where Newman outputs request, response, and assertion details.
+These logs help us identify whether the failure is due to authentication, environment configuration, test data, or backend issues.
+and Retry manually in Postman to isolate the issue.
+----------------------------------------------------
+eg.
+POST /api/orders
+//API CI-CD test fail output response:
+📉 CI Log Snippet
+Step 4/10 : Running API Tests...
 
+✔ Login API Test - Passed
+✔ Get Products API Test - Passed
+✖ Create Order API Test - Failed
+
+Reason:
+Expected: 201
+Received: 500
+
+Response Time: 3245ms
+//500:It means the server tried to process your request but something broke on the server, and it couldn't complete it.
+------------------------------------------------------
+When an API test fails in CI/CD, I first analyze the failure output like status code, error message, and logs.
+For example, if a Create Order API expected 201 but returns 500 with "Database connection failed", I know the issue is backend or infra — not test logic.
+Based on failure type (401, 404, 500, timeout), I narrow down whether it's auth, config, data, or dependency issue.
+
+When pipeline runs:
+CI (Jenkins / GitHub Actions / GitLab)
+        ↓
+Runs Newman command
+        ↓
+Newman executes Postman tests
+        ↓
+Outputs logs to CI console
+        ↓
+Build fails if assertions fail
+
+So you're still checking Newman results…
+
+…but through CI logs.
 ===========================================================================
 Example Real-time “Add to Cart” flow (API + UI):
 1️⃣ User clicks “Add to Cart” (UI)
