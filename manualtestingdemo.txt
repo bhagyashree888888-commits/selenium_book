@@ -2471,11 +2471,27 @@ updated on 23-12-2025
 updated on 24-12-2025 @17.25
 updated on 26-12-2025 @18.14
 updated on 27-12-2025@18.22
+updated on 28-02-2025@18.08
 
 
 
 
 
+Q. what are different asserations you used?
+parameter vs body 
+how will you debug 401 error in postman
+how will you validate the response contains list of users
+few senarios  with respect to MOVE OUT process in SAP
+TEST SENARIOS FOR billing and invoices
+every day test senarios:depends on complexity and range of test senarios
+how do you create a defect in jira(w.r.to.api testing):summary,steps to reproduce
+assetion library:chai.js
+which status code you have faced in your project
+API payment gateway:they ceated 2 api's lie (mock intevie ,real interview) simulation of ral api by mock api :this pariculate api is not accessible in test env so I took this different route ,this conditional sign off I will giving.
+large volume of test data how will you handle this
+different chanllenages you have faced during api testing:when we have so much of data ,and putting with different combinations of parameters,and then createing a +/-ve senarios is a big challenge,constuct a json payload with different different data to muchif documentation is also if not proper,validatin of too mch data in json,ceating  complex pojo class is also a chanllage
+what is pojo class:it is a data member,with getter,setter method used for serliation and deserlization here serlization is to send a payload and deseriation is for validating the respose
+how will do a concurrent api(trascation,user login) :i will check how uch 1 user will tak tm compare to 100 user response time , i will ask to Business Analysts or Project management teams what is the expcted time that it should take  
 
 
 
