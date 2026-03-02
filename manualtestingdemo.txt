@@ -1,3 +1,84 @@
+
+E-Commerce API Collection
+│
+├── 🔐 Auth APIs
+│   ├── Register User – (Valid details → 201 Created)
+│   ├── Login User – (Valid credentials → 200 OK)
+│   ├── Logout User – (Valid token → 200 OK)
+│   ├── Refresh Token – (Valid refresh token → 200 OK)
+│   ├── Forgot Password – (Registered email → 200 OK)
+│   └── Reset Password – (Valid reset token → 200 OK)
+│
+├── 👤 User APIs
+│   ├── Get All Users – (Authorized admin → 200 OK)
+│   ├── Get User By ID – (Valid user ID → 200 OK)
+│   ├── Update User – (Valid data → 200 OK)
+│   ├── Delete User – (Valid user ID → 204 No Content)
+│   ├── Update Profile Image – (Valid image file → 200 OK)
+│   └── Change Password – (Correct old password → 200 OK)
+│
+├── 🛍️ Product APIs
+│   ├── Add Product – (Valid product data → 201 Created)
+│   ├── Get All Products – (Products exist → 200 OK)
+│   ├── Get Product By ID – (Valid product ID → 200 OK)
+│   ├── Update Product – (Valid product update → 200 OK)
+│   ├── Delete Product – (Valid product ID → 204 No Content)
+│   ├── Search Product – (Matching keyword → 200 OK)
+│   └── Filter Products – (Valid filter parameters → 200 OK)
+│
+├── 📂 Category APIs
+│   ├── Create Category – (Valid category data → 201 Created)
+│   ├── Get All Categories – (Categories available → 200 OK)
+│   ├── Update Category – (Valid category ID → 200 OK)
+│   └── Delete Category – (Valid category ID → 204 No Content)
+│
+├── 🛒 Cart APIs
+│   ├── Add To Cart – (Valid product & quantity → 200 OK)
+│   ├── Get Cart Items – (User has cart items → 200 OK)
+│   ├── Update Cart Item – (Valid quantity update → 200 OK)
+│   ├── Remove Cart Item – (Valid cart item → 200 OK)
+│   └── Clear Cart – (Cart exists → 200 OK)
+│
+├── 📦 Order APIs
+│   ├── Create Order – (Valid cart & address → 201 Created)
+│   ├── Get All Orders – (Authorized admin → 200 OK)
+│   ├── Get Order By ID – (Valid order ID → 200 OK)
+│   ├── Update Order Status – (Valid status update → 200 OK)
+│   ├── Cancel Order – (Order in cancellable state → 200 OK)
+│   └── Order History – (User has previous orders → 200 OK)
+│
+├── 💳 Payment APIs
+│   ├── Create Payment – (Valid order & payment method → 201 Created)
+│   ├── Verify Payment – (Valid transaction ID → 200 OK)
+│   ├── Payment Status – (Valid payment ID → 200 OK)
+│   └── Refund Payment – (Eligible order → 200 OK)
+│
+├── 🚚 Shipping APIs
+│   ├── Add Shipping Address – (Valid address → 201 Created)
+│   ├── Update Shipping Address – (Valid address ID → 200 OK)
+│   ├── Get Shipping Address – (Existing address → 200 OK)
+│   └── Track Shipment – (Valid tracking ID → 200 OK)
+│
+├── ⭐ Review & Rating APIs
+│   ├── Add Review – (Valid order & rating → 201 Created)
+│   ├── Get Product Reviews – (Product has reviews → 200 OK)
+│   ├── Update Review – (Valid review ID → 200 OK)
+│   └── Delete Review – (Valid review ID → 204 No Content)
+│
+├── 🎟️ Coupon APIs
+│   ├── Create Coupon – (Valid coupon data → 201 Created)
+│   ├── Apply Coupon – (Valid coupon code → 200 OK)
+│   ├── Remove Coupon – (Coupon applied → 200 OK)
+│   └── Validate Coupon – (Valid coupon code → 200 OK)
+│
+└── 📊 Admin APIs
+    ├── Dashboard Stats – (Authorized admin → 200 OK)
+    ├── Manage Users – (Valid admin action → 200 OK)
+    ├── Manage Orders – (Valid admin action → 200 OK)
+    ├── Manage Products – (Valid admin action → 200 OK)
+    └── Sales Report – (Valid date range → 200 OK)
+
+
 1. What is API testing and why is it important?
 API testing is the process of verifying that Application Programming Interfaces work as intended.
 It ensures not only that APIs return the correct data, but also that they meet functional, performance, and security requirements. 
@@ -2119,16 +2200,15 @@ npm install -g newman-reporter-html
 
 Run with:
 
-bash
-CopyEdit
 newman run collection.json -r html
 ===========================================================================
 84. How do you schedule Postman collections to run automatically?
 Options:
-
 • Use Newman + cron jobs on a server.
 • Use Postman Monitors (cloud execution on a schedule).
 • Integrate with Jenkins to run daily/nightly.
+//int:
+“The DevOps team handled the scheduled pipeline configuration. My role was focused on API test design and execution within Postman.
 
 ==========================================================================
 85. How do you pass dynamic environment variables in CI/CD?
@@ -2137,25 +2217,35 @@ Options:
 • Override variables with --env-var flag in Newman:
 
 newman run collection.json --env-var baseUrl=https://staging.api.com
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+environment {
+    BASE_URL = 'https://qa-api.example.com'
+}
+“In Jenkins, I define environment variables directly in the pipeline using the environment block, for example setting BASE_URL to the QA API endpoint. Then I pass that variable to the Newman command during execution, which allows the same collection to run dynamically against different environments without modifying the collection itself.”
 ===========================================================================
 86. How do you run specific folders or requests from a collection in CI/CD?
 
 newman run collection.json --folder "User APIs"
 
 Useful when only a subset of tests needs to run.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+We can parameterize the folder name in the pipeline so that different test suites can be triggered dynamically based on the deployment or feature being tested.
 ===========================================================================
 87. How do you integrate Postman with version control (Git)?
 
 • Export collections as JSON and commit to Git.
 • Or use Postman API to sync and fetch latest collection before running.
 • Enables collaboration and CI/CD trigger on changes.
-
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+To integrate Postman with Git, I export Postman collections and environment files as JSON and commit them to the Git repository. This allows version tracking, collaboration among team members, and easy rollback if needed. In some cases, we also use the Postman API to fetch the latest collection dynamically before execution in CI/CD pipelines. This setup ensures that any changes to the collection trigger automated test execution through the CI process.
 ==========================================================================
 88. How do you test APIs automatically after deployment?
 
 • Add Newman run step post-deploy in CI/CD.
 • Run smoke tests on deployed environment to ensure it’s live.
 • Fail pipeline if smoke test fails.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+To test APIs automatically after deployment, I add a Newman execution step in the CI/CD pipeline immediately after the deployment stage. Once the application is deployed to the target environment, such as QA or staging, the pipeline triggers Postman collections using Newman to run smoke tests against the deployed APIs. These smoke tests verify that critical endpoints are live and functioning correctly. If any of the smoke tests fail, the pipeline is configured to fail the build, preventing further promotion to higher environments. This ensures that deployments are validated automatically before release.
 
 ===========================================================================
 89. How do you run Postman collections in parallel?
@@ -2163,12 +2253,31 @@ Newman doesn’t support native parallelism, but:
 
 • Use newman-reporter-htmlextra with concurrent test runners.
 • Or split collections into multiple smaller ones and run in parallel in CI/CD.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Since our project was already integrated with Jenkins CI/CD, using parallel stages was easier to manage, monitor, and maintain compared to background shell execution.
+//eg:
+parallel {
+    stage('Auth Tests') {
+        steps {
+            sh 'newman run auth_collection.json'
+        }
+    }
+    stage('Order Tests') {
+        steps {
+            sh 'newman run order_collection.json'
+        }
+    }
+}
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+“There are multiple ways to run Postman collections in parallel, such as using Newman commands, configuring parallel stages in Jenkins, setting up parallel jobs in GitHub Actions, or splitting collections into smaller modules. In my project, I implemented the Jenkins parallel stage method. I divided the main collection into feature-based collections and configured parallel stages in the Jenkins pipeline, where each stage executed a Newman command simultaneously. This significantly reduced execution time and improved CI pipeline efficiency.
 ===========================================================================
 90. How do you publish API test results to a dashboard?
 
 • Export Newman results as JUnit XML.
 • Feed XML into CI/CD dashboards (Jenkins, Azure).
 • Or use custom reporters for HTML dashboards.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+generally the Postman collection is exported and stored in the repository. In Jenkins pipeline, I configure Newman to run the collection using the file path and environment file. Newman generates HTML or JUnit reports, which Jenkins publishes on the dashboard. Based on test results, the build status is marked as pass or fail.
 
 ===========================================================================
 91. What are API testing best practices?
@@ -2185,6 +2294,8 @@ Newman doesn’t support native parallelism, but:
 • Use variables for base URLs, tokens, IDs.
 • Use scripts for reusable logic.
 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+“To ensure API tests are maintainable, I structure collections properly, use environment variables instead of hardcoded values, implement reusable test scripts at collection level, apply schema validation, and use pre-request scripts for dynamic data handling. I also follow naming conventions, implement data-driven testing, and integrate tests into CI/CD pipelines using Newman. This approach keeps tests scalable, reusable, and easy to maintain.”
 ===========================================================================
 93. What is schema validation and why is it important?
 
@@ -2195,13 +2306,58 @@ Example:
 pm.test("Schema valid", function() {
  pm.response.to.have.jsonSchema(schema);
 });
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+1.Open Postman
+2.Select your API (example: GET /users/1) :click send
+3.Below the request URL, click:
+Tests
+4.Paste this inside the Tests tab:
+const schema = {
+    "type": "object",
+    "properties": {
+        "id": { "type": "number" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "isActive": { "type": "boolean" }
+    },
+    "required": ["id", "name", "email", "isActive"]
+};
+
+pm.test("Schema valid", function () {
+    pm.response.to.have.jsonSchema(schema);
+});
+5.Now click Send again.
+If schema matches:
+✅ Test will show PASS (green)
+If schema does NOT match:
+❌ Test will show FAIL (red)
 ===========================================================================
 94. What’s the difference between smoke, regression, and load testing in APIs?
 
 • Smoke: Quick check if API works.
 • Regression: Check all functionality after changes.
 • Load: Test performance under expected traffic.
+Response time
+Server stability
+Throughput
+Error rate
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+In smoke testing, you check:
+Login works → 200 OK
+Get users works → 200 OK
+Create order works → 201 Created
+You do NOT test edge cases or heavy data — just basic success flow.
 
+Assume developer added a new discount feature in orders API.
+Create Order API (POST /orders) :
+Since discount feature was added, re-test:
+Create order without discount → 201 Created
+Create order with valid discount → 201 Created
+Invalid discount code → 400 Bad Request
+Price calculation correct
+Tax calculation correct
+Payment API still working
+👉 Ensure new logic didn’t break old order flow.
 ===========================================================================
 95. What are common mistakes in Postman testing?
 
@@ -2215,6 +2371,46 @@ pm.test("Schema valid", function() {
 • Test with expired tokens.
 • SQL injection & XSS payload checks in inputs.
 • Validate HTTPS is enforced.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+“In Postman, I follow a structured approach to API security testing covering authentication, authorization, validation, and data protection.”
+1️⃣ Authentication Testing
+I validate different authentication mechanisms like Bearer tokens (JWT), API keys, Basic Auth, and OAuth 2.0.
+I test:
+Valid token → Expect 200 OK
+Expired or invalid token → Expect 401 Unauthorized
+Missing token → Should not allow access
+This ensures proper identity verification.
+
+2️⃣ Authorization Testing (Role-Based Access)
+I verify role-based access control by testing endpoints with different user roles.
+For example:
+Normal user accessing admin endpoint → Should return 403 Forbidden
+Admin accessing same endpoint → Should return 200 OK
+This confirms proper access restrictions.
+
+3️⃣ Input Validation Testing
+I test APIs against malicious inputs like:
+SQL Injection (' OR '1'='1)
+XSS payloads (<script>alert(1)</script>)
+The API should sanitize inputs and return validation errors without exposing data.
+
+4️⃣ Rate Limiting Testing
+Using Postman Collection Runner, I send multiple rapid requests to check if the API enforces rate limits.
+If implemented correctly, it should return 429 Too Many Requests after exceeding the threshold.
+
+5️⃣ Sensitive Data Exposure Check
+I review API responses to ensure they do NOT expose:
+Passwords
+Tokens
+Credit card details
+Internal server errors or stack traces
+Error messages should be generic, like “Invalid credentials,” instead of revealing database details.
+
+6️⃣ HTTPS Verification
+I ensure all APIs are accessed over HTTPS to protect data in transit and prevent man-in-the-middle attacks.
+Ensure the API URL starts with https:
+✅ https://api.example.com/users
+❌ http://api.example.com/users
 ===========================================================================
 
 97. How do you manage large Postman collections efficiently?
