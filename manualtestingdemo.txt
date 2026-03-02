@@ -2173,10 +2173,12 @@ Postman now supports gRPC:
 • Select method to test.
 • Send request with parameters.
 • Validate response fields
-
+//eg:
+//We get the .proto file from the backend team or project repository
+Import the .proto file in Postman, select CheckDriverStatus, send driverId, and validate the response status like "available" or "onTrip".
 ===========================================================================
-81. How do you integrate Postman tests into CI/CD pipelines?
-
+81. How do you integrate Postman tests into CI/CD pipelines?           Q.87
+ 
 • Export Postman collection & environment as JSON.
 • Install Newman (Postman CLI).
 • In CI/CD (Jenkins, GitHub Actions, Azure DevOps), add a step to run:
@@ -2201,6 +2203,8 @@ npm install -g newman-reporter-html
 Run with:
 
 newman run collection.json -r html
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+HTML reports can be generated either through Newman command execution in the build script or by publishing the generated report using post-build configuration in Jenkins.
 ===========================================================================
 84. How do you schedule Postman collections to run automatically?
 Options:
@@ -2668,7 +2672,7 @@ updated on 24-12-2025 @17.25
 updated on 26-12-2025 @18.14
 updated on 27-12-2025@18.22
 updated on 28-02-2025@18.08
-
+updated on 02-03-2025@18.08
 
 
 
@@ -2687,7 +2691,11 @@ API payment gateway:they ceated 2 api's lie (mock intevie ,real interview) simul
 large volume of test data how will you handle this
 different chanllenages you have faced during api testing:when we have so much of data ,and putting with different combinations of parameters,and then createing a +/-ve senarios is a big challenge,constuct a json payload with different different data to muchif documentation is also if not proper,validatin of too mch data in json,ceating  complex pojo class is also a chanllage
 what is pojo class:it is a data member,with getter,setter method used for serliation and deserlization here serlization is to send a payload and deseriation is for validating the respose
-how will do a concurrent api(trascation,user login) :i will check how uch 1 user will tak tm compare to 100 user response time , i will ask to Business Analysts or Project management teams what is the expcted time that it should take  
+how will do a concurrent api(trascation,user login) :i will check how uch 1 user will tak tm compare to 100 user response time , i will ask to Business Analysts or Project management teams what is the expcted time that it should take
+write code for status code
+if you handling 2 api req and 1 api req take too much time how you would handle it in postman
+which postman version you are using :it already configured I not able to recall
+  
 
 
 
