@@ -1,0 +1,59 @@
+14.
+Environments in Postman are sets of variables used to manage different API configurations like dev, staging, and production. 
+They allow us to parameterize values such as base URLs, tokens, API keys, or user IDs. 
+By switching environments, the same request can run against different systems without modifying the request itself. 
+This makes API testing reusable, maintainable, and safer when working across multiple deployments.
+//Suppose we have an API request:
+GET {{base_url}}/users
+
+Now we can define variables in different environments:
+Development Environment :
+base_url = https://dev.api.com
+
+Production Environment :
+base_url = https://api.com
+
+When we switch the environment in Postman, the same request will automatically call the correct API without changing the request manually.
+Tip for interview (important):
+End with this line to sound experienced:
+This helps teams avoid hardcoding values and allows easier API testing across multiple environments.
+
+15.
+| Variable Type | Scope                 | Example    |
+| ------------- | --------------------- | ---------- |
+| Global        | Entire workspace      | base_url = https://api.company.com → 
+					  Used by many APIs like {{base_url}}/users, {{base_url}}/products, {{base_url}}/orders.
+
+| Collection    | One collection        | api_version = v1 inside a User Management Collection → Requests use 
+					  {{base_url}}/{{api_version}}/users or 						  								  {{base_url}}/{{api_version}}/createUser.
+
+| Environment   | Specific environment  | base_url = https://dev.company.com in Dev Environment and 
+					  base_url = https://prod.company.com in Production Environment → 
+					  Request: {{base_url}}/login. Switching environment changes the server automatically
+
+| Local         | Inside script/request | {
+  						"token": "abc123xyz789",
+  						"userId": 45,
+  						"username": "john"
+							}
+						let token = pm.response.json().token;//token = "abc123xyz789"
+
+| Data          | From CSV/JSON runner  | CSV file contains username and password. Example row: john_doe,pass123 → 
+					  Request body: 
+					  { "username": "{{username}}", "password": "{{password}}" } so each row runs the request with different users.
+
+
+17.
+pm.test("Status code is 200", function () {
+ pm.response.to.have.status(200);
+});
+
+pm → Postman Sandbox API object
+pm.test() → function used to define a test case
+"Status code is 200" → test name / description
+function () {} → callback function where test logic runs
+pm.response.to.have.status(200) → assertion to verify response status code
+Property :Returns actual value,	Chainer Property:does not Returns actual value
+//console.log(pm);          // prints the pm object
+//console.log(pm.response); // prints the response object
+
