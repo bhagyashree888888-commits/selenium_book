@@ -100,42 +100,50 @@ key:"value"
 
 //basic egs:
 Post
-https://jsonplaceholder.typicode.com/posts
+https://api.sbi.co.in/accounts
 {
-  "title": "My First Post",
-  "body": "Learning CRUD API",
-  "userId": 101
+  "accountHolderName": "Riya Sharma",
+  "accountType": "Savings",
+  "initialDeposit": 500000
 }
 O/P: 201 Created 
+{
+  "accountId": 101,
+  "accountHolderName": "Riya Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
 
 GET 
-https://jsonplaceholder.typicode.com/posts/?userId=101
-O/P:{
-  "title": "My First Post",
-  "body": "Learning CRUD API",
-  "userId": 101
+https://api.sbi.co.in/accounts/101
+O/P:
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 500000
 }
 O/P: 200 OK
 
 Delete
-https://jsonplaceholder.typicode.com/posts/1
+https://api.sbi.co.in/accounts/101
 O/P:204 No Content
 
 PUT
-https://jsonplaceholder.typicode.com/posts/1
+https://api.sbi.co.in/accounts/101
 {
-  "id": 1,
-  "title": "Updated Title",
-  "body": "Updated Body",
-  "userId": 101
+  "accountId": 101,
+  "accountHolderName": "Riya Sharma",
+  "accountType": "Current",
+  "balance": 500000
 }
 O/P:200 OK
 204 NO Content (if no body returened)
 
 PATCH
-https://jsonplaceholder.typicode.com/posts/1
+https://api.sbi.co.in/accounts/101
 {
-  "title": "Partially Updated"
+  "balance": 8000 00
 }
 O/P:200 OK
 204 NO Content (if no body returened)
@@ -1293,22 +1301,208 @@ www.example.com  host
 | **200** | OK                    | Success      | `GET /users/1` → user data returned      |
 | **201** | Created               | Success      | `POST /users` → new user created         |
 | **204** | No Content            | Success      | `DELETE /users/1` → deleted successfully |
-| **301** | Moved Permanently     | Redirect     | Old URL → new URL                        |
+| **301** | Moved Permanently     | Redirect     | Old URL → new URL Permanent redirect     |
 | **302** | Found                 | Redirect     | Temporary redirect after login           |
-| **304** | Not Modified          | Redirect     | Cached data reused                       |
-| **400** | Bad Request           | Client Error | Missing required field                   |
-| **401** | Unauthorized          | Client Error | Token missing/expired                    |
+    303     See Other                              with ols api Account created successfully.
+						   Now check the account details using GET at the new URL.
+| **304** | Not Modified          | Redirect     | Cached data reused 
+						  SBI mobile app:You open Account Summary->App already has cached account data->App checks server 
+						  → "Did balance change?" ->Server responds 304 Not Modified
+						  ->App uses stored data instead of downloading again
+						 ✔ Saves bandwidth and improves performance
+                     									    |
+| **400** | Bad Request           | Client Error | Creating  Bank Account : Missing required field                   	
+				    		   Invalid input format
+                                                   Wrong parameter type
+                                                   Malformed JSON
+                                                   Validation failure
+
+| **401** | Unauthorized          | Client Error | no Authorization/missing/expired token in header sent.                  
+						   1️⃣ User opens Account Balance API
+						   2️⃣ But the login session expired
+						   3️⃣ App sends request without valid token
+						      Server response:
+						      401 Unauthorized
+						      Meaning → User must login again
+
 | **403** | Forbidden             | Client Error | User lacks permission                    |
-| **404** | Not Found             | Client Error | Resource ID not found                    |
-| **405** | Method Not Allowed    | Client Error | POST used instead of GET                 |
-| **409** | Conflict              | Client Error | Duplicate email registration             |
-| **422** | Unprocessable Entity  | Client Error | Validation failed                        |
-| **429** | Too Many Requests     | Client Error | Rate limit exceeded                      |
-| **500** | Internal Server Error | Server Error | Unhandled exception                      |
-| **502** | Bad Gateway           | Server Error | Downstream service failed                |
-| **503** | Service Unavailable   | Server Error | Server under maintenance                 |
+						   1.You open the Loan Section and try to apply for a Premium Loan, but your account is not eligible.
+						     You are not eligible for this service.
+						     Please contact the branch for more information.
+				                     403 Forbidden
+			                           2.You try to transfer ₹5,00,000, but your daily limit is ₹1,00,000.
+					             Transaction limit exceeded.
+						     Please try a smaller amount or update your limit.
+				                   3.KYC Not Completed
+						     User tries to open a Fixed Deposit.
+	                                             Please complete KYC to access this service.
+					             403 Forbidden
 
+| **404** | Not Found             | Client Error | Resource ID not found                    
+						   1.Account Number Does Not Exist
+						     GET
+						     https://api.sbi.co.in/accounts/9999
+					             404 Not Found 
+						    {
+  			                               "error": "Account not found"
+						    }
+							2.Transaction ID Not Found
+							Transaction 56789 was never created or does not exist.
+							resp:{
+							  "error": "Transaction not found"
+							}
+							✔ Meaning: Requested transaction record is not available.
+							3.API Endpoint Does Not Exist
+							GET
+							https://api.sbi.co.in/customerinfo/101
+							Problem :
+							Correct endpoint should be:
+							https://api.sbi.co.in/customers/101
+							Server Response :
+							404 Not Found
+							{
+							  "error": "Endpoint not found"
+							}
+							✔ Meaning: The API URL itself is incorrect.
 
+| **405** | Method Not Allowed    | Client Error | POST used instead of GET                 
+							1.Trying to Delete Account with Wrong Method:
+							POST
+							https://api.sbi.co.in/accounts/101
+							Server Response :
+							405 Method Not Allowed
+							{
+							  "error": "Method Not Allowed",
+							  "message": "POST method is not supported for this endpoint"
+							}
+							2.Trying to Create Account Using GET
+							3.Trying to Update Account with DELETE
+
+| **409** | Conflict              | Client Error | The request cannot be completed because it conflicts with the current state of the resource.
+							1️⃣ Creating an Account That Already Exists
+							POST
+							https://api.sbi.co.in/accounts
+							{
+  														"accountNumber": "1234567890",
+ 														 }
+							Server Response :
+							409 Conflict
+							{
+ 														 "error": "Conflict",
+ 														 "message": "Account already exists"
+							}
+							2️⃣ Registering a Mobile Number Already Linked
+							3️⃣ Two Users Updating the Same Data
+
+| **422** | Unprocessable Entity  | Client Error | The server understands the request and the JSON format is correct, but the data fails business validation 						   rules.
+							1️⃣ Minimum Balance Rule
+							POST
+							https://api.sbi.co.in/accounts
+							{
+  														"accountHolderName": "Rahul Sharma",
+  														"accountType": "Savings",
+  														"initialDeposit": 200
+							}
+							Server Response :
+							422 Unprocessable Entity
+							{
+  														"error": "Validation Failed",
+  														"message": "Minimum deposit for savings account is ₹1000"
+							}
+							2️⃣ Invalid Account Type
+							3️⃣ Transfer Amount Greater Than Balance
+
+| **429** | Too Many Requests     | Client Error | The client has sent too many requests in a short period of time, so the server limits or blocks further 						   requests.
+						   This is called Rate Limiting.
+							1️⃣ Checking Balance Too Many Times
+							GET
+							https://api.sbi.co.in/accounts/101
+							Situation :
+							User refreshes the balance API 100 times in 1 minute.
+							Server limit: 20 requests per minute
+							Server Response :
+							429 Too Many Requests
+							{
+  														"error": "Too Many Requests",
+  														"message": "Rate limit exceeded. Please try again later."
+							}
+							2️⃣ OTP Request Spam
+							3️⃣ Login Attempts Too Frequently
+
+| **500** | Internal Server Error | Server Error | 1️⃣ Database Connection Failure
+							GET
+							https://api.sbi.co.in/accounts/101
+							Situation :
+							Server tries to fetch data from the database, but the database server is down.
+							Server Response :
+							500 Internal Server Error
+							{
+  														"error": "Internal Server Error",
+ 														 "message": "Unable to retrieve account details"
+							}
+							2️⃣ Money Transfer Server Crash
+							3️⃣ Backend Application Bug
+
+| **502** | Bad Gateway           | Server Error | 1️⃣ Account Service Not Responding
+							Request
+							GET
+							https://api.sbi.co.in/accounts/101
+							Situation :
+							Architecture :
+							User → API Gateway → Account Service
+							But Account Service crashes or sends invalid response.
+							Server Response :
+							502 Bad Gateway
+							{
+ 							 "error": "Bad Gateway",
+ 							 "message": "Invalid response from account service"
+							}
+							2️⃣ Payment Service Failure During Transfer
+							Request
+							POST
+							https://api.sbi.co.in/transfer
+							{
+ 														 "fromAccount": 101,
+  														"toAccount": 102,
+  														"amount": 2000
+							}
+							Situation :
+							Gateway calls Payment Service, but it returns an invalid response.
+							502
+							{
+  														"error": "Bad Gateway",
+  														"message": "Payment service unavailable"
+							}
+							3️⃣ External Service Failure
+							Sometimes banking APIs call external services.
+							Example:
+							Aadhaar verification
+							Credit score service
+							Request :
+							POST
+							https://api.sbi.co.in/kyc/verify
+							Situation :
+							External Aadhaar service sends invalid response.
+
+| **503** | Service Unavailable   | Server Error | Server under maintenance or overloaded 
+							1️⃣ Server Maintenance
+							Request :
+							GET
+							https://api.sbi.co.in/accounts/101
+							Situation :
+							SBI servers are under scheduled maintenance.
+							Architecture:
+							User → API Gateway → Account Service
+							But Account Service is temporarily stopped.
+							Server Response :
+							503 Service Unavailable
+							{
+							  "error": "Service Unavailable",
+							  "message": "The service is currently under maintenance. Please try again later."
+							}
+							2️⃣ Too Many Users on Banking Server
+							3️⃣ Payment Service Temporarily Down
+               
 ==========================================================================
 8. What are headers in API requests and responses?
 Headers carry metadata — such as authentication tokens, content type, caching instructions.
@@ -1490,35 +1684,162 @@ E-commerce Collection
  └── Users API
 =========================================================================
 14. What are environments in Postman?
-Environments in Postman allow you to store and switch between sets of variables for different API contexts (Dev, Staging, Production).
-Example:
-• Dev Base URL: https://dev.api.example.com
-• Prod Base URL: https://api.example.com
-By changing the environment, you can run the same requests against different servers without editing the
-requests manually
+
+Environments in Postman are sets of variables used to manage different API configurations like dev, staging, and production. 
+They allow us to parameterize values such as base URLs, tokens, API keys, or user IDs. 
+By switching environments, the same request can run against different systems without modifying the request itself. 
+This makes API testing reusable, maintainable, and safer when working across multiple deployments.
+//Suppose we have an API request:
+GET {{base_url}}/users
+
+Now we can define variables in different environments:
+Development Environment :
+base_url = https://dev.api.com
+
+Production Environment :
+base_url = https://api.com
+
+When we switch the environment in Postman, the same request will automatically call the correct API without changing the request manually.
+Tip for interview (important):
+End with this line to sound experienced:
+This helps teams avoid hardcoding values and allows easier API testing across multiple environments.
 =========================================================================
 15. What are variables in Postman and how do you use them?
 Variables store reusable values to make tests dynamic.
-Types of variables:
-• Global – Available everywhere.
-• Collection – Limited to a collection.
-• Environment – Limited to an environment.
-• Local – Limited to a single request execution.
-Usage:
 
-{{baseUrl}}/users/{{userId}}
+| Variable Type | Scope                 | Example    |
+| ------------- | --------------------- | ---------- |
+| Global        | Entire workspace      | base_url = https://api.company.com → 
+					  Used by many APIs like {{base_url}}/users, {{base_url}}/products, {{base_url}}/orders.
 
-Here, baseUrl and userId can be stored in variables.
+| Collection    | One collection        | api_version = v1 inside a User Management Collection → Requests use 
+					  {{base_url}}/{{api_version}}/users or 						  								  				  {{base_url}}/{{api_version}}/createUser.
+
+| Environment   | Specific environment  | base_url = https://dev.company.com in Dev Environment and 
+					  base_url = https://prod.company.com in Production Environment → 
+					  Request: {{base_url}}/login. Switching environment changes the server automatically
+
+| Local         | Inside script/request | {
+  						"token": "abc123xyz789",
+  						"userId": 45,
+  						"username": "john"
+							}
+						let token = pm.response.json().token;//token = "abc123xyz789"
+
+| Data          | From CSV/JSON runner  | CSV file contains username and password. Example row: john_doe,pass123 → 
+					  Request body: 
+					  { "username": "{{username}}", "password": "{{password}}" } so each row runs the request with different users.
 
 =========================================================================
 16. What is the difference between Pre-request Script and Tests in Postman?
 
-• Pre-request Script: JavaScript code that runs before the request is sent.
-Example: Generating a timestamp or token before request execution.
+Pre-request scripts run before the API request to prepare dynamic data or authentication, while Tests run after the response to validate the API behavior and extract values for subsequent requests.
 
-• Tests: JavaScript code that runs after the response is received.
-Example: Validating that the status code is 200.
+Purpose:
+Prepare data required for the request
+Set or update environment/collection variables
+Generate dynamic values
 
+Common Use Cases:
+Generating authentication tokens
+Creating timestamps
+Generating random test data
+Encrypting request payload
+
+//pre-request eg:
+1️⃣ Generating Authentication Tokens
+Example: Create a Basic Auth token using Base64 encoding.
+
+let username = "testuser";
+let password = "test123";
+let token = btoa(username + ":" + password);
+pm.environment.set("auth_token", token);
+
+Then use it in the header:
+Authorization: Basic {{auth_token}}
+📌 Use case: APIs that require Basic Authentication.
+
+2️⃣ Creating Timestamps
+Example: Generate a current timestamp.
+
+let timestamp = new Date().toISOString();
+pm.environment.set("timestamp", timestamp);
+
+Example output:
+2026-03-08T10:30:45.123Z
+Use in request body:
+{
+  "transaction_time": "{{timestamp}}"
+}
+📌 Use case: Banking APIs often require transaction timestamp.
+
+3️⃣ Generating Random Test Data
+Example: Generate a random email and number.
+
+let randomNum = Math.floor(Math.random() * 10000);
+let email = "testuser" + randomNum + "@mail.com";
+pm.environment.set("random_email", email);
+
+Use in request:
+{
+  "email": "{{random_email}}"
+}
+📌 Use case: Avoid duplicate data during user registration testing.
+
+4️⃣ Encrypting Request Payload
+Example: Encrypt payload using CryptoJS (SHA256).
+
+let payload = "account=12345&amount=5000";
+let encrypted = CryptoJS.SHA256(payload).toString();
+pm.environment.set("encrypted_payload", encrypted);
+
+Example header/body:
+X-Signature: {{encrypted_payload}}
+📌 Use case: Secure APIs like payment or banking transactions.
+-----------------
+//test eg:
+Suppose you call an API to create a bank account in State Bank of India.
+
+1️⃣ API Request
+POST /api/accounts/create
+Request Body :
+{
+  "name": "Rahul Sharma",
+  "mobile": "9876543210",
+  "accountType": "Savings"
+}
+2️⃣ API Response from Server
+{
+  "accountId": "ACC102345",
+  "name": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 0,
+  "status": "Active"
+}
+3️⃣ What the Script Does
+let jsonData = pm.response.json();
+pm.environment.set("accountId", jsonData.accountId);
+
+This script will:
+1️⃣ Convert response to JSON
+2️⃣ Extract accountId from response
+3️⃣ Store it in an environment variable
+Stored value:
+accountId = ACC102345
+4️⃣ Using it in Next API
+
+Now you can use it in another request.
+
+Example: Check account details
+
+GET /api/accounts/{{accountId}}
+
+Example:
+
+GET /api/accounts/ACC102345
+---------------------------------------------------------------------------
+“Where do you usually write token generation logic?” 
+— the expected answer is Pre-request Script.
 ==========================================================================
 17. How do you write a basic test script in Postman?
 
@@ -1531,29 +1852,65 @@ pm.test("Response time is less than 500ms", function () {
  pm.expect(pm.response.responseTime).to.be.below(500);
 });
 
+pm → Postman Sandbox API object
+pm.test() → function used to define a test case
+"Status code is 200" → test name / description
+function () {} → callback function where test logic runs
+pm.response.to.have.status(200) → assertion to verify response status code
+Property :Returns actual value,	Chainer Property:does not Returns actual value
+//console.log(pm);          // prints the pm object
+//console.log(pm.response); // prints the response object
 ===========================================================================
 18. How do you send authentication credentials in Postman?
 
 Postman supports multiple authentication types:
 
-• Basic Auth – Username/password encoded in Base64.
-• Bearer Token – Token passed in Authorization header.
-• OAuth 1.0 / 2.0 – Secure authentication flows.
-• API Key – Passed in query params or headers.
+In Postman, authentication credentials can be sent through the Authorization tab, request headers, or request body depending on the API authentication mechanism. Common methods include Basic Auth, Bearer Token, API Key, and OAuth 2.0, and credentials are typically managed using environment variables for maintainability.
 
 Example for Bearer Token:
 Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 ===========================================================================
 19. What is Collection Runner in Postman?
 
-The Collection Runner allows you to run all requests in a collection in sequence.
-You can:
+Collection Runner in Postman is used to execute multiple API requests from a collection in sequence, enabling automated API testing and data-driven testing using external data files like CSV or JSON.
 
-• Pass external test data (CSV/JSON).
-• Repeat iterations.
-• View summary reports.
-Example: Running login → add product → checkout flow in one run.
+//“In real-time projects, we first test APIs manually with a few sample requests. After validation, we use data-driven testing with CSV or JSON files in Postman Collection Runner or Newman to run the APIs with multiple test data."
 
+//steps:
+Select the collection or folder you want to run.
+Choose Environment (if required).
+Upload CSV/JSON data file (optional for data-driven testing).
+Set Iterations (number of runs).
+
+//csv eg:
+1️⃣ Customer Account Creation:
+Bank needs to test account creation for many customers with different details.
+name,email,accountType
+Rahul,rahul@test.com,Savings
+Amit,amit@test.com,Current
+Neha,neha@test.com,Savings
+2️⃣ Loan Application Testing :
+This checks if the system correctly processes different loan amounts and loan types.
+customerName,loanAmount,loanType
+Rahul,500000,Home Loan
+Amit,200000,Personal Loan
+Neha,300000,Car Loan
+3️⃣ Fund Transfer API :
+fromAccount,toAccount,amount
+10001,20001,500
+10002,20005,2000
+10003,20010,10000
+This verifies that different transfer amounts and accounts work correctly.
+4️⃣ Login / Authentication Testing
+username,password
+user1@test.com,Pass123
+user2@test.com,Pass456
+user3@test.com,Pass789
+5️⃣ Transaction Testing:
+accountId,amount,type
+10001,500,Deposit
+10002,2000,Withdraw
+10003,10000,Deposit
 ==========================================================================
 20. What is Newman and why is it used?
 
@@ -2193,7 +2550,7 @@ newman run collection.json -e environment.json
 
 • CLI tool to run Postman collections without opening the UI.
 • Used in automation, CI/CD, and scheduled jobs.
-• Supports HTML, JSON, and JUnit reports.
+• Su pports HTML, JSON, and JUnit reports.
 ===========================================================================
 83. How do you generate HTML reports from Newman?
 Install reporter:
@@ -2673,6 +3030,7 @@ updated on 26-12-2025 @18.14
 updated on 27-12-2025@18.22
 updated on 28-02-2025@18.08
 updated on 02-03-2025@18.08
+updated on 09/03/2026@9.47
 
 
 
