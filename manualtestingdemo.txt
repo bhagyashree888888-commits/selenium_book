@@ -1914,7 +1914,8 @@ accountId,amount,type
 ==========================================================================
 20. What is Newman and why is it used?
 
-Newman is Postman’s command-line tool to run collections in automated pipelines.
+Newman is Postman’s command-line tool .
+It allows testers to execute Postman collections from the terminal or integrate them into CI/CD pipelines for automated API testing.
 
 Why use it:
 • Integrates Postman tests into CI/CD (Jenkins, GitLab CI).
@@ -1922,18 +1923,2110 @@ Why use it:
 • Executes tests without the Postman GUI.
 
 Command:
-newman run mycollection.json -e myenv.json
-
+newman run BankingAPICollection.json -e QA.json
+//QA.json:
+{
+ "base_url": "https://qa.bankapi.com",
+ "token": "abc123"
+}
 ===========================================================================
 21. How do you handle dynamic data in Postman tests?
 
-• Use pm.variables.set() to set a variable dynamically.
-• Store values from one response to use in another request.
+Dynamic data in Postman is handled using variables, pre-request scripts, response data extraction, and external data files to dynamically generate and pass values between API requests.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+1️⃣ Using Environment / Collection Variables
+
+Dynamic values like tokens, account IDs, timestamps are stored in variables and reused in other requests.
+Example :
+Extract accountId from response:
+
+let jsonData = pm.response.json();
+pm.environment.set("accountId", jsonData.accountId);
+
+Use it in another request:
+GET https://api.bank.com/accounts/{{accountId}}
+
+
+Post
+https://jsonplaceholder.typicode.com/posts
+{
+  "title": "My First Post",
+  "body": "Learning CRUD API",
+  "userId": 101
+}
+O/P: 201 Created 
+
+GET 
+https://jsonplaceholder.typicode.com/posts/?userId=101
+O/P:{
+  "title": "My First Post",
+  "body": "Learning CRUD API",
+  "userId": 101
+}
+O/P: 200 OK
+Delete
+https://jsonplaceholder.typicode.com/posts/1
+O/P:204 No Content
+
+PUT
+https://jsonplaceholder.typicode.com/posts/1
+{
+  "id": 1,
+  "title": "Updated Title",
+  "body": "Updated Body",
+  "userId": 101
+}
+O/P:200 OK
+204 NO Content (if no body returened)
+
+PATCH
+https://jsonplaceholder.typicode.com/posts/1
+{
+  "title": "Partially Updated"
+}
+O/P:200 OK
+204 NO Content (if no body returened)
+replace all eg with bankin so i get clear the concept 
+
+Here is the same CRUD concept using a Banking example instead of posts so it is easier to understand. 🏦
+
+Banking API CRUD Example
+1️⃣ Create Account (POST)
+Create a new bank account.
+
+Request
+
+POST
+https://api.bank.com/accounts
+
+{
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "initialDeposit": 5000
+}
+Response
+
+201 Created
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
+✔ Meaning: New bank account successfully created.
+
+2️⃣ Get Account Details (GET)
+Fetch account details using accountId.
+
+Request
+
+GET
+https://api.bank.com/accounts/101
+
+Response
+
+200 OK
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
+✔ Meaning: Account details retrieved successfully.
+
+3️⃣ Delete Account (DELETE)
+Delete/close a bank account.
+
+Request
+
+DELETE
+https://api.bank.com/accounts/101
+
+Response
+
+204 No Content
+
+✔ Meaning: Account deleted successfully.
+No response body returned.
+
+4️⃣ Update Full Account Details (PUT)
+Update all details of the account.
+
+Request
+
+PUT
+https://api.bank.com/accounts/101
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Current",
+  "balance": 7000
+}
+Response
+
+200 OK
+
+or
+
+204 No Content (if server does not return body)
+
+✔ Meaning: Entire account information replaced.
+
+5️⃣ Partial Update (PATCH)
+Update only some fields (not all).
+
+Request
+
+PATCH
+https://api.bank.com/accounts/101
+
+{
+  "balance": 8000
+}
+Response
+
+200 OK
+
+or
+
+204 No Content
+
+✔ Meaning: Only the balance was updated, other fields remain same.
+
+📌 Simple Way to Remember (for Interviews)
+Method	Meaning	Banking Example
+POST	Create new data	Create bank account
+GET	Retrieve data	Get account details
+PUT	Update entire data	Update full account info
+PATCH	Update partial data	Update only balance
+DELETE	Remove data	Close bank account
+✅ 1 line interview answer:
+
+CRUD operations in API mean Create (POST), Read (GET), Update (PUT/PATCH), and Delete (DELETE) used to manage resources like bank accounts or users.
+
+If you want, I can also show 1 real Banking API testing example in Postman (with test cases) — this is very useful for API Testing interviews. 🚀
+
+
+replace doamin with sbi
+
+Here is the same Banking CRUD example but replacing the domain with SBI so it looks like a real banking API example.
+
+SBI Banking API CRUD Example 🏦
+1️⃣ Create Account (POST)
+Create a new SBI bank account.
+
+Request
+
+POST
+https://api.sbi.co.in/accounts
+
+{
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "initialDeposit": 5000
+}
+Response
+
+201 Created
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
+✔ Meaning: New SBI account successfully created.
+
+2️⃣ Get Account Details (GET)
+Fetch account details using accountId.
+
+Request
+
+GET
+https://api.sbi.co.in/accounts/101
+
+Response
+
+200 OK
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
+✔ Meaning: Account details retrieved successfully.
+
+3️⃣ Delete Account (DELETE)
+Close/delete an SBI account.
+
+Request
+
+DELETE
+https://api.sbi.co.in/accounts/101
+
+Response
+
+204 No Content
+
+✔ Meaning: Account deleted successfully.
+No response body returned.
+
+4️⃣ Update Full Account Details (PUT)
+Update the entire account information.
+
+Request
+
+PUT
+https://api.sbi.co.in/accounts/101
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Current",
+  "balance": 7000
+}
+Response
+
+200 OK
+
+or
+
+204 No Content (if no body returned)
+
+✔ Meaning: Entire account details updated.
+
+5️⃣ Partial Update (PATCH)
+Update only some fields.
+
+Request
+
+PATCH
+https://api.sbi.co.in/accounts/101
+
+{
+  "balance": 8000
+}
+Response
+
+200 OK
+
+or
+
+204 No Content
+
+✔ Meaning: Only the balance updated.
+
+📌 Quick Memory Trick (Interview)
+Method	SBI Example
+POST	Create new SBI account
+GET	Get SBI account details
+PUT	Update entire account info
+PATCH	Update only balance
+DELETE	Close SBI account
+If you want, I can also show a complete SBI Banking API Collection structure like you use in Postman for interview explanation (very useful for API Testing interviews).
+
+
+ Moved Permanently   eg
+
+🔹 301 Moved Permanently (Example)
+Meaning:
+The requested resource has been permanently moved to a new URL.
+Clients (browser/Postman/API) should use the new URL in future requests.
+
+🏦 Banking Example (SBI API)
+Suppose SBI changed the API version.
+
+Old API Endpoint
+
+GET
+https://api.sbi.co.in/accounts/101
+
+Server Response
+
+301 Moved Permanently
+
+Location: https://api.sbi.co.in/v2/accounts/101
+✔ Meaning:
+The account API has been permanently moved to version v2.
+
+🔹 New Correct Request
+GET
+https://api.sbi.co.in/v2/accounts/101
+
+Response
+
+200 OK
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
+📌 Simple Interview Answer
+301 Moved Permanently means:
+
+The resource has been permanently moved to another URL, and the client should use the new URL for future requests.
 
 Example:
-let userId = pm.response.json().id;
-pm.environment.set("userId", userId);
+https://api.sbi.co.in/accounts/101 → moved to → https://api.sbi.co.in/v2/accounts/101.
 
+If you want, I can also explain 302, 307, and 308 redirect status codes with banking examples (these are commonly asked in API testing interviews).
+
+
+https://api.sbi.co.in/accounts/101 
+what will be the output
+
+If you send a request to:
+
+GET https://api.sbi.co.in/accounts/101
+
+Possible Output (Example Response)
+Status Code: 200 OK
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000,
+  "branch": "Nagpur Main Branch"
+}
+Meaning
+200 OK → Request successful
+
+The server returned the account details of customer with accountId 101.
+
+Response Fields Explanation
+Field	Meaning
+accountId	Unique account number
+accountHolderName	Name of the customer
+accountType	Type of account (Savings / Current)
+balance	Current account balance
+branch	Branch where account is opened
+In API Testing (What you verify)
+1️⃣ Status Code → 200 OK
+2️⃣ Response Time → within acceptable limit
+3️⃣ Response Body Fields → accountId, name, balance etc.
+4️⃣ Data Accuracy → values match expected data
+
+✅ Short interview explanation
+
+When a GET request is sent to /accounts/101, the server returns 200 OK with the account details of the user in JSON format.
+
+If you want, I can also show realistic Banking API error examples like
+
+404 Account Not Found
+
+401 Unauthorized
+
+403 Forbidden
+
+500 Internal Server Error
+
+These are very important for API testing interviews. 🚀
+
+
+so when 301 comes in this above senarios
+
+In the same scenario, 301 Moved Permanently will come when the API endpoint URL has been permanently changed.
+
+🏦 Example with SBI API
+Old Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Server Response
+301 Moved Permanently
+
+Location: https://api.sbi.co.in/v2/accounts/101
+Meaning
+The old endpoint /accounts is no longer used.
+
+SBI moved the API to a new version /v2/accounts.
+
+Client (browser/Postman/app) should use the new URL from now on.
+
+🔹 Correct Request After Redirect
+GET
+https://api.sbi.co.in/v2/accounts/101
+
+Response
+
+200 OK
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
+📌 Simple Way to Understand
+Situation	Status Code
+API works normally	200 OK
+API moved to new permanent URL	301 Moved Permanently
+API temporarily redirected	302 Found
+✅ Interview one-line answer
+
+301 Moved Permanently occurs when an API endpoint is permanently shifted to a new URL, and the server returns the new location in the response header.
+
+If you want, I can also explain 301 vs 302 vs 307 vs 308 in API testing with very simple examples (many interviewers ask this).
+
+
+GET
+https://api.sbi.co.in/accounts/101
+
+Server Response
+
+301 Moved Permanently
+create a picture of ui like that will apear in postman
+
+
+Image created
+•
+API request response - 301 Moved Permanently
+Generated image
+Generated image
+Generated image
+
+
+
+Share
+
+302
+
+302 Found (Temporary Redirect)
+Meaning:
+The requested resource is temporarily moved to another URL.
+The client should still use the original URL in the future because the change is not permanent.
+
+🏦 SBI Banking Example
+Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Server Response
+302 Found
+
+Location: https://temp.api.sbi.co.in/accounts/101
+✔ Meaning:
+The request is temporarily redirected to another server or URL.
+
+Example reasons:
+
+Maintenance
+
+Load balancing
+
+Temporary server migration
+
+What Postman Will Show
+In Postman you might see something like:
+
+Status: 302 Found
+
+Headers:
+
+Key		Value
+Location	https://temp.api.sbi.co.in/accounts/101
+Content-Type	application/json
+After Redirect
+Postman/browser may automatically send request to:
+
+https://temp.api.sbi.co.in/accounts/101
+
+Response:
+
+200 OK
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
+📌 Difference (Important for Interviews)
+Status Code	Meaning
+301	Permanent redirect
+302	Temporary redirect
+✅ Interview one-line answer
+
+302 Found means the resource is temporarily available at another URL, and the client should continue using the original URL for future requests.
+
+If you want, I can also show 401, 403, 404, 500 errors with SBI banking API examples (these are very commonly asked in API testing interviews).
+
+
+303,304
+
+Here are 303 and 304 status codes explained using the same SBI banking API example so the concept stays clear. 🏦
+
+303 See Other
+Meaning:
+After completing a request (usually POST/PUT), the server tells the client to fetch the result using a GET request from another URL.
+
+🏦 SBI Banking Example
+Request (Create Account)
+POST
+https://api.sbi.co.in/accounts
+
+{
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "initialDeposit": 5000
+}
+Server Response
+303 See Other
+
+Location: https://api.sbi.co.in/accounts/101
+✔ Meaning:
+Account created successfully.
+Now check the account details using GET at the new URL.
+
+Next Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Response:
+
+200 OK
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "balance": 5000
+}
+304 Not Modified
+Meaning:
+The requested resource has not changed since the last request, so the server does not send the data again.
+
+This helps in caching and saving bandwidth.
+
+🏦 SBI Banking Example
+First Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Response:
+
+200 OK
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "balance": 5000
+}
+Server also sends a header like:
+
+Last-Modified: Mon, 01 Mar 2026 10:00:00 GMT
+Second Request (Client asks if data changed)
+GET
+https://api.sbi.co.in/accounts/101
+
+Header sent by client:
+
+If-Modified-Since: Mon, 01 Mar 2026 10:00:00 GMT
+Server Response
+304 Not Modified
+
+✔ Meaning:
+Account data has not changed, so server does not send response body.
+
+The client can use cached data.
+
+📌 Quick Interview Table
+Status Code	Meaning	Example
+303	See other URL using GET	After account creation
+304	Data not changed	Use cached account data
+✅ Simple interview explanation
+
+303 See Other → Server redirects client to another URL using GET to retrieve result.
+
+304 Not Modified → Resource not changed, so server doesn't send data again.
+
+If you want, I can also explain 307 and 308 redirects (these are confusing but interviewers like asking them).
+
+
+304 give me any banking senario
+
+304 Not Modified – Banking Scenario 🏦
+Meaning:
+The resource has not changed since the last request, so the server does not send the response body again.
+The client (app/browser) should use the cached data.
+
+Example: Checking SBI Account Details
+1️⃣ First Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Response
+
+200 OK
+
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
+Response Headers:
+
+Last-Modified: Fri, 06 Mar 2026 10:00:00 GMT
+✔ Meaning:
+Account details returned and the last modification time is saved.
+
+2️⃣ Second Request (Client checks if data changed)
+GET
+https://api.sbi.co.in/accounts/101
+
+Client sends header:
+
+If-Modified-Since: Fri, 06 Mar 2026 10:00:00 GMT
+3️⃣ Server Response
+304 Not Modified
+
+✔ No response body returned.
+
+Meaning:
+
+Account details did not change
+
+Server tells client use previously cached data
+
+📌 Real Banking App Example
+Imagine the SBI mobile app:
+
+You open Account Summary
+
+App already has cached account data
+
+App checks server → "Did balance change?"
+
+Server responds 304 Not Modified
+
+App uses stored data instead of downloading again
+
+✔ Saves bandwidth and improves performance
+
+✅ Interview one-line answer
+
+304 Not Modified means the requested resource has not changed since the last request, so the server does not send the response body and the client uses cached data.
+
+
+400
+
+400 Bad Request – Banking Scenario 🏦
+Meaning:
+The server cannot process the request because it is invalid or malformed.
+Usually happens when required data is missing or incorrect.
+
+Example: Creating SBI Bank Account
+Request
+POST
+https://api.sbi.co.in/accounts
+
+{
+  "accountHolderName": "",
+  "accountType": "Savings",
+  "initialDeposit": -500
+}
+Problem in Request
+accountHolderName → empty
+
+initialDeposit → negative value
+
+These are invalid inputs.
+
+Server Response
+400 Bad Request
+
+{
+  "error": "Invalid request",
+  "message": "Account holder name cannot be empty and initial deposit must be greater than 0"
+}
+Another Banking Example
+Request
+GET
+https://api.sbi.co.in/accounts/abc
+
+Problem:
+
+abc is not a valid accountId (should be numeric).
+
+Response
+400 Bad Request
+
+{
+  "error": "Invalid accountId format"
+}
+📌 When 400 Happens (Common in API Testing)
+Missing required fields
+
+Invalid input format
+
+Wrong parameter type
+
+Malformed JSON
+
+Validation failure
+
+✅ Interview one-line answer
+
+400 Bad Request occurs when the client sends an invalid or malformed request that the server cannot process.
+
+If you want, I can also show 401 vs 403 vs 404 with banking examples, which is one of the most asked API testing interview questions.
+
+
+401
+
+401 Unauthorized – Banking Scenario 🏦
+Meaning:
+The request does not have valid authentication credentials.
+The user must login or provide a valid token/API key to access the resource.
+
+Example: Get SBI Account Details
+Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Headers:
+
+Authorization: Bearer invalid_token
+or no Authorization header sent.
+
+Server Response
+401 Unauthorized
+
+{
+  "error": "Unauthorized",
+  "message": "Authentication token is missing or invalid"
+}
+Another Banking Scenario
+Imagine the SBI mobile banking app:
+
+1️⃣ User opens Account Balance API
+2️⃣ But the login session expired
+3️⃣ App sends request without valid token
+
+Server response:
+
+401 Unauthorized
+
+Meaning → User must login again
+
+📌 Simple Difference
+Status Code	Meaning
+400	Bad request (invalid input)
+401	Not authenticated (login/token required)
+✅ Interview one-line answer
+
+401 Unauthorized occurs when the request does not contain valid authentication credentials like a token, API key, or login session.
+
+If you want, I can also explain 403 Forbidden vs 401 Unauthorized with a banking example (very commonly asked in interviews).
+
+
+403
+
+403 Forbidden – Banking Scenario 🏦
+Meaning:
+The user is authenticated (logged in) but does not have permission to access the resource.
+
+So the server understands the request but refuses to allow it.
+
+Example: Accessing Another Customer’s Account
+Request
+GET
+https://api.sbi.co.in/accounts/102
+
+Headers:
+
+Authorization: Bearer valid_token_of_user_101
+User 101 is logged in, but trying to access account 102 which belongs to another customer.
+
+Server Response
+403 Forbidden
+
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to access this account"
+}
+✔ Meaning:
+User is authenticated but not authorized.
+
+Real Banking Scenario
+In SBI Internet Banking:
+
+1️⃣ You login successfully
+2️⃣ Try to access admin API
+
+Example:
+
+GET
+https://api.sbi.co.in/admin/accounts
+
+Server Response:
+
+403 Forbidden
+
+Because normal users cannot access admin resources.
+
+📌 Important Difference (Interview)
+Status Code	Meaning
+401 Unauthorized	User not authenticated (login/token missing)
+403 Forbidden	User authenticated but not allowed
+✅ Interview one-line answer
+
+403 Forbidden occurs when the user is authenticated but does not have permission to access the requested resource.
+
+If you want, I can also show 404, 405, 409, and 500 errors with banking API examples, which helps a lot in API testing interviews.
+
+
+ but in sbi app it is not given :
+1️⃣ You login successfully
+2️⃣ Try to access admin API
+
+You are correct 👍 In the real SBI mobile app, users do not see admin APIs. Those APIs are internal and hidden. I used that only as an example to explain the concept.
+
+Let me give a more realistic banking scenario for 403 Forbidden.
+
+🏦 Realistic 403 Banking Scenario
+Situation
+You are logged into your SBI account with accountId = 101.
+
+Now you try to access another customer’s account.
+
+Request
+GET
+https://api.sbi.co.in/accounts/102
+
+Headers
+
+Authorization: Bearer valid_token_user_101
+Server Response
+403 Forbidden
+
+{
+  "error": "Forbidden",
+  "message": "You are not allowed to access this account"
+}
+Why 403 happens here
+✔ User is logged in (authenticated)
+✔ But trying to access someone else's bank account
+
+So the server blocks it.
+
+📱 Real-life Example in Banking Apps
+Example:
+
+1️⃣ You login to SBI app
+2️⃣ You try to open another customer's account statement link somehow
+3️⃣ Server checks account ownership
+4️⃣ Server returns 403 Forbidden
+
+📌 Simple way to remember
+Status	Meaning
+401	Not logged in
+403	Logged in but not allowed
+✅ Interview one-line answer
+
+403 Forbidden occurs when the user is authenticated but tries to access a resource they do not have permission for, such as another customer's bank account.
+
+If you want, I can also show 404, 405, 409, 415, 500 with simple banking examples.
+These 8–10 status codes cover almost all API testing interviews.
+
+
+no it is not possibile
+
+You’re right to question it 👍 — in normal use through the SBI app UI, it’s not possible for a user to access another customer’s account. The app prevents that.
+
+But 403 Forbidden is still possible at the API level. It usually happens when the server blocks an action due to permission rules. Here is a more realistic banking scenario.
+
+🏦 Scenario: Trying to Close Account Without Permission
+Request
+DELETE
+https://api.sbi.co.in/accounts/101
+
+Headers
+
+Authorization: Bearer valid_customer_token
+Situation
+User is logged in successfully
+
+But closing an account is allowed only for bank staff or special process
+
+Server Response
+403 Forbidden
+
+{
+  "error": "Forbidden",
+  "message": "You do not have permission to perform this operation"
+}
+Another Real Scenario
+Request
+POST
+https://api.sbi.co.in/admin/create-branch
+
+Normal customer token is used.
+
+Response
+403 Forbidden
+
+Because only admin/bank employees can create branches.
+
+📌 Key Idea
+Status Code	Meaning
+401	Not logged in / token missing
+403	Logged in but action not allowed
+✅ Interview answer
+
+403 Forbidden occurs when the client is authenticated but does not have permission to perform the requested action, such as attempting an operation restricted to administrators.
+
+If you want, I can also show the most realistic banking API testing flow (login → token → balance → transfer) which makes all status codes very easy to understand.
+
+
+study app and tell me in ui/ux side it is possible in real time
+
+Yes — from a UI/UX perspective in a real banking app, a 403 Forbidden situation can happen, but the user usually does not see “403 Forbidden” directly. The app shows a user-friendly message instead.
+
+Let’s see realistic cases in a banking app UI.
+
+🏦 Scenario 1: Feature Not Allowed for Your Account Type
+In the App (UI)
+You open the Loan Section and try to apply for a Premium Loan, but your account is not eligible.
+
+What User Sees
+You are not eligible for this service.
+Please contact the branch for more information.
+Backend API Response
+403 Forbidden
+✔ Meaning:
+User is logged in but not permitted to use that feature.
+
+🏦 Scenario 2: Transaction Limit Exceeded
+In the App
+You try to transfer ₹5,00,000, but your daily limit is ₹1,00,000.
+
+UI Message
+Transaction limit exceeded.
+Please try a smaller amount or update your limit.
+API Response
+403 Forbidden
+✔ Because the action is not allowed by policy.
+
+🏦 Scenario 3: KYC Not Completed
+In the App
+User tries to open a Fixed Deposit.
+
+UI Message
+Please complete KYC to access this service.
+API Response
+403 Forbidden
+📱 Important UI/UX Rule in Real Apps
+Users never see raw HTTP codes like:
+
+403 Forbidden
+401 Unauthorized
+500 Internal Server Error
+Instead they see friendly messages.
+
+API Status	What User Sees
+401	Session expired, please login again
+403	You are not allowed to perform this action
+404	Service not available
+500	Something went wrong
+✅ Interview explanation (UI/UX perspective)
+
+In real applications, users usually do not see HTTP status codes like 403. Instead, the UI shows user-friendly messages while the backend API returns the status code.
+
+If you want, I can also explain how testers verify these errors in Postman vs what users see in UI, which is very important for QA interviews.
+
+
+404
+
+404 Not Found – Banking Scenario 🏦
+Meaning:
+The server cannot find the requested resource (API endpoint or data).
+
+Scenario 1: Account Does Not Exist
+Request
+GET
+https://api.sbi.co.in/accounts/9999
+
+Situation
+Account 9999 does not exist in the bank database.
+
+Server Response
+404 Not Found
+
+{
+  "error": "Not Found",
+  "message": "Account not found"
+}
+✔ Meaning:
+Server understood the request but the resource is not available.
+
+Scenario 2: Wrong API Endpoint
+Request
+GET
+https://api.sbi.co.in/accountdetails/101
+
+Problem:
+Correct endpoint should be /accounts/101
+
+Server Response
+404 Not Found
+
+{
+  "error": "Endpoint not found"
+}
+📱 Real Banking App UI Example
+Suppose you open a transaction link for an account that was already closed.
+
+The app might show:
+
+Account not found.
+Please contact the bank.
+Backend response:
+
+404 Not Found
+
+📌 Simple Way to Remember
+Status Code	Meaning
+400	Bad request (invalid input)
+401	Not logged in
+403	Logged in but not allowed
+404	Resource does not exist
+✅ Interview one-line answer
+
+404 Not Found occurs when the server cannot find the requested resource, such as an account ID or API endpoint that does not exist.
+
+
+give me  3 senarios 
+
+Here are 3 realistic banking scenarios for 404 Not Found 🏦
+
+1️⃣ Account Number Does Not Exist
+Request
+GET
+https://api.sbi.co.in/accounts/9999
+
+Situation
+Account 9999 is not present in the bank database.
+
+Server Response
+404 Not Found
+
+{
+  "error": "Account not found"
+}
+✔ Meaning: Requested account resource does not exist.
+
+2️⃣ Transaction ID Not Found
+Request
+GET
+https://api.sbi.co.in/transactions/56789
+
+Situation
+Transaction 56789 was never created or does not exist.
+
+Server Response
+404 Not Found
+
+{
+  "error": "Transaction not found"
+}
+✔ Meaning: Requested transaction record is not available.
+
+3️⃣ API Endpoint Does Not Exist
+Request
+GET
+https://api.sbi.co.in/customerinfo/101
+
+Problem
+Correct endpoint should be:
+
+https://api.sbi.co.in/customers/101
+
+Server Response
+404 Not Found
+
+{
+  "error": "Endpoint not found"
+}
+✔ Meaning: The API URL itself is incorrect.
+
+📌 Quick Interview Summary
+Scenario	Why 404 Happens
+Account not found	Account ID not in database
+Transaction not found	Transaction record missing
+Wrong API endpoint	Incorrect URL
+✅ Short interview answer
+
+404 Not Found occurs when the requested resource like an account, transaction, or API endpoint does not exist on the server.
+
+
+405
+
+405 Method Not Allowed – Banking Scenarios 🏦
+Meaning:
+The API endpoint exists, but the HTTP method used is not allowed for that endpoint.
+
+Example: Endpoint supports GET, but you send POST.
+
+1️⃣ Trying to Delete Account with Wrong Method
+Request
+POST
+https://api.sbi.co.in/accounts/101
+
+Problem
+This endpoint only supports GET to fetch account details.
+
+Server Response
+405 Method Not Allowed
+
+{
+  "error": "Method Not Allowed",
+  "message": "POST method is not supported for this endpoint"
+}
+2️⃣ Trying to Create Account Using GET
+Request
+GET
+https://api.sbi.co.in/accounts
+
+Problem
+Account creation should use POST, not GET.
+
+Server Response
+405 Method Not Allowed
+
+{
+  "error": "Method Not Allowed",
+  "message": "GET method is not allowed for account creation"
+}
+3️⃣ Trying to Update Account with DELETE
+Request
+DELETE
+https://api.sbi.co.in/accounts/101
+
+Problem
+This API only supports PUT or PATCH for updating account information.
+
+Server Response
+405 Method Not Allowed
+
+{
+  "error": "Method Not Allowed",
+  "message": "DELETE method is not supported for this resource"
+}
+📌 Simple Way to Remember
+Status Code	Meaning
+404	Resource not found
+405	Resource exists but method not allowed
+Example:
+
+Endpoint	Allowed Method
+/accounts/101	GET
+/accounts	POST
+If you send another method → 405
+
+✅ Interview one-line answer
+
+405 Method Not Allowed occurs when the API endpoint exists but the HTTP method used in the request is not supported for that resource.
+
+
+409
+
+409 Conflict – Banking Scenarios 🏦
+Meaning:
+The request cannot be completed because it conflicts with the current state of the resource.
+
+Usually happens when duplicate data or conflicting operations occur.
+
+1️⃣ Creating an Account That Already Exists
+Request
+POST
+https://api.sbi.co.in/accounts
+
+{
+  "accountNumber": "1234567890",
+  "accountHolderName": "Rahul Sharma"
+}
+Situation
+Account 1234567890 already exists in the system.
+
+Server Response
+409 Conflict
+
+{
+  "error": "Conflict",
+  "message": "Account already exists"
+}
+✔ Conflict because duplicate account creation is not allowed.
+
+2️⃣ Registering a Mobile Number Already Linked
+Request
+POST
+https://api.sbi.co.in/customers
+
+{
+  "name": "Rahul Sharma",
+  "mobileNumber": "9876543210"
+}
+Situation
+Mobile number 9876543210 is already registered with another account.
+
+Server Response
+409 Conflict
+
+{
+  "error": "Conflict",
+  "message": "Mobile number already registered"
+}
+3️⃣ Two Users Updating the Same Data
+Situation
+Two bank employees try to update the same customer record at the same time.
+
+Request
+PUT
+https://api.sbi.co.in/customers/101
+
+Server Response
+409 Conflict
+
+{
+  "error": "Conflict",
+  "message": "Resource was modified by another request"
+}
+✔ Prevents data inconsistency.
+
+📌 Simple Way to Remember
+Status Code	Meaning
+400	Bad request
+404	Resource not found
+405	Method not allowed
+409	Conflict with existing data
+✅ Interview one-line answer
+
+409 Conflict occurs when the request cannot be completed because it conflicts with the current state of the resource, such as duplicate account creation.
+
+
+422
+
+422 Unprocessable Entity – Banking Scenarios 🏦
+Meaning:
+The server understands the request and the JSON format is correct, but the data fails business validation rules.
+
+So:
+
+Request format ✔ correct
+
+JSON ✔ valid
+
+But data values are not acceptable
+
+1️⃣ Minimum Balance Rule
+Request
+POST
+https://api.sbi.co.in/accounts
+
+{
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "initialDeposit": 200
+}
+Problem
+Savings account requires minimum ₹1000 deposit.
+
+Server Response
+422 Unprocessable Entity
+
+{
+  "error": "Validation Failed",
+  "message": "Minimum deposit for savings account is ₹1000"
+}
+2️⃣ Invalid Account Type
+Request
+POST
+https://api.sbi.co.in/accounts
+
+{
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "StudentVIP",
+  "initialDeposit": 5000
+}
+Problem
+StudentVIP is not a valid account type.
+
+Allowed values:
+
+Savings
+
+Current
+
+Salary
+
+Server Response
+422 Unprocessable Entity
+
+{
+  "error": "Validation Failed",
+  "message": "Invalid account type"
+}
+3️⃣ Transfer Amount Greater Than Balance
+Request
+POST
+https://api.sbi.co.in/transfer
+
+{
+  "fromAccount": 101,
+  "toAccount": 102,
+  "amount": 10000
+}
+Situation
+Account 101 balance = ₹5000.
+
+Server Response
+422 Unprocessable Entity
+
+{
+  "error": "Validation Failed",
+  "message": "Insufficient balance"
+}
+📌 Difference from 400 (Important)
+Status Code	Meaning
+400	Request format is invalid
+422	Request format is correct but data violates business rules
+Example:
+
+Wrong JSON → 400
+
+Balance too low → 422
+
+✅ Interview one-line answer
+
+422 Unprocessable Entity occurs when the request is syntactically correct but the data fails business validation rules.
+
+If you want, I can also show the most important 15 API status codes for QA interviews with simple memory tricks.
+
+
+429
+
+429 Too Many Requests – Banking Scenario 🏦
+Meaning:
+The client has sent too many requests in a short period of time, so the server limits or blocks further requests.
+
+This is called Rate Limiting.
+
+1️⃣ Checking Balance Too Many Times
+Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Situation
+User refreshes the balance API 100 times in 1 minute.
+
+Server limit: 20 requests per minute
+
+Server Response
+429 Too Many Requests
+
+{
+  "error": "Too Many Requests",
+  "message": "Rate limit exceeded. Please try again later."
+}
+2️⃣ OTP Request Spam
+Request
+POST
+https://api.sbi.co.in/send-otp
+
+User clicks "Resend OTP" many times.
+
+Example:
+
+10 OTP requests in 30 seconds
+
+Server Response
+429 Too Many Requests
+
+{
+  "error": "Too Many Requests",
+  "message": "OTP request limit exceeded. Try again after 60 seconds."
+}
+3️⃣ Login Attempts Too Frequently
+Request
+POST
+https://api.sbi.co.in/login
+
+User tries login 50 times quickly.
+
+Server Response
+429 Too Many Requests
+
+{
+  "error": "Too Many Requests",
+  "message": "Too many login attempts. Please try again later."
+}
+📌 Simple Way to Remember
+Status Code	Meaning
+401	Not authenticated
+403	Not allowed
+409	Conflict
+422	Validation failed
+429	Too many requests
+✅ Interview one-line answer
+
+429 Too Many Requests occurs when a client sends too many requests within a limited time and exceeds the API rate limit.
+
+
+500
+
+500 Internal Server Error – Banking Scenarios 🏦
+Meaning:
+Something went wrong on the server side, and the server could not process the request.
+
+The request may be correct, but the server fails due to a bug, crash, or database issue.
+
+1️⃣ Database Connection Failure
+Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Situation
+Server tries to fetch data from the database, but the database server is down.
+
+Server Response
+500 Internal Server Error
+
+{
+  "error": "Internal Server Error",
+  "message": "Unable to retrieve account details"
+}
+2️⃣ Money Transfer Server Crash
+Request
+POST
+https://api.sbi.co.in/transfer
+
+{
+  "fromAccount": 101,
+  "toAccount": 102,
+  "amount": 2000
+}
+Situation
+During processing, the transaction service crashes.
+
+Server Response
+500 Internal Server Error
+
+{
+  "error": "Internal Server Error",
+  "message": "Transaction could not be completed"
+}
+3️⃣ Backend Application Bug
+Request
+GET
+https://api.sbi.co.in/transactions/5001
+
+Situation
+There is a bug in backend code while processing the transaction.
+
+Server Response
+500 Internal Server Error
+
+{
+  "error": "Internal Server Error",
+  "message": "Something went wrong on the server"
+}
+📌 Simple Way to Remember
+Status Code	Meaning
+400	Client sent bad request
+404	Resource not found
+429	Too many requests
+500	Server failure
+✅ Interview one-line answer
+
+500 Internal Server Error occurs when the server encounters an unexpected condition and cannot process the request due to backend issues like server crash, database failure, or application bug.
+
+
+502
+
+502 Bad Gateway – Banking Scenario 🏦
+Meaning:
+A server acting as a gateway or proxy received an invalid response from another server.
+
+In simple terms:
+
+Client → API Gateway → Backend Server
+
+If the backend server gives an invalid response, the gateway returns 502 Bad Gateway.
+
+1️⃣ Account Service Not Responding
+Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Situation
+Architecture:
+
+User → API Gateway → Account Service
+
+But Account Service crashes or sends invalid response.
+
+Server Response
+502 Bad Gateway
+
+{
+  "error": "Bad Gateway",
+  "message": "Invalid response from account service"
+}
+2️⃣ Payment Service Failure During Transfer
+Request
+POST
+https://api.sbi.co.in/transfer
+
+{
+  "fromAccount": 101,
+  "toAccount": 102,
+  "amount": 2000
+}
+Situation
+Gateway calls Payment Service, but it returns an invalid response.
+
+Server Response
+502 Bad Gateway
+
+{
+  "error": "Bad Gateway",
+  "message": "Payment service unavailable"
+}
+3️⃣ External Service Failure
+Sometimes banking APIs call external services.
+
+Example:
+
+Aadhaar verification
+
+Credit score service
+
+Request
+POST
+https://api.sbi.co.in/kyc/verify
+
+Situation
+External Aadhaar service sends invalid response.
+
+Server Response
+502 Bad Gateway
+
+{
+  "error": "Bad Gateway",
+  "message": "Unable to verify KYC at this time"
+}
+📌 Simple Difference (Important)
+Status Code	Meaning
+500	Server itself failed
+502	Gateway got bad response from another server
+✅ Interview one-line answer
+
+502 Bad Gateway occurs when a server acting as a gateway or proxy receives an invalid response from an upstream server.
+
+If you want, I can also show 503 vs 504 with simple banking scenarios, which completes all major API error codes for interviews.
+
+
+1️⃣ Account Service Not Responding
+Request
+GET
+https://api.sbi.co.in/accounts/101
+Situation :
+Architecture :
+User → API Gateway → Account Service
+But Account Service crashes or sends invalid response.
+Server Response :
+502 Bad Gateway
+{
+  "error": "Bad Gateway",
+  "message": "Invalid response from account service"
+}
+2️⃣ Payment Service Failure During Transfer
+Request
+POST
+https://api.sbi.co.in/transfer
+{
+  "fromAccount": 101,
+  "toAccount": 102,
+  "amount": 2000
+}
+Situation :
+Gateway calls Payment Service, but it returns an invalid response.
+
+Here is your content cleaned and formatted so you can write it in notes or explain in interview.
+
+502 Bad Gateway – Banking Scenarios 🏦
+1️⃣ Account Service Not Responding
+Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Situation
+Architecture:
+
+User → API Gateway → Account Service
+User sends request to API Gateway
+
+Gateway calls Account Service
+
+But Account Service crashes or sends invalid response
+
+Server Response
+502 Bad Gateway
+
+{
+  "error": "Bad Gateway",
+  "message": "Invalid response from account service"
+}
+2️⃣ Payment Service Failure During Transfer
+Request
+POST
+https://api.sbi.co.in/transfer
+
+{
+  "fromAccount": 101,
+  "toAccount": 102,
+  "amount": 2000
+}
+Situation
+Architecture:
+
+User → API Gateway → Payment Service
+User sends transfer request
+
+Gateway forwards request to Payment Service
+
+Payment Service returns invalid response or crashes
+
+Server Response
+502 Bad Gateway
+
+{
+  "error": "Bad Gateway",
+  "message": "Payment service unavailable"
+}
+📌 Simple Interview Explanation
+502 Bad Gateway occurs when a server acting as a gateway or proxy receives an invalid response from another upstream server.
+
+Example flow:
+
+Client → API Gateway → Backend Service
+                ❌
+        Invalid Response
+Gateway returns 502 Bad Gateway.
+
+If you want, I can also show 503 vs 504 in the same banking architecture diagram, which makes all 5xx errors very easy to understand.
+
+
+503
+
+503 Service Unavailable – Banking Scenarios 🏦
+Meaning:
+The server is temporarily unable to handle the request because it is overloaded or under maintenance.
+
+The service exists, but it is currently unavailable.
+
+1️⃣ Server Maintenance
+Request
+GET
+https://api.sbi.co.in/accounts/101
+
+Situation
+SBI servers are under scheduled maintenance.
+
+Architecture:
+
+User → API Gateway → Account Service
+But Account Service is temporarily stopped.
+
+Server Response
+503 Service Unavailable
+
+{
+  "error": "Service Unavailable",
+  "message": "The service is currently under maintenance. Please try again later."
+}
+2️⃣ Too Many Users on Banking Server
+Request
+POST
+https://api.sbi.co.in/transfer
+
+{
+  "fromAccount": 101,
+  "toAccount": 102,
+  "amount": 2000
+}
+Situation
+During salary day or festival time, millions of users access the server and it becomes overloaded.
+
+Server Response
+503 Service Unavailable
+
+{
+  "error": "Service Unavailable",
+  "message": "Server is currently overloaded. Please try again later."
+}
+3️⃣ Payment Service Temporarily Down
+Request
+POST
+https://api.sbi.co.in/upi/payment
+
+{
+  "amount": 500,
+  "receiverUpiId": "user@upi"
+}
+Situation
+UPI payment service is temporarily down.
+
+Server Response
+503 Service Unavailable
+
+{
+  "error": "Service Unavailable",
+  "message": "UPI service temporarily unavailable"
+}
+📌 Simple Difference (Important)
+Status Code	Meaning
+500	Internal server error
+502	Bad response from another server
+503	Service temporarily unavailable
+✅ Interview one-line answer
+
+503 Service Unavailable occurs when the server is temporarily unable to handle the request due to maintenance or overload.
+
+
+ What is the difference between Pre-request Script and Tests in Postman?
+
+• Pre-request Script: JavaScript code that runs before the request is sent.
+Example: Generating a timestamp or token before request execution.
+
+• Tests: JavaScript code that runs after the response is received.
+Example: Validating that the status code is 200.
+for more senior level interview it is correct
+
+Your answer is correct but a bit basic. For a senior-level interview, interviewers usually expect a slightly deeper explanation with use cases. You can answer like this:
+
+Difference Between Pre-request Script and Tests in Postman
+1️⃣ Pre-request Script
+Definition:
+Pre-request scripts contain JavaScript code that executes before the API request is sent to the server.
+
+Purpose:
+
+Prepare data required for the request
+
+Set or update environment/collection variables
+
+Generate dynamic values
+
+Common Use Cases:
+
+Generating authentication tokens
+
+Creating timestamps
+
+Generating random test data
+
+Encrypting request payload
+
+Example
+
+// Generate timestamp
+pm.environment.set("timestamp", Date.now());
+Another example (token generation):
+
+pm.environment.set("authToken", "12345abcde");
+These values can then be used in the request.
+
+2️⃣ Tests
+Definition:
+Tests are JavaScript scripts that execute after the response is received from the server.
+
+Purpose:
+
+Validate API responses
+
+Verify response structure, data, and status codes
+
+Store response values for future requests
+
+Common Use Cases:
+
+Verify status code
+
+Validate response body
+
+Check response time
+
+Extract tokens or IDs for next request
+
+Example
+
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+Extract value example:
+
+let jsonData = pm.response.json();
+pm.environment.set("accountId", jsonData.accountId);
+Key Difference
+Feature	Pre-request Script	Tests
+Execution Time	Before request	After response
+Purpose	Prepare request data	Validate response
+Example	Generate token	Check status code
+✅ Senior-level one-line answer
+
+Pre-request scripts run before the API request to prepare dynamic data or authentication, while Tests run after the response to validate the API behavior and extract values for subsequent requests.
+
+💡 Senior interview tip:
+Sometimes interviewers also ask “Where do you usually write token generation logic?” — the expected answer is Pre-request Script.
+
+If you want, I can also show 5 advanced Postman scripting examples that impress interviewers (token chaining, dynamic payload, loops, etc.).
+
+
+How do you send authentication credentials in Postman?
+
+For a senior-level interview, you can answer like this:
+
+How do you send authentication credentials in Postman?
+Authentication credentials in Postman can be sent using the Authorization tab, headers, or request body, depending on the API’s authentication mechanism.
+
+1️⃣ Using Authorization Tab (Recommended)
+Postman provides a built-in Authorization tab where you can select the authentication type and provide credentials.
+
+Common types include:
+
+Basic Auth
+
+Bearer Token
+
+API Key
+
+OAuth 2.0
+
+Digest Auth
+
+Example – Bearer Token
+
+Authorization → Type: Bearer Token
+
+Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Postman automatically sends it in the header:
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+2️⃣ Using Headers
+Credentials can also be manually sent through HTTP headers.
+
+Example:
+
+Authorization: Bearer abc123xyz
+Or API key:
+
+x-api-key: 123456789
+3️⃣ Using Request Body
+Some APIs require credentials in the request body, typically during login.
+
+Example:
+
+POST /login
+
+{
+  "username": "rahul",
+  "password": "password123"
+}
+The server then returns an access token used for subsequent requests.
+
+4️⃣ Using Environment Variables
+For automation and security, credentials like tokens or API keys are usually stored in environment variables.
+
+Example:
+
+Authorization: Bearer {{authToken}}
+This allows the same request to run across different environments (dev, QA, prod).
+
+Senior-Level Summary
+In Postman, authentication credentials can be sent through the Authorization tab, request headers, or request body depending on the API authentication mechanism. Common methods include Basic Auth, Bearer Token, API Key, and OAuth 2.0, and credentials are typically managed using environment variables for maintainability.
+
+If you want, I can also show how authentication flows work in API testing interviews (Login → Token → Protected APIs), which is a very common question for experienced testers.
+
+
+What is Collection Runner in Postman?
+
+For a senior-level interview, you can answer like this:
+
+What is Collection Runner in Postman?
+Collection Runner in Postman is a feature used to execute multiple API requests from a collection in sequence automatically.
+
+It helps testers run automated API tests, perform data-driven testing, and validate workflows without sending requests manually one by one.
+
+Key Features
+Runs all requests in a collection or selected folder
+
+Supports data-driven testing using CSV or JSON files
+
+Executes test scripts automatically
+
+Generates execution results and reports
+
+Example Scenario (Banking API Testing)
+Suppose you have a Banking API Collection:
+
+Banking APIs
+│
+├── Login API
+├── Get Account Details
+├── Transfer Money
+├── Get Transaction History
+Using Collection Runner, Postman will execute them in order automatically.
+
+Example flow:
+
+1. Login API → generate token
+2. Get Account Details
+3. Transfer Money
+4. Verify Transaction
+Data-Driven Testing Example
+You can run the same API multiple times using test data.
+
+Example CSV file:
+
+accountId,amount
+101,500
+102,1000
+103,200
+Collection Runner will execute the Transfer API for each row of data.
+
+Where it is Used
+API automation testing
+
+Regression testing
+
+Workflow testing
+
+Data-driven testing
+
+Senior-Level One-Line Answer
+Collection Runner in Postman is used to execute multiple API requests from a collection in sequence, enabling automated API testing and data-driven testing using external data files like CSV or JSON.
+
+If you want, I can also show how Collection Runner + Newman + CI/CD work together, which is very important for experienced API testers.
+
+
+What is Newman and why is it used?
+
+What is Newman and why is it used?
+Newman is the command-line tool for running Postman collections outside the Postman application.
+
+It allows testers to execute Postman collections from the terminal or integrate them into CI/CD pipelines for automated API testing.
+
+Why Newman is Used
+Newman is mainly used for automation and continuous integration.
+
+Key reasons:
+
+Run Postman collections from command line
+
+Integrate API tests into CI/CD pipelines (Jenkins, GitLab, GitHub Actions)
+
+Execute tests automatically during builds
+
+Generate HTML or CLI reports
+
+Run collections in automation environments without opening Postman
+
+Example Command
+Run a collection using Newman:
+
+newman run banking_api_collection.json
+Run with environment variables:
+
+newman run banking_api_collection.json -e qa_environment.json
+Example Scenario (Banking API Testing)
+Collection:
+
+Banking APIs
+│
+├── Login API
+├── Get Account Details
+├── Transfer Money
+└── Transaction History
+Using Newman, these APIs can run automatically in a CI/CD pipeline to verify that all APIs are working correctly after every deployment.
+
+Key Difference from Collection Runner
+Feature	Collection Runner	Newman
+Runs inside	Postman UI	Command Line
+Used for	Manual test runs	Automation & CI/CD
+Reporting	Basic	Advanced reports
+✅ Senior-level one-line answer
+
+Newman is a command-line tool used to run Postman collections outside the Postman application, mainly for automating API tests and integrating them into CI/CD pipelines.
+
+💡 Interview tip:
+A very common follow-up question is:
+“How do you generate HTML reports using Newman?”
+I can show you the exact command interviewers expect if you want.
+
+
+How do you handle dynamic data in Postman tests?
+
+For a senior-level interview, you can answer like this:
+
+How do you handle dynamic data in Postman tests?
+Dynamic data in Postman is handled using variables, scripting, and data files so that values can change automatically between requests.
+
+1️⃣ Using Environment / Collection Variables
+Dynamic values like tokens, account IDs, timestamps are stored in variables and reused in other requests.
+
+Example
+
+Extract accountId from response:
+
+let jsonData = pm.response.json();
+pm.environment.set("accountId", jsonData.accountId);
+Use it in another request:
+
+GET https://api.bank.com/accounts/{{accountId}}
+
+2️⃣ Using Pre-request Scripts :
+Dynamic values can be generated before sending the request.
+Example: Generate timestamp
+
+pm.environment.set("timestamp", Date.now());
+Or generate random number:
+
+pm.environment.set("randomId", Math.floor(Math.random() * 1000));
+
+3️⃣ Using Response Data Chaining
+One API response value is passed to the next API request.
+Example workflow:
+1. Login API → get token
+2. Store token in variable
+3. Use token in next API request
+
+Script example:
+
+let jsonData = pm.response.json();
+pm.environment.set("authToken", jsonData.token);
+
+Then use:
+Authorization: Bearer {{authToken}}
+
+4️⃣ Using Data Files (CSV / JSON)
+For data-driven testing, dynamic test data can be loaded using Collection Runner.
+Example CSV:
+accountId,amount
+101,500
+102,1000
+103,200
+
+Each row runs the request with different values.
 ===========================================================================
 22. How do you import/export collections and environments in Postman?
 
@@ -1947,27 +4040,60 @@ A Monitor runs your collection at scheduled intervals and sends alerts if tests 
 Example: Run API health checks every hour and email results.
 
 ===========================================================================24. How do you validate JSON schema in Postman?
-You can use the tv4 or Ajv validator inside tests.
-const schema = {
- "type": "object",
- "properties": {
- "id": { "type": "number" },
- "name": { "type": "string" }
- },
- "required": ["id", "name"]
-};
-pm.test("Schema is valid", function () {
- pm.response.to.have.jsonSchema(schema);
-});
+tv4 and Ajv are JavaScript libraries used for JSON schema validation. They are used in Postman tests to verify that the API response structure matches the expected schema.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//suppose API response is:
+{
+  "accountId": 101,
+  "accountHolderName": "Rahul Sharma",
+  "accountType": "Savings",
+  "balance": 5000
+}
+//JSON Schema Validation Script:
+pm.test("Validate account schema", function () {
+    const schema = {
+        "type": "object",
+        "properties": {
+            "accountId": { "type": "number" },
+            "accountHolderName": { "type": "string" },
+            "accountType": { "type": "string" },
+            "balance": { "type": "number" }
+        },
+        "required": ["accountId", "accountHolderName", "accountType", "balance"]
+    };
 
+    pm.response.to.have.jsonSchema(schema);
+});
 =========================================================================
 25. How do you pass query parameters in Postman?
-You can:
-• Add them in the Params tab.
-• Append to URL manually (?page=1&limit=5).
-• Set dynamically with variables.
+Query parameters in Postman can be passed using the Params tab or directly in the request URL after the ?, allowing key-value pairs to filter or customize API responses.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+1️⃣ Using the Params Tab (Most Common) :
+Request
+GET https://api.sbi.co.in/accounts
+
+Params:
+Key		Value
+accountType	savings
+branch		nagpur
+
+Postman automatically builds the URL:
+https://api.sbi.co.in/accounts?accountType=savings&branch=nagpur
+
+2️⃣ Directly in the URL
+You can manually add query parameters.
+Example:
+GET https://api.sbi.co.in/accounts?accountType=savings&branch=nagpur
+
+3️⃣ Using Variables
+Query parameters can also use environment variables.
+Example:
+GET https://api.sbi.co.in/accounts?accountId={{accountId}}
+Where accountId is stored as an environment variable.
 ==========================================================================
 26. How do you approach testing a new API when no documentation is available?
+If API documentation is unavailable, I start with an exploratory approach. I capture network traffic using browser DevTools or proxy tools like Charles or Fiddler to identify endpoints. Then I use Postman to send requests, starting with GET methods to understand responses and headers. I analyze error messages to identify required parameters and authentication methods, perform positive and negative testing, and document the discovered API behavior. I also confirm assumptions with developers if needed.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 When there’s no documentation, you need to reverse-engineer or explore the API:
 1. Check available code or network logs (e.g., browser DevTools, mobile proxy tools like
 Charles/Fiddler).
@@ -1980,6 +4106,8 @@ parameters.
 ===========================================================================
 27. What are the most common API testing validations?
 
+The most common API validations include status code validation, response body verification, JSON schema validation, response time checks, header validation, data accuracy checks, and error handling validation.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 You should validate:
 • Status Code – Matches expected result (e.g., 200 for success).
 • Response Body Content – Expected fields, values, and data types.
@@ -1990,96 +4118,306 @@ You should validate:
 • Idempotency – Multiple identical requests give the same result (for idempotent methods).
 ==========================================================================
 28. How do you test API error handling?
-Negative testing is as important as positive testing:
-• Invalid inputs – Missing fields, incorrect data types.
-• Unauthorized access – Invalid token, missing token.
-• Resource not found – Requesting an ID that doesn’t exist.
-• Method not allowed – Sending POST instead of GET.
-• Rate limiting – Sending too many requests.
-Example in Postman:
+API error handling is tested by sending invalid inputs, missing parameters, unauthorized requests, and invalid resources, then verifying the API returns the correct status codes, meaningful error messages, and consistent response structure.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 pm.test("Returns 404 when user not found", function () {
  pm.expect(pm.response.code).to.eql(404);
 });
+//eg:
+1️⃣ Invalid Input Data
+POST https://api.sbi.co.in/accounts
+{
+  "accountHolderName": "",
+  "initialDeposit": -500
+}
+Expected Response :
+400 Bad Request
+{
+  "error": "Invalid input",
+  "message": "Initial deposit must be greater than 0"
+}
+2️⃣ Missing Required Fields
+{
+  "accountType": "Savings"
+}
+o/p:
+400 Bad Request
+3️⃣ Unauthorized Access
+Request :
+GET https://api.sbi.co.in/accounts/101
 
+Expected Response :
+401 Unauthorized
 ===========================================================================
 29. What is the difference between functional and non-functional API testing?
-• Functional Testing – Verifies that the API does what it’s supposed to (correct inputs produce correct
-outputs).
-• Non-functional Testing – Focuses on performance, security, usability, scalability.
+Functional API testing verifies whether the API works according to business requirements, while non-functional API testing evaluates performance, scalability, security, and reliability of the API.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Example:
-• Functional: Does GET /users/1 return the correct user?
-• Non-functional: Does GET /users/1 respond within 300ms under 1000 concurrent requests?
+• Functional: 
+POST /api/login
+{
+  "username": "user1",
+  "password": "pass123"
+}
+O/P:
+{
+  "token": "abc123xyz",
+  "message": "Login successful"
+}
+• Non-functional:
+Send 10,000 requests to payment API
+Validation:
+API handles high traffic
+No server failure
 
 ===========================================================================
 30. How do you validate data integrity in API testing?
+Data integrity in API testing means ensuring that the data sent to the API, stored in the database, and returned in the response remains correct, consistent, and unchanged.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Steps:
+  Trigger the API -> Check API Response -> Verify Database -> Retrieve via GET API.
+POST /api/fundTransfer 
+{
+  "fromAccount": "123456",
+  "toAccount": "789012",
+  "amount": 1000
+}
+O/P:
+{
+  "status": "success",
+  "transactionId": "TXN56789",
+  "message": "Fund transferred successfully"
+}
+//run query:
 
-1. Trigger the API – e.g., POST /users creates a new user.
-2. Check API Response – Ensure the returned data matches input.
-3. Verify Database – Run SQL query to ensure data is stored correctly.
-4. Retrieve via GET API – Ensure consistency between DB and API output.
-
+SELECT * FROM transactions 
+WHERE transaction_id = 'TXN56789';
+Validate:
+fromAccount = 123456
+toAccount = 789012
+amount = 1000
+//also check in db like balance validation before after transaction,amount validation, message validation
 ===========================================================================
 31. How do you test API security in Postman?
 Security testing in Postman includes:
 
 • Authentication – Ensure endpoints require proper login.
-• Authorization – Ensure users can only access permitted resources.
+Example:
+Request without token
+
+GET /api/accounts
+
+Expected response:
+401 Unauthorized
+
+Then test with valid token.
+
+GET /api/accounts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+
+Validation:
+API allows access only with valid token.
+
+• Authorization – Check whether users can access only permitted resources.
+Example:
+User A tries to access User B account
+GET /api/accounts/789012
+
+Expected:
+403 Forbidden
+
+Validation:
+Users cannot access other users’ data.
+
+• Input Validation Testing
+Test APIs with invalid or malicious inputs.
+Example:
+{
+  "username": "' OR 1=1 --",
+  "password": "test"
+}
+Expected:
+API should reject request
+No SQL injection vulnerability.
+
 • Token Expiry – Check that expired tokens are rejected.
-• Data Exposure – Ensure sensitive data (passwords, credit cards) is never in plain text.
-• CORS Handling – Ensure API restricts requests from unknown domains.
+Test expired token.
+Example:
+GET /api/accounts
+Authorization: Bearer expired_token
+
+Expected:
+401 Unauthorized
+Token expired
+
+• Data Exposure – Ensure sensitive data (passwords, credit cards,otp number,cvv,aadhaar no) is never in plain text.
+• CORS Handling – Verify the API only allows requests from trusted domains and blocks requests from unknown origins.
 ==========================================================================
 32. How do you test an API for performance using Postman?
 
-Postman alone isn’t a full performance testing tool, but you can:
-• Use pm.expect(pm.response.responseTime).to.be.below(500) to check speed.
-• Run APIs repeatedly using Collection Runner with multiple iterations.
-• For deeper load testing, export Postman collections to JMeter or k6.
+To test API performance in Postman, I check response time and write tests to validate acceptable response thresholds. I also run multiple iterations using Collection Runner to simulate load. For large-scale execution and reporting, I use Newman to run collections from the command line and generate performance reports.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+1️⃣ Check API Response Time (Basic Performance Test)
+2️⃣ Write Performance Test Script in Postman :
+pm.test("Response time is less than 500ms", function () {
+    pm.expect(pm.response.responseTime).to.be.below(500);
+});
+3️⃣ Run Multiple Requests (Load Simulation)
+4️⃣ Data-Driven Performance Testing :
+You can run API with multiple test data using CSV/JSON.
+Example CSV:
+fromAccount,toAccount,amount
+123456,789012,1000
+123456,789013,2000
+123456,789014,5000
+Postman sends multiple fund transfer requests automatically.
 
 ==========================================================================
 33. How do you chain API requests in Postman?
 Chaining means using output from one API as input to another.
 Example:
 
-let token = pm.response.json().token;
-pm.environment.set("authToken", token);
+API chaining in Postman is achieved by extracting data from one API response using scripts and storing it in variables, which are then used as inputs for subsequent API requests.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+1️⃣ Create Account
+POST /accounts
 
-Then in the next request, set:
+2️⃣ Get Account Details
+GET /accounts/{{accountId}}
 
-Authorization: Bearer {{authToken}}
+3️⃣ Transfer Money
+POST /transfer
+{
+ "fromAccount": "{{accountId}}",
+ "toAccount": "202",
+ "amount": 1000
+}
+Why API Chaining is Used :
+Test end-to-end workflows
+Pass dynamic data between APIs
+Automate real-world scenarios
 
-This is useful for login flows, order placements, etc.
-
+Example flows:
+Login → Get Token → Access Protected APIs
+Create User → Get User → Update User
+Create Account → Transfer Money → Check Balance
 ==========================================================================
 34. How do you test APIs that have dependencies on other services?
 
-• Use mock servers when dependent services are unavailable.
-• Test with stubs for partial functionality.
-• Use contract testing to validate API interactions without full integration.
+In my project most services are already integrated in the test environment, so we usually perform end-to-end API testing. However, if a dependent service is unavailable, we can use mock servers or stubs to simulate responses and continue testing. 
+-------------------------------------------------------------------------
+When dependent services are unavailable, I use mock servers to simulate API responses, stubs to test partial functionality, and contract testing to ensure request and response structures remain consistent between services.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+1️⃣ Use Mock Servers when Dependent Services Are Unavailable
+A mock server simulates the response of a real API so testing can continue even if the actual service is not ready or down.
 
-Example: If your payment API depends on a banking API, you can mock the bank’s success/failure responses to
-test your service behavior.
+Example :
+Transfer API depends on Account Service.
 
+Actual API:
+GET /api/accounts/123456
+
+If the account service is unavailable, create a mock response:
+{
+  "accountId": "123456",
+  "balance": 5000,
+  "status": "active"
+}
+Now the Transfer API can still be tested using this simulated response.
+Tools used:
+Postman Mock Server
+WireMock
+Mockoon
+
+2️⃣ Test with Stubs for Partial Functionality
+A stub is a simplified version of a service that returns predefined responses.
+It is used when only part of the system is developed.
+Example:
+Transfer API calls Payment Service.
+Stub response:
+{
+  "paymentStatus": "SUCCESS",
+  "transactionId": "TXN56789"
+}
+This allows testing transfer logic without the real payment service.
+Difference from mock:
+Stub → predefined response
+Mock → simulates full API behavior
+
+3️⃣ Use Contract Testing
+Contract testing verifies that the request and response format between services remains consistent.
+It ensures both systems follow the same API contract.
+Example contract:
+Request
+{
+  "accountId": "string"
+}
+Response
+{
+  "accountId": "string",
+  "balance": "number"
+}
+If the service suddenly changes balance to string instead of number, contract test fails immediately.
 =========================================================================
 35. How do you handle dynamic tokens or session IDs in Postman?
 
-• Capture the token/session ID from login response:
+In Postman, dynamic tokens or session IDs are handled by extracting them from the API response using scripts in the Tests tab, storing them in environment variables, and then referencing those variables in subsequent requests such as in headers or request parameters.
 
-let sessionId = pm.response.json().sessionId;
-pm.environment.set("sessionId", sessionId);
+//eg:
+1️⃣ Login API (Get Token)
 
-• Use it in headers or params for subsequent requests:
+Request
 
-Session-Id: {{sessionId}}
+POST /api/login
+{
+  "username": "user1",
+  "password": "pass123"
+}
 
+Response
+
+{
+  "token": "abc123xyz"
+}
+2️⃣ Store Token in Postman
+
+In Tests tab of login request:
+
+let data = pm.response.json();
+pm.environment.set("token", data.token);
+
+Now token is saved as {{token}}.
+
+3️⃣ Fund Transfer API
+
+Request
+
+POST /api/fundTransfer
+Authorization: Bearer {{token}}
+
+{
+  "fromAccount": "123456",
+  "toAccount": "789012",
+  "amount": 1000
+}
+
+Postman automatically replaces:
+
+{{token}} → abc123xyz
+4️⃣ Response
+{
+  "status": "success",
+  "transactionId": "TXN56789",
+  "message": "Fund transferred successfully"
+}
 =========================================================================
 36. How do you ensure API backward compatibility?
 Backward compatibility means old clients still work when API is updated.
 Testing steps:
 • Run old test cases on the new API version.
 • Verify deprecated fields still work (until officially removed).
-• Ensure default values are returned when new fields are added.
+• Ensure default values are returned when new fields are added.   
 
 ==========================================================================
 37. How do you test API pagination?
