@@ -4414,94 +4414,258 @@ Postman automatically replaces:
 =========================================================================
 36. How do you ensure API backward compatibility?
 Backward compatibility means old clients still work when API is updated.
-Testing steps:
-• Run old test cases on the new API version.
-• Verify deprecated fields still work (until officially removed).
-• Ensure default values are returned when new fields are added.   
+
+To ensure API backward compatibility, I follow practices such as API versioning, avoiding removal of existing fields, contract validation, and regression testing. In banking projects, many applications like mobile banking and internet banking depend on the same APIs. So whenever a change is introduced, I verify that existing request and response structures remain unchanged. For example, if a balance API adds a new field like currency, it is added as optional so older clients continue working without issues. Additionally, we run automated regression tests using Postman/Newman to ensure no existing functionality is impacted
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+   //eg:
+We never remove fields used by existing clients. Instead, we add new optional fields.
+Example (Account Details API)
+
+Old response:
+{
+ "accountId": "12345",
+ "balance": 50000
+}
+
+New response:
+{
+ "accountId": "12345",
+ "balance": 50000,
+ "currency": "INR"
+}
+Old applications ignore the currency field, so they continue working.
 
 ==========================================================================
 37. How do you test API pagination?
-Pagination is tested by:
 
-• Checking correct page size – e.g., if limit=10, ensure only 10 items returned.
-• Validating total pages – Matches total data count.
-• Testing boundary values – First page, last page, empty page
+API pagination is used when an API has large datasets. Instead of returning all records in one response, the API sends data in smaller pages using parameters like:
+page
+limit
+offset
+cursor
+
+Example:
+GET /transactions?page=1&limit=10
+This returns 10 transactions per page.
+
+GET /transactions?page=1&limit=10
+GET /transactions?page=2&limit=10
+
+Validation:
+Page 2 should return next set of records
+No duplicate data between pages
+
+Verify Total Records / Metadata
+Some APIs return pagination details:
+Example response:
+{
+ "page":1,
+ "limit":10,
+ "totalRecords":105,
+ "totalPages":11
+}
+I validate:
+totalPages calculation
+totalRecords accuracy
+
+GET /accounts/{accountId}/transactions?page=1&limit=20
 ===========================================================================
 38. How do you test sorting and filtering in APIs?
 
-• Send API requests with sorting params (?sort=name&order=asc).
-• Verify the list is correctly sorted.
-• Apply filters (?status=active) and check only matching records are returned.
-• Combine filters and sorting for complex validations
-
+I test API sorting by validating that the response data is returned in the correct order based on parameters like ascending or descending. For filtering, I verify that only records matching the filter conditions are returned. I also test multiple filters, invalid parameters, empty results, and performance. For example, in banking APIs I test transaction history filtering by status or date range and sorting by transaction date.
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//GET /transactions?sort=amount&order=asc
+[
+ { "amount": 100 },
+ { "amount": 500 },
+ { "amount": 1000 }
+]
+//GET /transactions?sort=amount&order=desc
+[
+ { "amount": 1000 },
+ { "amount": 500 },
+ { "amount": 100 }
+]
+//GET /transactions?sort=transactionDate&order=desc
+//filtering
+GET /transactions?status=SUCCESS
+[
+ { "status": "SUCCESS" },
+ { "status": "SUCCESS" }
+]
+GET /transactions?status=SUCCESS&type=DEBIT
+GET /transactions?fromDate=2026-03-01&toDate=2026-03-10
+GET /transactions?status=FAILED&amount=999999
 =========================================================================
 39. How do you validate API contracts?
-An API contract defines expected request/response structure (fields, types, rules).
-You can:
 
-• Use JSON Schema validation in Postman.
-• Compare response with OpenAPI/Swagger definitions.
+API contract validation ensures that the API request and response structure strictly follow the API specification defined in documents like OpenAPI (Swagger), RAML, or API documentation.
 
+During testing, I verify that the request format, response structure, data types, status codes, and required fields match the contract agreed between the frontend and backend teams.
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+pm.test("Schema validation", function () {
+    const schema = {
+        "type": "object",
+        "properties": {
+            "accountId": {"type": "string"},
+            "balance": {"type": "number"}
+        },
+        "required": ["accountId","balance"]
+    };
+
+    pm.response.to.have.jsonSchema(schema);
+});
+//{
+ "accountId": "12345",
+ "customerName": "Rahul Sharma",
+ "balance": 25000,
+ "currency": "INR"
+}
+Field		Expected Type
+accountId	String
+balance		Number
+currency	String
+
+If API returns:
+"balance": "25000"
+instead of number → contract violation.
 =========================================================================
 40. How do you test APIs that return asynchronous responses?
 
-Some APIs return an immediate “processing” status and require polling:
+//sync:immediately
+//async: server start processing in background
+When testing APIs that return asynchronous responses, I verify that the API correctly processes the request in the background and that the final result can be retrieved through a status endpoint, callback, webhook, or polling mechanism.
 
-1. Send initial request → get job ID.
-2. Poll status API until job is completed.
-3. Validate final output.
+In such APIs, the server does not return the final result immediately, but instead provides a job ID, request ID, or transaction ID which can be used to check the processing statu
 
-Example in Postman:
+//eg:
+First, I validate the initial response from the API.
+Example request:
+POST /fund-transfer
+{
+ "fromAccount": "12345",
+ "toAccount": "67890",
+ "amount": 5000
+}
+Example response:
+{
+ "requestId": "REQ12345",
+ "status": "PROCESSING"
+}
+Validation:
+API returns 202 Accepted or 200 OK
+Response contains requestId or transactionId
+Status shows PROCESSING or PENDING
 
-let status = pm.response.json().status;
-pm.test("Processing started", function () {
- pm.expect(status).to.eql("in_progress");
-});
+GET /transfer-status?requestId=REQ12345
+{
+ "requestId": "REQ12345",
+ "status": "SUCCESS",
+ "transactionId": "TXN98765"
+}
+Validation:
+Status changes from PROCESSING → SUCCESS/FAILED
+Correct transaction details appear.
 =========================================================================
 41. What scripting language does Postman use for automation?
 Postman uses JavaScript for both Pre-request Scripts and Tests tabs.
 
-• Pre-request Scripts → Execute before sending the API request (used for dynamic data creation, signing
-requests, generating tokens).
-• Tests → Execute after receiving a response (used for validation, storing variables, chaining).
+Postman uses JavaScript for writing automation scripts.
+These scripts are written in the Tests tab or Pre-request Script tab using the Postman Sandbox environment, which provides built-in libraries and functions for testing APIs.
 
-Example Pre-request Script:
+//eg
+let timestamp = new Date().getTime();
+pm.environment.set("time", timestamp);
 
-javascript
-CopyEdit
-pm.environment.set("timestamp", Date.now());
+Common JavaScript Features Used in Postman :
+pm.response.json() → read response body
+pm.environment.set() → store variables
+pm.test() → create test assertions
+pm.expect() → validate response data
 
+Example: Fund Transfer API
+Response:
+{
+ "transactionId": "TXN789",
+ "status": "SUCCESS",
+ "amount": 5000
+}
+Script :
+let jsonData = pm.response.json();
+
+pm.environment.set("txnId", jsonData.transactionId);
+
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
+
+pm.test("Transaction successful", function () {
+    pm.expect(jsonData.status).to.eql("SUCCESS");
+});
 =======================================================================
 42. How do you store and use dynamic values across requests?
-You can extract values from a response and store them in environment or global variables using:
+In Postman, I store dynamic values by extracting them from API responses using pm.response.json() and saving them as variables using pm.environment.set(). These variables can then be reused in other requests using the {{variableName}} syntax. For example, in a banking API flow, I store the login token or accountId from one API response and use it in subsequent APIs like balance check or fund transfer.
 
-javascript
-CopyEdit
-let token = pm.response.json().token;
-pm.environment.set("authToken", token);
+//eg Account ID:
+Step 1 – Create Account API
+Response:
+{
+ "accountId": "ACC789456"
+}
 
-Then in another request, use:
+Script:
 
-css
-CopyEdit
-Authorization: Bearer {{authToken}}
+let jsonData = pm.response.json();
+pm.environment.set("accountId", jsonData.accountId);
 
-This allows chaining requests like login → perform action → logout.
+Step 2 – Use in Balance API
+
+Request:
+GET /accounts/{{accountId}}/balance
+
+Postman replaces:
+{{accountId}} → ACC789456
 ========================================================================
 43. How do you run data-driven tests in Postman?
-Data-driven testing in Postman is done using Collection Runner with a CSV or JSON data file.
-Steps:
+Data-driven testing in Postman is done using the Collection Runner. I create request variables and provide multiple test datasets in a CSV or JSON file. Postman runs the same API multiple times with different data inputs. For example, in banking APIs I can test multiple fund transfer or login scenarios using different accounts and amounts.
 
-1. Create test data file (users.csv).
-2. Use variables in requests ({{username}}, {{password}}).
-3. Run collection with data file in Collection Runner.
+----------------------------------------------------------------------------
+Method :
+POST
+URL:
+https://api.bankdemo.com/fund-transfer
+Headers :
+Content-Type : application/json
+Authorization : Bearer {{token}}
+//body->raw->json
+Request:
+{
+ "fromAccount": "{{fromAccount}}",
+ "toAccount": "{{toAccount}}",
+ "amount": "{{amount}}"
+}
+CSV File:
+fromAccount,toAccount,amount
+ACC1001,ACC2001,500
+ACC1002,ACC2002,1000
+ACC1003,ACC2003,2500
 
-Example CSV:
+Add Test Script in Postman :
+Go to Tests tab
+pm.test("Status code is 200", function () {
+    pm.response.to.have.status(200);
+});
 
-username,password
-user1,pass123
-user2,pass456
+pm.test("Transaction successful", function () {
+    var jsonData = pm.response.json();
+    pm.expect(jsonData.status).to.eql("SUCCESS");
+});
 
+This validates:
+API response code
+Transfer status
+
+Postman will test multiple fund transfer scenarios automatically.
 ========================================================================
 44. How do you write assertions for status codes and response times?
 
@@ -4517,17 +4681,15 @@ These ensure APIs return correct codes and are within performance SLAs
 
 ========================================================================
 45. How do you validate JSON response body in Postman?
+To validate a JSON response body in Postman, we write test scripts in the Tests tab using JavaScript and the pm library. These scripts verify response fields, values, data types, and structure.
 
 let jsonData = pm.response.json();
-pm.test("Name is John", function () {
- pm.expect(jsonData.name).to.eql("John");
+
+pm.test("Validate account details", function () {
+    pm.expect(jsonData.accountId).to.eql("ACC1001");
+    pm.expect(jsonData.currency).to.eql("INR");
+    pm.expect(jsonData.status).to.eql("ACTIVE");
 });
-
-You can validate:
-
-• Specific fields (jsonData.id)
-• Nested objects (jsonData.address.city)
-• Arrays (jsonData.items.length)
 
 ========================================================================
 46. How do you validate a JSON schema in Postman tests?
