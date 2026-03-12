@@ -4692,8 +4692,8 @@ pm.test("Validate account details", function () {
 });
 
 ========================================================================
-46. How do you validate a JSON schema in Postman tests?
-
+46. How do you validate a JSON schema in Postman tests?   Q 39 refer
+  
 const schema = {
  "type": "object",
  "properties": {
