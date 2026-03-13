@@ -4710,14 +4710,17 @@ This ensures the API response matches the expected contract.
 
 =======================================================================
 47. How do you log output to Postman Console?
-You can debug scripts using:
 
-console.log("Token:", pm.environment.get("authToken"));
+I use the Postman Console with console.log() to print request data, response bodies, and variables. For example, I log the parsed JSON response using pm.response.json() to verify fields like accountId or transactionId in banking APIs.
 
-Postman Console is opened with View → Show Postman Console.
+Example:
+
+let response = pm.response.json();
+console.log(response);
 
 ========================================================================
 48. How do you handle loops in Postman scripts?
+
 Postman does not have native looping between requests in one run, but you can:
 
 • Use Collection Runner with multiple iterations.
@@ -4728,10 +4731,29 @@ Example:
 if(pm.environment.get("retryCount") < 3) {
  postman.setNextRequest("Check Status");
 }
+ 
+VS 
 
+In Postman scripts, loops are implemented using JavaScript constructs like for or forEach to iterate through arrays in API responses. This allows us to perform validations on multiple records, such as verifying each transaction amount, checking required fields, and ensuring data consistency across the response.
+//eg
+1️⃣ Validate Multiple Transactions
+API Response :{ 
+  "transactions": [
+    {"id": 1, "amount": 500},
+    {"id": 2, "amount": 1000},
+    {"id": 3, "amount": 1500}
+  ]
+}
+Postman test Script:
+let jsonData = pm.response.json();
+
+for (let i = 0; i < jsonData.transactions.length; i++) {
+    pm.test("Transaction amount is greater than 0", function () {
+        pm.expect(jsonData.transactions[i].amount).to.be.above(0);
+    });
+}
 ===========================================================================
 49. How do you call one request from another in Postman?
-You can:
 
 • Use postman.setNextRequest("Request Name") for chaining.
 • Store variables in Pre-request scripts and reuse them.
