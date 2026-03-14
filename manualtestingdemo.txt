@@ -4412,7 +4412,7 @@ Postman automatically replaces:
   "message": "Fund transferred successfully"
 }
 =========================================================================
-36. How do you ensure API backward compatibility?
+36. How do you ensure API backward compatibility? Q . 61. How do you test versioned APIs?
 Backward compatibility means old clients still work when API is updated.
 
 To ensure API backward compatibility, I follow practices such as API versioning, avoiding removal of existing fields, contract validation, and regression testing. In banking projects, many applications like mobile banking and internet banking depend on the same APIs. So whenever a change is introduced, I verify that existing request and response structures remain unchanged. For example, if a balance API adds a new field like currency, it is added as optional so older clients continue working without issues. Additionally, we run automated regression tests using Postman/Newman to ensure no existing functionality is impacted
@@ -4532,11 +4532,19 @@ instead of number → contract violation.
 =========================================================================
 40. How do you test APIs that return asynchronous responses?
 
-//sync:immediately
+63. How do you test APIs that return asynchronous results?
+
+//in short :
+1. Send initial request (POST).
+2. Receive jobId and status pending.
+3. Poll status API until completion.
+4. Validate final output or error.
+
+//sync: immediately
 //async: server start processing in background
 When testing APIs that return asynchronous responses, I verify that the API correctly processes the request in the background and that the final result can be retrieved through a status endpoint, callback, webhook, or polling mechanism.
 
-In such APIs, the server does not return the final result immediately, but instead provides a job ID, request ID, or transaction ID which can be used to check the processing statu
+In such APIs, the server does not return the final result immediately, but instead provides a job ID, request ID, or transaction ID which can be used to check the processing status
 
 //eg:
 First, I validate the initial response from the API.
@@ -5051,61 +5059,181 @@ retryCount < 3
 • Select file type and attach the file.
 • Validate upload success in response.
 
-==========================================================================
-61. How do you test versioned APIs?
-
-API versioning ensures backward compatibility when new changes are introduced.
-Steps:
-
-1. Identify available versions (/v1/, /v2/).
-2. Compare responses for the same request in each version.
-3. Ensure old clients still function with older versions.
-4. Validate deprecation notices in headers or documentation.
-5. Ensure new fields are optional and don’t break existing responses.
-
-Example:
-GET /v1/users/123 returns {name, email}
-GET /v2/users/123 returns {name, email, phone} — old apps should still work without phone.
-58
 
 ===========================================================================
 62. How do you test APIs in a microservices architecture?
-Challenges:
 
-• APIs may depend on multiple services.
-• Failures in one service can cascade.
+In microservices architecture, each service exposes its own endpoints like auth, account, and transaction APIs, and services communicate through internal APIs, so testers often validate both individual service APIs and the overall workflow.
 
-Testing strategy:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+//eg:
+Monolithic vs Microservices Endpoints (API Testing Perspective)
+1. Service Structure
 
-• Test each service independently with mock data.
-• Use contract testing (e.g., Pact) to verify integrations.
-• Test end-to-end workflows to ensure orchestration is correct.
-Example: In an e-commerce app, the Order Service API depends on Inventory Service and Payment Service.
-===========================================================================
-63. How do you test APIs that return asynchronous results?
-Some APIs process requests in the background and return job IDs.
-Steps:
+Monolithic Architecture:
+Entire banking system is one backend application. All modules like login, account, and transactions exist inside the same codebase.
 
-1. Send initial request (POST).
-2. Receive jobId and status pending.
-3. Poll status API until completion.
-4. Validate final output or error.
+Microservices Architecture:
+Banking system is split into multiple small services, each responsible for one function such as Auth Service, Account Service, Transaction Service.
 
-Example in Postman:
+2. Example Structure
 
-let status = pm.response.json().status;
-if (status !== "completed") {
- postman.setNextRequest("Check Job Status");
-}
+Monolithic Architecture:
+Banking App contains all modules internally.
+
+Banking App
+ ├ Login Module
+ ├ Account Module
+ └ Transaction Module
+
+Microservices Architecture:
+Different services handle different responsibilities.
+
+API Gateway
+   ↓
+Auth Service
+Account Service
+Transaction Service
+
+3. Base URL
+
+Monolithic Architecture:
+All APIs share one base URL because there is only one backend application.
+Example:
+https://bank.com/api/login
+https://bank.com/api/accounts
+https://bank.com/api/transactions
+
+Microservices Architecture:
+Each service may have its own base URL or an API Gateway routes requests to different services.
+Example:
+https://bank.com/auth/login
+https://bank.com/accounts/101
+https://bank.com/transactions/101
+
+4. Login Endpoint
+
+Monolithic Architecture:
+Login API is handled inside the same application.
+Example:
+POST /login
+The login module validates credentials and generates a token.
+
+Microservices Architecture:
+Login is handled by a separate Auth Service.
+Example:
+POST /auth/login
+Only the Auth Service is responsible for authentication.
+
+5. Transaction Endpoint
+
+Monolithic Architecture:
+Transaction APIs are part of the same application.
+
+Example:
+GET /accounts/{id}/transactions
+The same application directly fetches transaction data from the database.
+
+Microservices Architecture:
+Transactions are handled by a Transaction Service.
+
+Example:
+GET /transactions/{accountId}
+This service may internally call other services like Account Service.
+
+6. Account Endpoint
+
+Monolithic Architecture:
+Account information is retrieved from the same application.
+Example:
+GET /accounts/{id}
+The request is processed by the account module in the same backend.
+
+Microservices Architecture:
+Account details are managed by a separate Account Service.
+Example:
+GET /accounts/{id}
+This endpoint belongs to Account Service and may be used by other services.
+
+7. Internal APIs
+
+Monolithic Architecture:
+Modules communicate through internal method or function calls, not through APIs.
+Example:
+Transaction module directly calls a function from the Account module.
+
+Microservices Architecture:
+Services communicate through HTTP APIs or messaging systems.
+Example:
+Transaction Service calls Account Service through an API.
+
+8. Example Internal Calls
+
+Monolithic Architecture:
+Communication happens inside the same code.
+Example:
+Transaction Module → calls Account Module function
+No external API request is made.
+
+Microservices Architecture:
+Services communicate using APIs.
+Example:
+Transaction Service → GET /accounts/{id}
+Transaction Service calls Account Service to get account details.
+
+9. Deployment Impact
+
+Monolithic Architecture:
+If the login API changes, the entire banking application must be redeployed.
+
+Microservices Architecture:
+If login API changes, only the Auth Service needs to be redeployed.
+Other services like Account Service and Transaction Service remain unaffected.
+
+10. Testing Scope
+
+Monolithic Architecture:
+API testers mainly test external APIs such as login, account, and transactions.
+
+Microservices Architecture:
+Testers may test each service API individually and also validate the complete system workflow.
+Example:
+Auth Service APIs
+Account Service APIs
+Transaction Service APIs
+End-to-end flow
+
+11. Number of APIs
+
+Monolithic Architecture:
+APIs are usually fewer and grouped together.
+Example:
+/login
+/accounts
+/transactions
+
+Microservices Architecture:
+There are more APIs because each service exposes its own endpoints.
+
+Example:
+/auth/login
+/accounts/{id}
+/transactions/{id}
+/notifications/send
+12. Failure Isolation
+
+Monolithic Architecture:
+If one module like Transaction fails, it may affect the entire application.
+
+Microservices Architecture:
+If Transaction Service fails, other services like Auth Service or Account Service can still work.
+
+The failure is isolated to that service.
 
 ===========================================================================
 64. How do you test APIs with third-party integrations?
-Third-party APIs can be slow, expensive, or unavailable in testing.
-Solutions:
 
-• Use mock servers to simulate their responses.
-• Validate API error handling when the third party fails.
-• Verify that the correct payload is sent to the external API.
+When testing APIs with third-party integrations, I first validate the request and response contract to ensure our system communicates with the external service correctly. I typically use sandbox environments or mock services to simulate the third-party system during testing. I also verify error handling for scenarios like timeouts, invalid responses, and service failures. Finally, I perform end-to-end testing to ensure the complete workflow works correctly. For example, in a banking application, when a user initiates a payment, our API calls a third-party payment gateway, and I verify that the request is correct, the gateway response is handled properly, and the transaction status is updated in our system.
 
 ==========================================================================
 65. How do you test API rate limiting?
@@ -5116,31 +5244,103 @@ Steps:
 2. Send rapid requests until limit is hit.
 3. Validate correct error response (often 429 Too Many Requests).
 4. Check Retry-After header for cooldown time.
+
+//eg:
+Max 5 login attempts per minute per IP
+Max 3 OTP requests per 5 minutes per mobile number
+Max 10 payment requests per minute per user
+Max 5 registrations per hour per IP
+Max 3 reset requests per hour
 ==========================================================================
 66. How do you test webhooks in Postman?
-Webhooks send data to your endpoint when an event happens.
-Testing:
 
-• Use Postman’s Mock Server as the webhook receiver.
-• Send a test event from the service.
-• Validate payload and headers received.
+//A webhook is a mechanism where one system automatically sends data to another system when a specific event occurs.
+
+Banking Webhook Scenario: Payment Status Update
+Step 1 — User Initiates Payment
+User sends a payment request.
+Request :
+
+POST /api/payments
+Content-Type: application/json
+{
+  "accountId": "101",
+  "amount": 5000,
+  "currency": "INR",
+  "recipientAccount": "202"
+}
+
+Response :
+{
+  "transactionId": "TXN98765",
+  "status": "PENDING"
+}
+The system sends the payment request to a third-party payment gateway.
+
+Step 2 — Payment Gateway Sends Webhook
+After processing the payment, the payment gateway sends a webhook to the bank’s API.
+Webhook Request :
+
+POST /api/payment/webhook
+Content-Type: application/json
+{
+  "transactionId": "TXN98765",
+  "paymentId": "PAY12345",
+  "status": "SUCCESS",
+  "amount": 5000
+}
+
+Step 3 — Banking System Processes Webhook
+Banking system receives the webhook and updates the transaction status.
+Webhook Response :
+{
+  "message": "Webhook received successfully",
+  "transactionId": "TXN98765"
+}
+Status code:
+200 OK
+
+Step 4 — Verify Transaction Status
+Tester checks if the transaction was updated.
+Request :
+GET /api/transactions/TXN98765
+
+Response :
+{
+  "transactionId": "TXN98765",
+  "status": "SUCCESS",
+  "amount": 5000
+}
 ==========================================================================
 67. How do you test GraphQL APIs in Postman?
 Steps:
 
-1. Set request type to POST.
+1. Set request type to POST : https://bank-api.com/graphql
 2. In Body → select GraphQL.
 3. Write query/mutation:
-
 query {
  user(id: "123") {
  name
  email
  }
 }
-
 4. Validate that only requested fields are returned.
 
+//eg
+mutation TransferMoney {
+  transferMoney(fromAccount: "101", toAccount: "202", amount: 1000) {
+    transactionId
+    status
+  }
+}
+{
+  "data": {
+    "transferMoney": {
+      "transactionId": "TX78945",
+      "status": "SUCCESS"
+    }
+  }
+}
 ==========================================================================
 68. How do you test APIs with file downloads?
 
@@ -5148,6 +5348,32 @@ query {
 • Check Content-Disposition header for filename.
 • Verify file type (Content-Type).
 • Save and compare file size/hash to expected.
+---------------------------------------------------------------------------
+Steps to Test in Postman
+Step 1 — Send Request
+Request:
+GET https://bank-api.com/accounts/101/statement?month=Jan
+
+Step 2 — Verify Status Code
+Expected:
+200 OK
+
+Step 3 — Verify Response Headers
+Important headers:
+Content-Type: application/pdf
+Content-Disposition: attachment; filename="statement_jan.pdf"
+
+These confirm that the response is a downloadable file.
+
+Step 4 — Download and Validate File
+In Postman:
+Click Save Response → Save to file
+
+Verify:
+File downloads successfully
+Correct file format (PDF, CSV, Excel etc.)
+File opens without corruption
+Data inside file is correct
 ===========================================================================
 69. How do you test APIs that require digital signatures?
 
@@ -5158,21 +5384,56 @@ Example:
 const hash = CryptoJS.HmacSHA256(pm.request.body.raw, "secretKey");
 pm.environment.set("signature", hash.toString(CryptoJS.enc.Hex));
 
+Step 1 — Generate Digital Signature
+The client creates a signature using a private key or secret key based on the request payload.
+Example request payload:
+{
+  "fromAccount": "101",
+  "toAccount": "202",
+  "amount": 1000
+}
+
+Example header:
+X-Signature: abcd123456789
+---------------------------
+Step 2 — Send Request
+
+Request:
+POST /api/transfer
+Content-Type: application/json
+X-Signature: abcd123456789
+
+Body:
+{
+  "fromAccount": "101",
+  "toAccount": "202",
+  "amount": 1000
+}
+-----------------------------
+Step 3 — Verify Response
+Successful response:
+{
+  "transactionId": "TX5678",
+  "status": "SUCCESS"
+}
+
+If the signature is invalid:
+{
+  "error": "Invalid digital signature"
+}
+Status code:
+401 Unauthorized
 =========================================================================
 70. How do you mock APIs in Postman?
-Postman Mock Server steps:
 
-1. Create a new mock server.
-2. Define sample responses for endpoints.
-3. Use mock URL in place of real API.
-	This is useful for testing UI before backend is ready.
+In my projects, developers usually provided the actual APIs, so I mostly worked on testing real APIs. However, I understand how to create and use mock APIs in Postman when the backend is not ready or when we need to simulate API responses.
+
+Create a request inside a collection and save an example response, then select Mock Collection to generate a mock server URL that returns the predefined response.
 
 =========================================================================
 71. How do you handle API request sequencing in Postman?
 
-• Use postman.setNextRequest() to define next request order.
-• Store values from previous responses in variables.
-• Example: Login → Create User → Get User → Delete User.
+Q33, Q49
 
 =========================================================================
 72. How do you test APIs that have different behavior for different users?
@@ -5180,6 +5441,21 @@ Postman Mock Server steps:
 • Use different authentication tokens for different roles (admin, user, guest).
 • Validate role-based access control (RBAC).
 • Example: Admin can DELETE /users/123, normal user cannot.
+
+| Role                                    |          Example API Request                       | Expected Response Behavior               | Example Response                                                                                                  |
+| -------------------------------- | ----------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+
+| Customer                          `GET /accounts/101` with `customer_token` | Customer can only view their own account details                 | `{ "accountId": "101", "balance": 5000 }`                                                        
+
+| Bank Employee                     `GET /accounts/101` with `employee_token` | Employee can view customer details and account balance           | `{ "accountId": "101", "customerName": 																"Rahul Sharma", "balance": 5000 }`
+
+| Admin                             `GET /accounts/101` with `admin_token`    | Admin can access full account information including transactions | `{ "accountId": "101", "customerName": 														"Rahul Sharma", "balance": 5000, "transactions": [...] }`
+
+| Unauthorized User                | `GET /accounts/101` with invalid token    | API should deny access                                           | `401 Unauthorized`                                                                               
+
+| Customer accessing other account | `GET /accounts/999` with `customer_token` | Customer should not access other users' data                     | `403 Forbidden`                                                                                  
+
+
 ==========================================================================
 73. How do you test an API migration from monolith to microservices?
 
@@ -5187,6 +5463,8 @@ Postman Mock Server steps:
 • Compare responses for the same input.
 • Test for performance improvements and no functional breakage.
 • Validate integration points with new microservices.
+
+When testing API migration from monolith to microservices, I first capture baseline responses from the existing monolithic API. Then I validate that the microservice-based API returns the same functionality and data. I also test service integrations, response structures, performance, and run regression tests to ensure the migration does not break existing features.
 =========================================================================
 74. How do you test an API that returns streaming data?
 Streaming APIs (e.g., WebSocket, SSE):
@@ -5195,6 +5473,7 @@ Streaming APIs (e.g., WebSocket, SSE):
 • Send a message and validate incoming stream messages.
 • Check message format and frequency.
 
+//
 =========================================================================
 75. How do you test APIs with scheduled jobs?
 If API triggers a scheduled task (e.g., nightly report):
