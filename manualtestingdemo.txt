@@ -4755,11 +4755,72 @@ for (let i = 0; i < jsonData.transactions.length; i++) {
 ===========================================================================
 49. How do you call one request from another in Postman?
 
-• Use postman.setNextRequest("Request Name") for chaining.
-• Store variables in Pre-request scripts and reuse them.
+We chain requests in Postman using postman.setNextRequest() and pass dynamic data between APIs using environment variables, enabling automated end-to-end API testing flows.
 
-Example: Login request sets {{token}} → used in subsequent APIs.
+//eg:
+1️⃣ Login API
+API Name:Login Customer
+Method: POST
+Endpoint : /api/login
+Request Body :
+{
+  "username": "bhagyashree",
+  "password": "Test@123"
+}
+Response :
+{
+  "token": "abc123xyz",
+  "customerId": "CUST1001"
+}
+//Test Script (Save Token + Call Next API)
+let res = pm.response.json();
+pm.environment.set("token", res.token);
+pm.environment.set("customerId", res.customerId);
+postman.setNextRequest("Fund Transfer");
 
+2️⃣ Fund Transfer API
+API Name : Transfer Money
+Method :POST
+Endpoint : /api/transfer
+Headers : Authorization: Bearer {{token}}
+Request Body :
+{
+  "fromAccount": "ACC1001",
+  "toAccount": "ACC2001",
+  "amount": 5000
+}
+Response :
+{
+  "transactionId": "TXN9001",
+  "status": "SUCCESS"
+}
+//Test Script (Store Transaction ID + Call Next API)
+let res = pm.response.json();
+pm.environment.set("txnId", res.transactionId);
+postman.setNextRequest("Transaction History");
+
+3️⃣ Transaction History API
+API Name : Check Transaction History
+Method : GET
+Endpoint : /api/transactions/{{customerId}}
+Headers : 
+Authorization: Bearer {{token}}
+Response :
+{
+  "transactions": [
+    {
+      "transactionId": "TXN9001",
+      "amount": 5000,
+      "status": "SUCCESS"
+    }
+  ]
+}
+//Test Script (Validation)
+let res = pm.response.json();
+pm.test("Verify transaction exists", function () {
+    pm.expect(res.transactions[0].transactionId)
+      .to.eql(pm.environment.get("txnId"));
+});
 ===========================================================================
 
 50. How do you generate random test data in Postman?
@@ -4799,15 +4860,42 @@ newman run MyCollection.json -e MyEnv.json --reporters cli,html
 
 ===========================================================================
 53. How do you capture values from headers in Postman?
+In Postman, header values can be captured using the pm.response.headers.get() method in the Tests script. The extracted value is then stored in an environment or collection variable and reused in subsequent API requests.
 
-let contentType = pm.response.headers.get("Content-Type");
-pm.environment.set("contentType", contentType);
+//eg:
+Example (Banking API – Capture Session ID)
+API Request
+POST /api/login
 
-This is useful for APIs that send tokens in headers instead of body.
+Response Headers
+Session-Id: SID12345
+Content-Type: application/json
+
+Postman Script (Tests Tab)
+let sessionId = pm.response.headers.get("Session-Id");
+pm.environment.set("sessionId", sessionId);
+
+This stores the header value in a variable:
+
+{{sessionId}} → SID12345
+
+• use in next API request:
+
+Example:
+
+GET /api/accounts
+Session-Id: {{sessionId}}
+
+Postman automatically replaces:
+
+{{sessionId}} → SID12345
 
 ===========================================================================
 54. How do you validate arrays in Postman response?
 
+Arrays in Postman responses are validated using JavaScript assertions (pm.expect) to check the array existence, length, and values of elements.
+
+//eg:
 let jsonData = pm.response.json();
 pm.test("Array contains 'Apple'", function () {
  pm.expect(jsonData.items).to.include("Apple");
@@ -4816,6 +4904,42 @@ pm.test("Array length is 5", function () {
  pm.expect(jsonData.items.length).to.eql(5);
 });
 
+//If you want to validate that transaction TXN2 has amount 1000, you should search the array and then validate the value.
+let jsonData = pm.response.json();
+let txn = jsonData.transactions.find(t => t.transactionId === "TXN2");
+pm.test("TXN2 amount is 1000", function () {
+    pm.expect(txn.amount).to.eql(1000);
+});
+
+1️⃣ Check if Array Exists
+let jsonData = pm.response.json();
+
+pm.test("Transactions array exists", function () {
+    pm.expect(jsonData.transactions).to.exist;
+});
+2️⃣ Validate Array Length
+pm.test("Transactions count is 3", function () {
+    pm.expect(jsonData.transactions.length).to.eql(3);
+});
+3️⃣ Validate First Element
+pm.test("First transaction amount is correct", function () {
+    pm.expect(jsonData.transactions[0].amount).to.eql(500);
+});
+4️⃣ Validate Each Element Using Loop
+let jsonData = pm.response.json();
+
+jsonData.transactions.forEach(function(txn) {
+    pm.test("Transaction amount should be greater than 0", function () {
+        pm.expect(txn.amount).to.be.above(0);
+    });
+});
+
+This checks all transactions.
+
+5️⃣ Validate Field in Each Object
+jsonData.transactions.forEach(function(txn) {
+    pm.expect(txn).to.have.property("transactionId");
+});
 =========================================================================
 55. How do you run only selected tests in a Postman collection?
 
@@ -4829,7 +4953,38 @@ pm.test("Array length is 5", function () {
 pm.environment.set("userId", pm.response.json().id);
 let id = pm.environment.get("userId");
 
-Environment variables make requests portable between Dev, QA, and Prod
+//explaniation of code :
+What this code does
+1️⃣ Extracts a value from the API response
+pm.response.json().id
+
+Converts the response to JSON
+Reads the id field from the response
+Example response:
+
+{
+  "id": "USR1001",
+  "name": "Rahul",
+  "accountType": "Savings"
+}
+
+2️⃣ Stores the value in an Environment Variable
+pm.environment.set("userId", pm.response.json().id);
+
+This stores:
+userId = USR1001
+in the Postman Environment.
+
+Purpose:
+Save dynamic data from one request
+Reuse it in other requests
+
+3️⃣ Retrieves the stored value
+let id = pm.environment.get("userId");
+
+This gets the stored value and assigns it to a JavaScript variable id.
+id = USR1001
+Now it can be used in scripts or validations.
 
 =========================================================================
 57. How do you parameterize requests in Postman?
@@ -4848,12 +5003,46 @@ This is essential for automation and CI/CD
 ==========================================================================
 59. How do you retry failed requests in Postman scripts?
 Postman itself doesn’t have automatic retries, but you can simulate:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-if (pm.response.code !== 200) {
- postman.setNextRequest("Same Request Name");
+In Postman, failed requests can be retried using postman.setNextRequest() with a retry counter stored in variables.
+If a request fails (for example status code ≠ 200), the script increments the retry count and re-runs the same request until the maximum retry limit is reached.
+
+Example Script
+let retryCount = pm.environment.get("retryCount") || 0;
+
+if (pm.response.code !== 200 && retryCount < 3) {
+    retryCount++;
+    pm.environment.set("retryCount", retryCount);
+    postman.setNextRequest(pm.info.requestName); 
+} else {
+    pm.environment.set("retryCount", 0);
 }
 
-Limit retries with a counter variable.
+//
+What this script does
+
+1️⃣ Gets retry count
+
+let retryCount = pm.environment.get("retryCount") || 0;
+
+If no retry value exists, it starts from 0.
+
+2️⃣ Checks if request failed
+
+pm.response.code !== 200
+
+3️⃣ Retries the request
+
+postman.setNextRequest(pm.info.requestName);
+
+Runs the same request again.
+
+4️⃣ Stops after 3 retries
+
+retryCount < 3
+
+5️⃣ Resets retry counter when success occurs
 
 ==========================================================================
 60. How do you test APIs with file uploads in Postman?
